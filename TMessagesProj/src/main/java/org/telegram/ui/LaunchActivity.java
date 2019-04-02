@@ -1142,10 +1142,10 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
                                                 if (segments.size() > 0) {
                                                     username = segments.get(0);
                                                     if (segments.size() > 1) {
-                                                        messageId = Utilities.parseInt(segments.get(1));
-                                                        if (messageId == 0) {
-                                                            messageId = null;
-                                                        }
+//                                                        messageId = Utilities.parseInt(segments.get(1));
+//                                                        if (messageId == 0) {
+//                                                            messageId = null;
+//                                                        }
                                                     }
                                                 }
                                                 botUser = data.getQueryParameter("start");
@@ -1177,10 +1177,10 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
                                             botUser = data.getQueryParameter("start");
                                             botChat = data.getQueryParameter("startgroup");
                                             game = data.getQueryParameter("game");
-                                            messageId = Utilities.parseInt(data.getQueryParameter("post"));
-                                            if (messageId == 0) {
-                                                messageId = null;
-                                            }
+//                                            messageId = Utilities.parseInt(data.getQueryParameter("post"));
+//                                            if (messageId == 0) {
+//                                                messageId = null;
+//                                            }
                                         }
                                     } else if (url.startsWith("tg:bg") || url.startsWith("tg://bg")) {
                                         url = url.replace("tg:bg", "tg://telegram.org").replace("tg://bg", "tg://telegram.org");
@@ -1374,6 +1374,8 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
                     }
                 }
             }
+
+            push_msg_id = 0; // workaround
 
             if (UserConfig.getInstance(currentAccount).isClientActivated()) {
                 if (push_user_id != 0) {

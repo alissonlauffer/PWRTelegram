@@ -166,7 +166,10 @@ public class SearchAdapterHelper {
 
                             globalSearch.clear();
                             globalSearchMap.clear();
-                            localSearchResults.clear();
+                            
+                            if (localSearchResults != null) {
+                                localSearchResults.clear();                            
+                            }
 
                             MessagesController.getInstance(currentAccount).putChats(res.chats, false);
                             MessagesController.getInstance(currentAccount).putUsers(res.users, false);

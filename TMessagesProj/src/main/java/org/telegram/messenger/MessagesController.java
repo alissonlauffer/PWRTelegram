@@ -3534,9 +3534,8 @@ public class MessagesController implements NotificationCenter.NotificationCenter
                                 channelsPtsSafe.put(peer.channel_id, req.pts - ((req.pts > 150) ? 125 : 1));
 
                                 if (res.new_messages.isEmpty()) {
-                                    retry.set(retry.get() + 1);
+                                    channelsRetry.put(peer.channel_id, retry.get() + 1);
                                     loadMessages(dialog_id, count, max_id, offset_date, fromCache, midDate, classGuid, load_type, last_message_id, isChannel, loadIndex, 0, 0, 0, false, 0);
-                                    channelsRetry.put(peer.channel_id, retry.get());
                                 } else {
                                     channelsRetry.put(peer.channel_id, 1);
                                 }
