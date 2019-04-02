@@ -1,4 +1,4 @@
-# PWRTelegram (telegram mobile for login as bot)
+# PWRTelegram<br><a href="https://github.com/andrew-ld/PWRTelegram/releases"><img src="https://img.shields.io/github/release/andrew-ld/pwrtelegram.svg"/></a>
 
 [Telegram](https://telegram.org) is a messaging app with a focus on speed and security. It’s superfast, simple and free.
 This is an unofficial, FOSS-friendly fork of the original [Telegram App for Android](https://github.com/DrKLO/Telegram).
@@ -36,6 +36,13 @@ This is an unofficial, FOSS-friendly fork of the original [Telegram App for Andr
 - HockeyApp crash reporting and self-updates
 - Google SMS retrieval. You have to type the code manually
 
+*PWRTelegram patches:*
+ - login as bot using importBotAuthorization
+ - completely removed all unsupported background calls for bot
+ - read groups / channels history using getChannelDifference
+ - download all old private messages using getDifference with pts = 0
+ - search public chats using resolvUsername
+
 *Other:*
 - Allow to set a proxy before login
 - Added the ability to parse locations from intents containing a `geo:<lat>,<lon>,<zoom>` string
@@ -50,8 +57,6 @@ MTproto protocol manuals: https://core.telegram.org/mtproto
 ## Building
 **NOTE: Building on Windows is, unfortunately, not supported.
 Consider using a Linux VM or dual booting.**
-
-**Important:**
 
 1. You need the Android NDK, Go(Golang) and [Ninja](https://ninja-build.org/) to build the apk.
 
