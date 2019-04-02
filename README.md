@@ -37,11 +37,11 @@ This is an unofficial, FOSS-friendly fork of the original [Telegram App for Andr
 - Google SMS retrieval. You have to type the code manually
 
 *PWRTelegram patches:*
- - login as bot using importBotAutorization
- - completly removed all unsupported background calls for bot
+ - login as bot using importBotAuthorization
+ - completely removed all unsupported background calls for bot
  - read groups / channels history using getChannelDifference
  - download all old private messages using getDifference with pts = 0
- - search public chats by username using resolvUsername
+ - search public chats using resolvUsername
 
 *Other:*
 - Allow to set a proxy before login
