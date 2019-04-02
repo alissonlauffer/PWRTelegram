@@ -2864,42 +2864,42 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                         }
                     });
                 } else {
-                    final MessagesStorage messagesStorage = MessagesStorage.getInstance(currentAccount);
-                    TLRPC.TL_messages_getUnreadMentions req = new TLRPC.TL_messages_getUnreadMentions();
-                    req.peer = MessagesController.getInstance(currentAccount).getInputPeer((int) dialog_id);
-                    req.limit = 1;
-                    req.add_offset = newMentionsCount - 1;
-                    ConnectionsManager.getInstance(currentAccount).sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
-                        TLRPC.messages_Messages res = (TLRPC.messages_Messages) response;
-                        if (error != null || res.messages.isEmpty()) {
-                            if (res != null) {
-                                newMentionsCount = res.count;
-                            } else {
-                                newMentionsCount = 0;
-                            }
-                            messagesStorage.resetMentionsCount(dialog_id, newMentionsCount);
-                            if (newMentionsCount == 0) {
-                                hasAllMentionsLocal = true;
-                                showMentiondownButton(false, true);
-                            } else {
-                                mentiondownButtonCounter.setText(String.format("%d", newMentionsCount));
-                                loadLastUnreadMention();
-                            }
-                        } else {
-                            int id = res.messages.get(0).id;
-                            long mid = id;
-                            if (ChatObject.isChannel(currentChat)) {
-                                mid = mid | (((long) currentChat.id) << 32);
-                            }
-                            MessageObject object = messagesDict[0].get(id);
-                            messagesStorage.markMessageAsMention(mid);
-                            if (object != null) {
-                                object.messageOwner.media_unread = true;
-                                object.messageOwner.mentioned = true;
-                            }
-                            scrollToMessageId(id, 0, false, 0, false);
-                        }
-                    }));
+//                    final MessagesStorage messagesStorage = MessagesStorage.getInstance(currentAccount);
+//                    TLRPC.TL_messages_getUnreadMentions req = new TLRPC.TL_messages_getUnreadMentions();
+//                    req.peer = MessagesController.getInstance(currentAccount).getInputPeer((int) dialog_id);
+//                    req.limit = 1;
+//                    req.add_offset = newMentionsCount - 1;
+//                    ConnectionsManager.getInstance(currentAccount).sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
+//                        TLRPC.messages_Messages res = (TLRPC.messages_Messages) response;
+//                        if (error != null || res.messages.isEmpty()) {
+//                            if (res != null) {
+//                                newMentionsCount = res.count;
+//                            } else {
+//                                newMentionsCount = 0;
+//                            }
+//                            messagesStorage.resetMentionsCount(dialog_id, newMentionsCount);
+//                            if (newMentionsCount == 0) {
+//                                hasAllMentionsLocal = true;
+//                                showMentiondownButton(false, true);
+//                            } else {
+//                                mentiondownButtonCounter.setText(String.format("%d", newMentionsCount));
+//                                loadLastUnreadMention();
+//                            }
+//                        } else {
+//                            int id = res.messages.get(0).id;
+//                            long mid = id;
+//                            if (ChatObject.isChannel(currentChat)) {
+//                                mid = mid | (((long) currentChat.id) << 32);
+//                            }
+//                            MessageObject object = messagesDict[0].get(id);
+//                            messagesStorage.markMessageAsMention(mid);
+//                            if (object != null) {
+//                                object.messageOwner.media_unread = true;
+//                                object.messageOwner.mentioned = true;
+//                            }
+//                            scrollToMessageId(id, 0, false, 0, false);
+//                        }
+//                    }));
                 }
             }
 

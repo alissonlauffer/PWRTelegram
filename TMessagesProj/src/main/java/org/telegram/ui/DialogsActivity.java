@@ -1041,33 +1041,33 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         });
 
         floatingButton = new ImageView(context);
-        floatingButton.setScaleType(ImageView.ScaleType.CENTER);
-        Drawable drawable = Theme.createSimpleSelectorCircleDrawable(AndroidUtilities.dp(56), Theme.getColor(Theme.key_chats_actionBackground), Theme.getColor(Theme.key_chats_actionPressedBackground));
-        if (Build.VERSION.SDK_INT < 21) {
-            Drawable shadowDrawable = context.getResources().getDrawable(R.drawable.floating_shadow).mutate();
-            shadowDrawable.setColorFilter(new PorterDuffColorFilter(0xff000000, PorterDuff.Mode.MULTIPLY));
-            CombinedDrawable combinedDrawable = new CombinedDrawable(shadowDrawable, drawable, 0, 0);
-            combinedDrawable.setIconSize(AndroidUtilities.dp(56), AndroidUtilities.dp(56));
-            drawable = combinedDrawable;
-        }
-        floatingButton.setBackgroundDrawable(drawable);
-        floatingButton.setColorFilter(new PorterDuffColorFilter(Theme.getColor(Theme.key_chats_actionIcon), PorterDuff.Mode.MULTIPLY));
-        floatingButton.setImageResource(R.drawable.floating_pencil);
-        if (Build.VERSION.SDK_INT >= 21) {
-            StateListAnimator animator = new StateListAnimator();
-            animator.addState(new int[]{android.R.attr.state_pressed}, ObjectAnimator.ofFloat(floatingButton, View.TRANSLATION_Z, AndroidUtilities.dp(2), AndroidUtilities.dp(4)).setDuration(200));
-            animator.addState(new int[]{}, ObjectAnimator.ofFloat(floatingButton, View.TRANSLATION_Z, AndroidUtilities.dp(4), AndroidUtilities.dp(2)).setDuration(200));
-            floatingButton.setStateListAnimator(animator);
-            floatingButton.setOutlineProvider(new ViewOutlineProvider() {
-                @SuppressLint("NewApi")
-                @Override
-                public void getOutline(View view, Outline outline) {
-                    outline.setOval(0, 0, AndroidUtilities.dp(56), AndroidUtilities.dp(56));
-                }
-            });
-        }
-        floatingButtonContainer.addView(floatingButton, LayoutHelper.createFrame((Build.VERSION.SDK_INT >= 21 ? 56 : 60), (Build.VERSION.SDK_INT >= 21 ? 56 : 60), Gravity.LEFT | Gravity.TOP, 10, 0, 10, 0));
-
+//        floatingButton.setScaleType(ImageView.ScaleType.CENTER);
+//        Drawable drawable = Theme.createSimpleSelectorCircleDrawable(AndroidUtilities.dp(56), Theme.getColor(Theme.key_chats_actionBackground), Theme.getColor(Theme.key_chats_actionPressedBackground));
+//        if (Build.VERSION.SDK_INT < 21) {
+//            Drawable shadowDrawable = context.getResources().getDrawable(R.drawable.floating_shadow).mutate();
+//            shadowDrawable.setColorFilter(new PorterDuffColorFilter(0xff000000, PorterDuff.Mode.MULTIPLY));
+//            CombinedDrawable combinedDrawable = new CombinedDrawable(shadowDrawable, drawable, 0, 0);
+//            combinedDrawable.setIconSize(AndroidUtilities.dp(56), AndroidUtilities.dp(56));
+//            drawable = combinedDrawable;
+//        }
+//        floatingButton.setBackgroundDrawable(drawable);
+//        floatingButton.setColorFilter(new PorterDuffColorFilter(Theme.getColor(Theme.key_chats_actionIcon), PorterDuff.Mode.MULTIPLY));
+//        floatingButton.setImageResource(R.drawable.floating_pencil);
+//        if (Build.VERSION.SDK_INT >= 21) {
+//            StateListAnimator animator = new StateListAnimator();
+//            animator.addState(new int[]{android.R.attr.state_pressed}, ObjectAnimator.ofFloat(floatingButton, View.TRANSLATION_Z, AndroidUtilities.dp(2), AndroidUtilities.dp(4)).setDuration(200));
+//            animator.addState(new int[]{}, ObjectAnimator.ofFloat(floatingButton, View.TRANSLATION_Z, AndroidUtilities.dp(4), AndroidUtilities.dp(2)).setDuration(200));
+//            floatingButton.setStateListAnimator(animator);
+//            floatingButton.setOutlineProvider(new ViewOutlineProvider() {
+//                @SuppressLint("NewApi")
+//                @Override
+//                public void getOutline(View view, Outline outline) {
+//                    outline.setOval(0, 0, AndroidUtilities.dp(56), AndroidUtilities.dp(56));
+//                }
+//            });
+//        }
+//        floatingButtonContainer.addView(floatingButton, LayoutHelper.createFrame((Build.VERSION.SDK_INT >= 21 ? 56 : 60), (Build.VERSION.SDK_INT >= 21 ? 56 : 60), Gravity.LEFT | Gravity.TOP, 10, 0, 10, 0));
+//
         /*unreadFloatingButtonContainer = new FrameLayout(context);
         if (onlySelect) {
             unreadFloatingButtonContainer.setVisibility(View.GONE);
@@ -1475,28 +1475,28 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             dialogsSearchAdapter.notifyDataSetChanged();
         }
         if (checkPermission && !onlySelect && Build.VERSION.SDK_INT >= 23) {
-            Activity activity = getParentActivity();
-            if (activity != null) {
-                checkPermission = false;
-                if (activity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED || activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    if (askAboutContacts && UserConfig.getInstance(currentAccount).syncContacts && activity.shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
-                        AlertDialog.Builder builder = AlertsCreator.createContactsPermissionDialog(activity, param -> {
-                            askAboutContacts = param != 0;
-                            MessagesController.getGlobalNotificationsSettings().edit().putBoolean("askAboutContacts", askAboutContacts).commit();
-                            askForPermissons(false);
-                        });
-                        showDialog(permissionDialog = builder.create());
-                    } else if (activity.shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                        builder.setTitle(LocaleController.getString("AppName", R.string.AppName));
-                        builder.setMessage(LocaleController.getString("PermissionStorage", R.string.PermissionStorage));
-                        builder.setPositiveButton(LocaleController.getString("OK", R.string.OK), null);
-                        showDialog(permissionDialog = builder.create());
-                    } else {
-                        askForPermissons(true);
-                    }
-                }
-            }
+//            Activity activity = getParentActivity();
+//            if (activity != null) {
+//                checkPermission = false;
+//                if (activity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED || activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+//                    if (askAboutContacts && UserConfig.getInstance(currentAccount).syncContacts && activity.shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
+//                        AlertDialog.Builder builder = AlertsCreator.createContactsPermissionDialog(activity, param -> {
+//                            askAboutContacts = param != 0;
+//                            MessagesController.getGlobalNotificationsSettings().edit().putBoolean("askAboutContacts", askAboutContacts).commit();
+//                            askForPermissons(false);
+//                        });
+//                        showDialog(permissionDialog = builder.create());
+//                    } else if (activity.shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+//                        builder.setTitle(LocaleController.getString("AppName", R.string.AppName));
+//                        builder.setMessage(LocaleController.getString("PermissionStorage", R.string.PermissionStorage));
+//                        builder.setPositiveButton(LocaleController.getString("OK", R.string.OK), null);
+//                        showDialog(permissionDialog = builder.create());
+//                    } else {
+//                        askForPermissons(true);
+//                    }
+//                }
+//            }
         } else if (!onlySelect && XiaomiUtilities.isMIUI() && Build.VERSION.SDK_INT >= 19 && !XiaomiUtilities.isCustomPermissionGranted(XiaomiUtilities.OP_SHOW_WHEN_LOCKED)) {
             if (getParentActivity() == null) {
                 return;
@@ -1735,12 +1735,12 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         ArrayList<String> permissons = new ArrayList<>();
         if (UserConfig.getInstance(currentAccount).syncContacts && askAboutContacts && activity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             if (alert) {
-                AlertDialog.Builder builder = AlertsCreator.createContactsPermissionDialog(activity, param -> {
-                    askAboutContacts = param != 0;
-                    MessagesController.getGlobalNotificationsSettings().edit().putBoolean("askAboutContacts", askAboutContacts).commit();
-                    askForPermissons(false);
-                });
-                showDialog(permissionDialog = builder.create());
+//                AlertDialog.Builder builder = AlertsCreator.createContactsPermissionDialog(activity, param -> {
+//                    askAboutContacts = param != 0;
+//                    MessagesController.getGlobalNotificationsSettings().edit().putBoolean("askAboutContacts", askAboutContacts).commit();
+//                    askForPermissons(false);
+//                });
+//                showDialog(permissionDialog = builder.create());
                 return;
             }
             permissons.add(Manifest.permission.READ_CONTACTS);

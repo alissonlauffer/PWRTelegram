@@ -662,26 +662,26 @@ public class ContactsActivity extends BaseFragment implements NotificationCenter
         if (listViewAdapter != null) {
             listViewAdapter.notifyDataSetChanged();
         }
-        if (checkPermission && Build.VERSION.SDK_INT >= 23) {
-            Activity activity = getParentActivity();
-            if (activity != null) {
-                checkPermission = false;
-                if (activity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-                    if (activity.shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
-                        AlertDialog.Builder builder = AlertsCreator.createContactsPermissionDialog(activity, param -> {
-                            askAboutContacts = param != 0;
-                            if (param == 0) {
-                                return;
-                            }
-                            askForPermissons(false);
-                        });
-                        showDialog(permissionDialog = builder.create());
-                    } else {
-                        askForPermissons(true);
-                    }
-                }
-            }
-        }
+//        if (checkPermission && Build.VERSION.SDK_INT >= 23) {
+//            Activity activity = getParentActivity();
+//            if (activity != null) {
+//                checkPermission = false;
+//                if (activity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+//                    if (activity.shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
+//                        AlertDialog.Builder builder = AlertsCreator.createContactsPermissionDialog(activity, param -> {
+//                            askAboutContacts = param != 0;
+//                            if (param == 0) {
+//                                return;
+//                            }
+//                            askForPermissons(false);
+//                        });
+//                        showDialog(permissionDialog = builder.create());
+//                    } else {
+//                        askForPermissons(true);
+//                    }
+//                }
+//            }
+//        }
     }
 
     @Override
@@ -711,27 +711,27 @@ public class ContactsActivity extends BaseFragment implements NotificationCenter
 
     @TargetApi(Build.VERSION_CODES.M)
     private void askForPermissons(boolean alert) {
-        Activity activity = getParentActivity();
-        if (activity == null || !UserConfig.getInstance(currentAccount).syncContacts || activity.checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        if (alert && askAboutContacts) {
-            AlertDialog.Builder builder = AlertsCreator.createContactsPermissionDialog(activity, param -> {
-                askAboutContacts = param != 0;
-                if (param == 0) {
-                    return;
-                }
-                askForPermissons(false);
-            });
-            showDialog(builder.create());
-            return;
-        }
-        ArrayList<String> permissons = new ArrayList<>();
-        permissons.add(Manifest.permission.READ_CONTACTS);
-        permissons.add(Manifest.permission.WRITE_CONTACTS);
-        permissons.add(Manifest.permission.GET_ACCOUNTS);
-        String[] items = permissons.toArray(new String[0]);
-        activity.requestPermissions(items, 1);
+//        Activity activity = getParentActivity();
+//        if (activity == null || !UserConfig.getInstance(currentAccount).syncContacts || activity.checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+//            return;
+//        }
+//        if (alert && askAboutContacts) {
+//            AlertDialog.Builder builder = AlertsCreator.createContactsPermissionDialog(activity, param -> {
+//                askAboutContacts = param != 0;
+//                if (param == 0) {
+//                    return;
+//                }
+//                askForPermissons(false);
+//            });
+//            showDialog(builder.create());
+//            return;
+//        }
+//        ArrayList<String> permissons = new ArrayList<>();
+//        permissons.add(Manifest.permission.READ_CONTACTS);
+//        permissons.add(Manifest.permission.WRITE_CONTACTS);
+//        permissons.add(Manifest.permission.GET_ACCOUNTS);
+//        String[] items = permissons.toArray(new String[0]);
+//        activity.requestPermissions(items, 1);
     }
 
     @Override

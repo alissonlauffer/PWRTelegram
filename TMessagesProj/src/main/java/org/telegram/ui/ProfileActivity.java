@@ -2458,7 +2458,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             }
 
             if (user != null && !isBot && currentEncryptedChat == null && user.id != UserConfig.getInstance(currentAccount).getClientUserId()) {
-                startSecretChatRow = rowCount++;
+//                startSecretChatRow = rowCount++;
                 lastSectionRow = rowCount++;
             }
         } else if (chat_id != 0) {

@@ -198,17 +198,17 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         rowCount = 0;
         overscrollRow = rowCount++;
         numberSectionRow = rowCount++;
-        numberRow = rowCount++;
+        // numberRow = rowCount++;
         usernameRow = rowCount++;
         bioRow = rowCount++;
         settingsSectionRow = rowCount++;
         settingsSectionRow2 = rowCount++;
         notificationRow = rowCount++;
-        privacyRow = rowCount++;
+        // privacyRow = rowCount++;
         dataRow = rowCount++;
         chatRow = rowCount++;
         languageRow = rowCount++;
-        helpRow = rowCount++;
+        // helpRow = rowCount++;
         versionRow = rowCount++;
 
         DataQuery.getInstance(currentAccount).checkFeaturedStickers();
@@ -421,14 +421,14 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                 showDialog(builder.create());
             } else if (position == languageRow) {
                 presentFragment(new LanguageSelectActivity());
-            } else if (position == usernameRow) {
-                presentFragment(new ChangeUsernameActivity());
-            } else if (position == bioRow) {
-                if (userInfo != null) {
-                    presentFragment(new ChangeBioActivity());
-                }
-            } else if (position == numberRow) {
-                presentFragment(new ChangePhoneHelpActivity());
+//            } else if (position == usernameRow) {
+//                presentFragment(new ChangeUsernameActivity());
+//            } else if (position == bioRow) {
+//                if (userInfo != null) {
+//                    presentFragment(new ChangeBioActivity());
+//                }
+//            } else if (position == numberRow) {
+//                presentFragment(new ChangePhoneHelpActivity());
             }
         });
 

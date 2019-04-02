@@ -254,28 +254,28 @@ public class ContactsController {
     }
 
     public void checkInviteText() {
-        SharedPreferences preferences = MessagesController.getMainSettings(currentAccount);
-        inviteLink = preferences.getString("invitelink", null);
-        int time = preferences.getInt("invitelinktime", 0);
-        if (!updatingInviteLink && (inviteLink == null || Math.abs(System.currentTimeMillis() / 1000 - time) >= 86400)) {
-            updatingInviteLink = true;
-            TLRPC.TL_help_getInviteText req = new TLRPC.TL_help_getInviteText();
-            ConnectionsManager.getInstance(currentAccount).sendRequest(req, (response, error) -> {
-                if (response != null) {
-                    final TLRPC.TL_help_inviteText res = (TLRPC.TL_help_inviteText) response;
-                    if (res.message.length() != 0) {
-                        AndroidUtilities.runOnUIThread(() -> {
-                            updatingInviteLink = false;
-                            SharedPreferences preferences1 = MessagesController.getMainSettings(currentAccount);
-                            SharedPreferences.Editor editor = preferences1.edit();
-                            editor.putString("invitelink", inviteLink = res.message);
-                            editor.putInt("invitelinktime", (int) (System.currentTimeMillis() / 1000));
-                            editor.commit();
-                        });
-                    }
-                }
-            }, ConnectionsManager.RequestFlagFailOnServerErrors);
-        }
+//        SharedPreferences preferences = MessagesController.getMainSettings(currentAccount);
+//        inviteLink = preferences.getString("invitelink", null);
+//        int time = preferences.getInt("invitelinktime", 0);
+//        if (!updatingInviteLink && (inviteLink == null || Math.abs(System.currentTimeMillis() / 1000 - time) >= 86400)) {
+//            updatingInviteLink = true;
+//            TLRPC.TL_help_getInviteText req = new TLRPC.TL_help_getInviteText();
+//            ConnectionsManager.getInstance(currentAccount).sendRequest(req, (response, error) -> {
+//                if (response != null) {
+//                    final TLRPC.TL_help_inviteText res = (TLRPC.TL_help_inviteText) response;
+//                    if (res.message.length() != 0) {
+//                        AndroidUtilities.runOnUIThread(() -> {
+//                            updatingInviteLink = false;
+//                            SharedPreferences preferences1 = MessagesController.getMainSettings(currentAccount);
+//                            SharedPreferences.Editor editor = preferences1.edit();
+//                            editor.putString("invitelink", inviteLink = res.message);
+//                            editor.putInt("invitelinktime", (int) (System.currentTimeMillis() / 1000));
+//                            editor.commit();
+//                        });
+//                    }
+//                }
+//            }, ConnectionsManager.RequestFlagFailOnServerErrors);
+//        }
     }
 
     public String getInviteText(int contacts) {
@@ -1331,40 +1331,40 @@ public class ContactsController {
             }
             MessagesStorage.getInstance(currentAccount).getContacts();
         } else {
-            if (BuildVars.LOGS_ENABLED) {
-                FileLog.d("load contacts from server");
-            }
-
-            TLRPC.TL_contacts_getContacts req = new TLRPC.TL_contacts_getContacts();
-            req.hash = hash;
-            ConnectionsManager.getInstance(currentAccount).sendRequest(req, (response, error) -> {
-                if (error == null) {
-                    TLRPC.contacts_Contacts res = (TLRPC.contacts_Contacts) response;
-                    if (hash != 0 && res instanceof TLRPC.TL_contacts_contactsNotModified) {
-                        contactsLoaded = true;
-                        if (!delayedContactsUpdate.isEmpty() && contactsBookLoaded) {
-                            applyContactsUpdates(delayedContactsUpdate, null, null, null);
-                            delayedContactsUpdate.clear();
-                        }
-                        UserConfig.getInstance(currentAccount).lastContactsSyncTime = (int) (System.currentTimeMillis() / 1000);
-                        UserConfig.getInstance(currentAccount).saveConfig(false);
-                        AndroidUtilities.runOnUIThread(() -> {
-                            synchronized (loadContactsSync) {
-                                loadingContacts = false;
-                            }
-                            NotificationCenter.getInstance(currentAccount).postNotificationName(NotificationCenter.contactsDidLoad);
-                        });
-                        if (BuildVars.LOGS_ENABLED) {
-                            FileLog.d("load contacts don't change");
-                        }
-                        return;
-                    } else {
-                        UserConfig.getInstance(currentAccount).contactsSavedCount = res.saved_count;
-                        UserConfig.getInstance(currentAccount).saveConfig(false);
-                    }
-                    processLoadedContacts(res.contacts, res.users, 0);
-                }
-            });
+//            if (BuildVars.LOGS_ENABLED) {
+//                FileLog.d("load contacts from server");
+//            }
+//
+//            TLRPC.TL_contacts_getContacts req = new TLRPC.TL_contacts_getContacts();
+//            req.hash = hash;
+//            ConnectionsManager.getInstance(currentAccount).sendRequest(req, (response, error) -> {
+//                if (error == null) {
+//                    TLRPC.contacts_Contacts res = (TLRPC.contacts_Contacts) response;
+//                    if (hash != 0 && res instanceof TLRPC.TL_contacts_contactsNotModified) {
+//                        contactsLoaded = true;
+//                        if (!delayedContactsUpdate.isEmpty() && contactsBookLoaded) {
+//                            applyContactsUpdates(delayedContactsUpdate, null, null, null);
+//                            delayedContactsUpdate.clear();
+//                        }
+//                        UserConfig.getInstance(currentAccount).lastContactsSyncTime = (int) (System.currentTimeMillis() / 1000);
+//                        UserConfig.getInstance(currentAccount).saveConfig(false);
+//                        AndroidUtilities.runOnUIThread(() -> {
+//                            synchronized (loadContactsSync) {
+//                                loadingContacts = false;
+//                            }
+//                            NotificationCenter.getInstance(currentAccount).postNotificationName(NotificationCenter.contactsDidLoad);
+//                        });
+//                        if (BuildVars.LOGS_ENABLED) {
+//                            FileLog.d("load contacts don't change");
+//                        }
+//                        return;
+//                    } else {
+//                        UserConfig.getInstance(currentAccount).contactsSavedCount = res.saved_count;
+//                        UserConfig.getInstance(currentAccount).saveConfig(false);
+//                    }
+//                    processLoadedContacts(res.contacts, res.users, 0);
+//                }
+//            });
         }
     }
 

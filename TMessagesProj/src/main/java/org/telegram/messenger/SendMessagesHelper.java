@@ -1899,15 +1899,15 @@ public class SendMessagesHelper implements NotificationCenter.NotificationCenter
                 }
             }
 
-            TLRPC.TL_messages_getBotCallbackAnswer req = new TLRPC.TL_messages_getBotCallbackAnswer();
-            req.peer = MessagesController.getInstance(currentAccount).getInputPeer(lowerId);
-            req.msg_id = msgId;
-            req.game = false;
-            if (data != null) {
-                req.flags |= 1;
-                req.data = data;
-            }
-            ConnectionsManager.getInstance(currentAccount).sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> waitingForCallback.remove(key)), ConnectionsManager.RequestFlagFailOnServerErrors);
+//            TLRPC.TL_messages_getBotCallbackAnswer req = new TLRPC.TL_messages_getBotCallbackAnswer();
+//            req.peer = MessagesController.getInstance(currentAccount).getInputPeer(lowerId);
+//            req.msg_id = msgId;
+//            req.game = false;
+//            if (data != null) {
+//                req.flags |= 1;
+//                req.data = data;
+//            }
+//            ConnectionsManager.getInstance(currentAccount).sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> waitingForCallback.remove(key)), ConnectionsManager.RequestFlagFailOnServerErrors);
             MessagesController.getInstance(currentAccount).markDialogAsRead(dialogId, msgId, msgId, 0, false, 0, true);
         });
     }
@@ -1921,36 +1921,38 @@ public class SendMessagesHelper implements NotificationCenter.NotificationCenter
     }
 
     public int sendVote(final MessageObject messageObject, final TLRPC.TL_pollAnswer answer, final Runnable finishRunnable) {
-        if (messageObject == null) {
-            return 0;
-        }
-        final String key = "poll_" + messageObject.getPollId();
-        if (waitingForCallback.containsKey(key)) {
-            return 0;
-        }
-        waitingForVote.put(key, answer != null ? answer.option : new byte[0]);
-        TLRPC.TL_messages_sendVote req = new TLRPC.TL_messages_sendVote();
-        req.msg_id = messageObject.getId();
-        req.peer = MessagesController.getInstance(currentAccount).getInputPeer((int) messageObject.getDialogId());
-        if (answer != null) {
-            req.options.add(answer.option);
-        }
-        return ConnectionsManager.getInstance(currentAccount).sendRequest(req, (response, error) -> {
-            if (error == null) {
-                voteSendTime.put(messageObject.getPollId(), 0L);
-                MessagesController.getInstance(currentAccount).processUpdates((TLRPC.Updates) response, false);
-                voteSendTime.put(messageObject.getPollId(), SystemClock.uptimeMillis());
-            }
-            AndroidUtilities.runOnUIThread(new Runnable() {
-                @Override
-                public void run() {
-                    waitingForVote.remove(key);
-                    if (finishRunnable != null) {
-                        finishRunnable.run();
-                    }
-                }
-            });
-        });
+//        if (messageObject == null) {
+//            return 0;
+//        }
+//        final String key = "poll_" + messageObject.getPollId();
+//        if (waitingForCallback.containsKey(key)) {
+//            return 0;
+//        }
+//        waitingForVote.put(key, answer != null ? answer.option : new byte[0]);
+//        TLRPC.TL_messages_sendVote req = new TLRPC.TL_messages_sendVote();
+//        req.msg_id = messageObject.getId();
+//        req.peer = MessagesController.getInstance(currentAccount).getInputPeer((int) messageObject.getDialogId());
+//        if (answer != null) {
+//            req.options.add(answer.option);
+//        }
+//        return ConnectionsManager.getInstance(currentAccount).sendRequest(req, (response, error) -> {
+//            if (error == null) {
+//                voteSendTime.put(messageObject.getPollId(), 0L);
+//                MessagesController.getInstance(currentAccount).processUpdates((TLRPC.Updates) response, false);
+//                voteSendTime.put(messageObject.getPollId(), SystemClock.uptimeMillis());
+//            }
+//            AndroidUtilities.runOnUIThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    waitingForVote.remove(key);
+//                    if (finishRunnable != null) {
+//                        finishRunnable.run();
+//                    }
+//                }
+//            });
+//        });
+
+        return 0;
     }
 
     protected long getVoteSendTime(long pollId) {
@@ -2054,25 +2056,25 @@ public class SendMessagesHelper implements NotificationCenter.NotificationCenter
             MessagesStorage.getInstance(currentAccount).getBotCache(key, requestDelegate);
         } else {
             if (button instanceof TLRPC.TL_keyboardButtonBuy) {
-                if ((messageObject.messageOwner.media.flags & 4) == 0) {
-                    TLRPC.TL_payments_getPaymentForm req = new TLRPC.TL_payments_getPaymentForm();
-                    req.msg_id = messageObject.getId();
-                    ConnectionsManager.getInstance(currentAccount).sendRequest(req, requestDelegate, ConnectionsManager.RequestFlagFailOnServerErrors);
-                } else {
-                    TLRPC.TL_payments_getPaymentReceipt req = new TLRPC.TL_payments_getPaymentReceipt();
-                    req.msg_id = messageObject.messageOwner.media.receipt_msg_id;
-                    ConnectionsManager.getInstance(currentAccount).sendRequest(req, requestDelegate, ConnectionsManager.RequestFlagFailOnServerErrors);
-                }
+//                if ((messageObject.messageOwner.media.flags & 4) == 0) {
+//                    TLRPC.TL_payments_getPaymentForm req = new TLRPC.TL_payments_getPaymentForm();
+//                    req.msg_id = messageObject.getId();
+//                    ConnectionsManager.getInstance(currentAccount).sendRequest(req, requestDelegate, ConnectionsManager.RequestFlagFailOnServerErrors);
+//                } else {
+//                    TLRPC.TL_payments_getPaymentReceipt req = new TLRPC.TL_payments_getPaymentReceipt();
+//                    req.msg_id = messageObject.messageOwner.media.receipt_msg_id;
+//                    ConnectionsManager.getInstance(currentAccount).sendRequest(req, requestDelegate, ConnectionsManager.RequestFlagFailOnServerErrors);
+//                }
             } else {
-                TLRPC.TL_messages_getBotCallbackAnswer req = new TLRPC.TL_messages_getBotCallbackAnswer();
-                req.peer = MessagesController.getInstance(currentAccount).getInputPeer((int) messageObject.getDialogId());
-                req.msg_id = messageObject.getId();
-                req.game = button instanceof TLRPC.TL_keyboardButtonGame;
-                if (button.data != null) {
-                    req.flags |= 1;
-                    req.data = button.data;
-                }
-                ConnectionsManager.getInstance(currentAccount).sendRequest(req, requestDelegate, ConnectionsManager.RequestFlagFailOnServerErrors);
+//                TLRPC.TL_messages_getBotCallbackAnswer req = new TLRPC.TL_messages_getBotCallbackAnswer();
+//                req.peer = MessagesController.getInstance(currentAccount).getInputPeer((int) messageObject.getDialogId());
+//                req.msg_id = messageObject.getId();
+//                req.game = button instanceof TLRPC.TL_keyboardButtonGame;
+//                if (button.data != null) {
+//                    req.flags |= 1;
+//                    req.data = button.data;
+//                }
+//                ConnectionsManager.getInstance(currentAccount).sendRequest(req, requestDelegate, ConnectionsManager.RequestFlagFailOnServerErrors);
             }
         }
     }
