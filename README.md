@@ -1,4 +1,4 @@
-# PWRTelegram<br><a href="https://github.com/andrew-ld/PWRTelegram/releases"><img src="https://img.shields.io/github/release/andrew-ld/pwrtelegram.svg"/></a>
+# PWRTelegram<br><a href="https://github.com/andrew-ld/PWRTelegram/releases"><img src="https://img.shields.io/github/release/andrew-ld/pwrtelegram.svg"/></a> <img src="https://img.shields.io/github/downloads/andrew-ld/PWRTelegram/latest/total.svg"></img>
 
 [Telegram](https://telegram.org) is a messaging app with a focus on speed and security. It’s superfast, simple and free.
 This is an unofficial, FOSS-friendly fork of the original [Telegram App for Android](https://github.com/DrKLO/Telegram).
