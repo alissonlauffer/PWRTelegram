@@ -1,25 +1,13 @@
-[![Releases](https://img.shields.io/github/release/Telegram-FOSS-Team/Telegram-FOSS.svg)](https://github.com/Telegram-FOSS-Team/Telegram-FOSS/releases/latest)
-[![Discussions](https://img.shields.io/badge/Offtopics-Telegram-blue.svg)](https://t.me/tfossofftop)
-
-[![Donate](https://liberapay.com/assets/widgets/donate.svg)](https://liberapay.com/Telegram-FOSS/) or <img src="https://en.bitcoin.it/w/images/en/c/cb/BC_Logotype.png" alt="Bitcoin" height="25px" /> `1McafEgMvqAVujNLtcJumZHxp2UfaNByqs`
-
-# Telegram-FOSS
+# PWRTelegram (telegram mobile for login as bot)
 
 [Telegram](https://telegram.org) is a messaging app with a focus on speed and security. It’s superfast, simple and free.
-
 This is an unofficial, FOSS-friendly fork of the original [Telegram App for Android](https://github.com/DrKLO/Telegram).
-
-This version of Telegram is available on FDroid:
-
-[<img src="https://f-droid.org/badge/get-it-on.png"
-      alt="Get it on F-Droid"
-      height="80">](https://f-droid.org/app/org.telegram.messenger)
 
 ## Current Maintainers
 
 - [thermatk](https://github.com/thermatk)
 - [Bubu](https://github.com/Bubu)
-- you? :)
+- [andrew-ld](https://github.com/andrew-ld)
 
 ## Contributors
 
@@ -30,12 +18,6 @@ This version of Telegram is available on FDroid:
 - [vn971](https://github.com/vn971)
 - [theel0ja](https://github.com/theel0ja)
 - [AnXh3L0](https://github.com/AnXh3L0)
-
-## Discussion
-
-Join the [Telegram-FOSS Offtopics group](https://t.me/tfossofftop)
-
-You can also join `#telegram-foss:matrix.org` via [matrix](https://matrix.to/#/#telegram-foss:matrix.org) or `#telegram-foss` on freenode.
 
 ## Changes:
 
@@ -59,15 +41,6 @@ You can also join `#telegram-foss:matrix.org` via [matrix](https://matrix.to/#/#
 - Added the ability to parse locations from intents containing a `geo:<lat>,<lon>,<zoom>` string
 - Force static map previews from Telegram
 
-## Versioning
-
-This repository contains tags to make tracking versions easier.
-
-Versions are in form "v$UPSTREAM$RELEASE" where:
-
-* $UPSTREAM is the public, visible version of upstream.
-* $RELEASE is a letter ([a-z]) indicating minor releases between official versions (sometimes, upstream is updated without relating the changes to an specific version).
-
 ## API, Protocol documentation
 
 Telegram API manuals: https://core.telegram.org/api
@@ -75,17 +48,15 @@ Telegram API manuals: https://core.telegram.org/api
 MTproto protocol manuals: https://core.telegram.org/mtproto
 
 ## Building
-
 **NOTE: Building on Windows is, unfortunately, not supported.
 Consider using a Linux VM or dual booting.**
-![WindowsSupport](/tgfoss-build-under-win.gif?raw=true)
 
 **Important:**
 
 1. You need the Android NDK, Go(Golang) and [Ninja](https://ninja-build.org/) to build the apk.
 
 2. Don't forget to include the submodules when you clone:
-      - `git clone --recursive https://github.com/Telegram-FOSS-Team/Telegram-FOSS.git`
+      - `git clone --recursive https://github.com/andrew-ld/PWRTelegram.git`
 
 3. Build native FFmpeg and BoringSSL dependencies:
       - Go to the `TMessagesProj/jni` folder and execute the following (define the paths to your NDK and Ninja):
@@ -112,8 +83,3 @@ Consider using a Linux VM or dual booting.**
 The project can be built with Android Studio or from the command line with gradle:
 
 `./gradlew assembleAfatRelease`
-
-# DIGITAL RESISTANCE
-
-![DIGITALRESISTANCE](/DigitalResistance.jpg?raw=true "DIGITALRESISTANCE")
-
