@@ -1502,7 +1502,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             actionModeViews.add(actionMode.addItemWithWidth(copy, R.drawable.ic_ab_copy, AndroidUtilities.dp(54)));
             actionModeViews.add(actionMode.addItemWithWidth(delete, R.drawable.ic_ab_delete, AndroidUtilities.dp(54)));
         }
-        actionMode.getItem(edit).setVisibility(canEditMessagesCount == 1 && selectedMessagesIds[0].size() + selectedMessagesIds[1].size() == 1 ? View.VISIBLE : View.GONE);
+        actionMode.getItem(edit).setVisibility(selectedMessagesIds[0].size() + selectedMessagesIds[1].size() == 1 ? View.VISIBLE : View.GONE);
         actionMode.getItem(copy).setVisibility(selectedMessagesCanCopyIds[0].size() + selectedMessagesCanCopyIds[1].size() != 0 ? View.VISIBLE : View.GONE);
         actionMode.getItem(star).setVisibility(selectedMessagesCanStarIds[0].size() + selectedMessagesCanStarIds[1].size() != 0 ? View.VISIBLE : View.GONE);
         actionMode.getItem(delete).setVisibility(cantDeleteMessagesCount == 0 ? View.VISIBLE : View.GONE);
@@ -11607,28 +11607,32 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         updatePinnedMessageView(true);
         updateVisibleRows();
 
-        TLRPC.TL_messages_getMessageEditData req = new TLRPC.TL_messages_getMessageEditData();
-        req.peer = MessagesController.getInstance(currentAccount).getInputPeer((int) dialog_id);
-        req.id = messageObject.getId();
-        editingMessageObjectReqId = ConnectionsManager.getInstance(currentAccount).sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
-            editingMessageObjectReqId = 0;
-            if (response == null) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
-                builder.setTitle(LocaleController.getString("AppName", R.string.AppName));
-                builder.setMessage(LocaleController.getString("EditMessageError", R.string.EditMessageError));
-                builder.setPositiveButton(LocaleController.getString("OK", R.string.OK), null);
-                showDialog(builder.create());
+//        TLRPC.TL_messages_getMessageEditData req = new TLRPC.TL_messages_getMessageEditData();
+//        req.peer = MessagesController.getInstance(currentAccount).getInputPeer((int) dialog_id);
+//        req.id = messageObject.getId();
+//        editingMessageObjectReqId = ConnectionsManager.getInstance(currentAccount).sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
+//            editingMessageObjectReqId = 0;
+//            if (response == null) {
+//                AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
+//                builder.setTitle(LocaleController.getString("AppName", R.string.AppName));
+//                builder.setMessage(LocaleController.getString("EditMessageError", R.string.EditMessageError));
+//                builder.setPositiveButton(LocaleController.getString("OK", R.string.OK), null);
+//                showDialog(builder.create());
+//
+//                if (chatActivityEnterView != null) {
+//                    chatActivityEnterView.setEditingMessageObject(null, false);
+//                    hideFieldPanel();
+//                }
+//            } else {
+//                if (chatActivityEnterView != null) {
+//                    chatActivityEnterView.showEditDoneProgress(false, true);
+//                }
+//            }
+//        }));
 
-                if (chatActivityEnterView != null) {
-                    chatActivityEnterView.setEditingMessageObject(null, false);
-                    hideFieldPanel();
-                }
-            } else {
-                if (chatActivityEnterView != null) {
-                    chatActivityEnterView.showEditDoneProgress(false, true);
-                }
-            }
-        }));
+        if (chatActivityEnterView != null) {
+            chatActivityEnterView.showEditDoneProgress(false, true);
+        }
     }
 
     private String getMessageContent(MessageObject messageObject, int previousUid, boolean name) {
