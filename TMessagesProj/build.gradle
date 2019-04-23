@@ -26,15 +26,17 @@ dependencies {
     implementation 'com.googlecode.mp4parser:isoparser:1.0.6'
     implementation 'com.stripe:stripe-android:2.0.2'
     implementation 'org.osmdroid:osmdroid-android:6.1.0-SNAPSHOT'
+    implementation 'com.android.support:design:28.0.0'
 }
 
 //return an api key from a properties file.
-def getAppId(){
+static def getAppId(){
     Properties properties = new Properties()
     properties.load(new FileInputStream("./API_KEYS"))
     return properties.get("APP_ID")
 }
-def getAppHash(){
+
+static def getAppHash(){
     Properties properties = new Properties()
     properties.load(new FileInputStream("./API_KEYS"))
     return "\"" + properties.get("APP_HASH") + "\""
@@ -44,7 +46,7 @@ android {
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
 
-    defaultConfig.applicationId = "org.telegram.messenger"
+    defaultConfig.applicationId = "org.pwrtelegram.messenger"
 
     sourceSets.main.jniLibs.srcDirs = ['./jni/']
 
@@ -82,8 +84,8 @@ android {
         debugMultidex {
             initWith debug
             minifyEnabled false
-			multiDexEnabled true
-			dependencies{
+            multiDexEnabled true
+            dependencies{
                 implementation 'com.android.support:multidex:1.0.3'
             }
             manifestPlaceholders = [applicationClassName:"MultiDexApplicationLoader"]
@@ -114,7 +116,7 @@ android {
 
     sourceSets.debugMultidex {
         manifest.srcFile 'config/debug/AndroidManifest.xml'
-		java.srcDirs = ['src/multidex/java']
+        java.srcDirs = ['src/multidex/java']
     }
 
     sourceSets.HA {
@@ -254,14 +256,13 @@ android {
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 27
-        versionName "5.4.0"
+        targetSdkVersion 28
 
         //obtain your own keys at https://core.telegram.org/api/obtaining_api_id
         buildConfigField 'int', 'APP_ID', getAppId()
         buildConfigField 'String', 'APP_HASH', getAppHash()
 
-		vectorDrawables.generatedDensities = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi']
+        vectorDrawables.generatedDensities = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi']
 
         externalNativeBuild {
             ndkBuild {
