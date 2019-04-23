@@ -257,6 +257,7 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 28
+        versionName "5.4.0"
 
         //obtain your own keys at https://core.telegram.org/api/obtaining_api_id
         buildConfigField 'int', 'APP_ID', getAppId()
