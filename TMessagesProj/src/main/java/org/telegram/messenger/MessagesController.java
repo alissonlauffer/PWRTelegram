@@ -49,7 +49,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import android.support.v4.app.NotificationManagerCompat;
 
 public class MessagesController implements NotificationCenter.NotificationCenterDelegate {
-
     private ConcurrentHashMap<Integer, TLRPC.Chat> chats = new ConcurrentHashMap<>(100, 1.0f, 2);
     private ConcurrentHashMap<Integer, TLRPC.EncryptedChat> encryptedChats = new ConcurrentHashMap<>(10, 1.0f, 2);
     private ConcurrentHashMap<Integer, TLRPC.User> users = new ConcurrentHashMap<>(100, 1.0f, 2);
@@ -2521,8 +2520,10 @@ public class MessagesController implements NotificationCenter.NotificationCenter
                         dialogsUsersOnly.remove(dialog);
                         dialogsForward.remove(dialog);
                         dialogs_dict.remove(did);
+
                         dialogs_read_inbox_max.remove(did);
                         dialogs_read_outbox_max.remove(did);
+
                         nextDialogsCacheOffset--;
                     }
                 } else {
@@ -9981,17 +9982,20 @@ public class MessagesController implements NotificationCenter.NotificationCenter
         dialogsGroupsOnly.clear();
         dialogsUsersOnly.clear();
         dialogsForward.clear();
+
         unreadUnmutedDialogs = 0;
         boolean selfAdded = false;
         int selfId = UserConfig.getInstance(currentAccount).getClientUserId();
         Collections.sort(dialogs, dialogComparator);
         isLeftProxyChannel = true;
+
         if (proxyDialog != null && proxyDialog.id < 0) {
             TLRPC.Chat chat = getChat(-(int) proxyDialog.id);
             if (chat != null && !chat.left) {
                 isLeftProxyChannel = false;
             }
         }
+
         for (int a = 0; a < dialogs.size(); a++) {
             TLRPC.TL_dialog d = dialogs.get(a);
             int high_id = (int) (d.id >> 32);

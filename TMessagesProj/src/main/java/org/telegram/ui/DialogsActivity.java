@@ -40,6 +40,9 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ApplicationLoader;
@@ -110,7 +113,41 @@ import org.telegram.ui.Components.UndoView;
 import java.util.ArrayList;
 
 public class DialogsActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate {
-    
+
+    public enum TabsEnum {
+
+        ALL("All",0,R.drawable.tab_all),
+        PEOPLE("People",4,R.drawable.tab_people),
+        CHANNELS("Channels",5,R.drawable.tab_channels),
+        GROUPS("Groups",6,R.drawable.tab_groups);
+
+        private String mTitle;
+        private int mType;
+        private int mDrawableId;
+
+        TabsEnum(String title, int type, int drawableId) {
+            mTitle = title;
+            mType = type;
+            mDrawableId = drawableId;
+        }
+
+        public String getTitle() {
+            return mTitle;
+        }
+
+        public int getType() {
+            return mType;
+        }
+
+        public int getDrawableId() {
+            return mDrawableId;
+        }
+    }
+
+
+    private int tabsHeight = 56;
+    private TabLayout tabLayout;
+
     private RecyclerListView listView;
     private LinearLayoutManager layoutManager;
     private DialogsAdapter dialogsAdapter;
@@ -177,6 +214,20 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
 
     public DialogsActivity(Bundle args) {
         super(args);
+    }
+
+    private void hideTabs(boolean hide) {
+        if(hide) {
+            tabLayout.setVisibility(View.GONE);
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) listView.getLayoutParams();
+            params.setMargins(0, 0, 0, 0);
+            listView.setLayoutParams(params);
+        } else {
+            tabLayout.setVisibility(View.VISIBLE);
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) listView.getLayoutParams();
+            params.setMargins(0, AndroidUtilities.dp(tabsHeight), 0, 0);
+            listView.setLayoutParams(params);
+        }
     }
 
     @Override
@@ -308,6 +359,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                         progressView.setVisibility(View.GONE);
                     }
                     if (!onlySelect) {
+                        hideTabs(true);
                         floatingButtonContainer.setVisibility(View.GONE);
                         //unreadFloatingButtonContainer.setVisibility(View.GONE);
                     }
@@ -338,6 +390,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                     listView.setEmptyView(progressView);
                     searchEmptyView.setVisibility(View.GONE);
                     if (!onlySelect) {
+                        hideTabs(false);
                         floatingButtonContainer.setVisibility(View.VISIBLE);
                         /*if (currentUnreadCount != 0) {
                             unreadFloatingButtonContainer.setVisibility(View.VISIBLE);
@@ -599,8 +652,46 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 notifyHeightChanged();
             }
         };
+
         fragmentView = contentView;
-        
+
+        tabLayout = new TabLayout(context);
+        tabLayout.setBackgroundColor(Theme.getColor(Theme.key_actionBarDefault));
+        int fontColor = Theme.getColor(Theme.key_actionBarDefaultTitle);
+        tabLayout.setSelectedTabIndicatorColor(fontColor);
+        tabLayout.setSelectedTabIndicatorHeight(AndroidUtilities.dp(2));
+        tabLayout.setTabTextColors(fontColor,fontColor);
+
+        for (TabsEnum tab : TabsEnum.values()) {
+            //tabLayout.addTab(tabLayout.newTab().setText(tab.getTitle()));
+            Drawable normalDrawable = ContextCompat.getDrawable(context, tab.getDrawableId());
+            Drawable wrapDrawable = DrawableCompat.wrap(normalDrawable);
+            DrawableCompat.setTint(wrapDrawable, fontColor);
+            tabLayout.addTab(tabLayout.newTab().setIcon(wrapDrawable));
+        }
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                TabsEnum tabsEnum = TabsEnum.values()[tab.getPosition()];
+                dialogsType = tabsEnum.getType();
+                dialogsAdapter.setDialogsType(dialogsType);
+                dialogsAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        contentView.addView(tabLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, tabsHeight, Gravity.TOP));
+
+
         listView = new RecyclerListView(context);
         listView.setVerticalScrollBarEnabled(true);
         listView.setItemAnimator(null);
@@ -623,7 +714,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         listView.setLayoutManager(layoutManager);
         listView.setVerticalScrollbarPosition(LocaleController.isRTL ? RecyclerListView.SCROLLBAR_POSITION_LEFT : RecyclerListView.SCROLLBAR_POSITION_RIGHT);
-        contentView.addView(listView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT));
+        contentView.addView(listView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT, Gravity.TOP | Gravity.START,0,tabsHeight,0,0));
         listView.setOnItemClickListener((view, position) -> {
             if (listView == null || listView.getAdapter() == null || getParentActivity() == null) {
                 return;

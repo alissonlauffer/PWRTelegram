@@ -65,6 +65,10 @@ public class DialogsAdapter extends RecyclerListView.SelectionAdapter {
         }
     }
 
+    public void setDialogsType(int dialogsType) {
+        this.dialogsType = dialogsType;
+    }
+
     public void setOpenedDialogId(long id) {
         openedDialogId = id;
     }
