@@ -3477,6 +3477,7 @@ public class MessagesController implements NotificationCenter.NotificationCenter
     private SparseIntArray currentEndPts = new SparseIntArray();
     private SparseIntArray currentStartPts = new SparseIntArray();
     private SparseIntArray currentRecursion = new SparseIntArray();
+    public final static int maxDepth = 25;
 
     public int calculateStartPts(int pts) {
         if (pts > 2000) {
@@ -3494,7 +3495,6 @@ public class MessagesController implements NotificationCenter.NotificationCenter
 
         currentStartPts.put(id, newStart);
         currentEndPts.put(id, newEnd);
-        currentRecursion.delete(id);
         alreadyGettingDifference.delete(id);
     }
 
@@ -3511,29 +3511,19 @@ public class MessagesController implements NotificationCenter.NotificationCenter
         return false;
     }
 
-    public boolean recursionGuard(int id) {
-        int n = currentRecursion.get(id);
-        return n > 25;
-    }
-
-    public void recursionIncrement(int id) {
-        int n = currentRecursion.get(id, 0);
-        currentRecursion.put(id, n + 1);
-    }
-
     public void fetchFromDifference(TLRPC.InputChannel peer, long dialog_id) {
         int id = peer.channel_id;
         int start = currentStartPts.get(id, 0);
         int end = currentEndPts.get(id, 0);
 
-        fetchFromDifference(peer, dialog_id, true, false, start, end, null);
+        fetchFromDifference(peer, dialog_id, true, false, start, end, null, 0);
     }
 
     public void storeDifference(long dialog_id, TLRPC.TL_messages_messages messages) {
         MessagesStorage.getInstance(currentAccount).putMessages(messages, dialog_id, 0, Integer.MAX_VALUE, true);
     }
 
-    public void fetchFromDifference(TLRPC.InputChannel peer, long dialog_id, boolean first, boolean slice, int start, int end, TLRPC.TL_messages_messages messages) {
+    public void fetchFromDifference(TLRPC.InputChannel peer, long dialog_id, boolean first, boolean slice, int start, int end, TLRPC.TL_messages_messages messages, int depth) {
         // critical section
 
         int id = peer.channel_id;
@@ -3542,14 +3532,18 @@ public class MessagesController implements NotificationCenter.NotificationCenter
             return;
         }
 
-        if (recursionGuard(id)) {
+        if (depth > maxDepth) {
             storeDifference(id, messages);
             stopFetch(id, end);
             return;
         }
 
+        if (start == 1 && end == 1) {
+            return; // fetch done
+        }
+
         if (!first) {
-            recursionIncrement(id);
+            depth++;
         }
 
         // req
@@ -3579,6 +3573,7 @@ public class MessagesController implements NotificationCenter.NotificationCenter
         }
 
         final TLRPC.TL_messages_messages finalMessages = messages;
+        final int finalDepth = depth;
 
         // res
 
@@ -3596,7 +3591,7 @@ public class MessagesController implements NotificationCenter.NotificationCenter
                             int newEnd = calculateStartPts(end);
                             int newStart = calculateStartPts(newEnd);
 
-                            fetchFromDifference(peer, dialog_id, false, true, newStart, newEnd, finalMessages);
+                            fetchFromDifference(peer, dialog_id, false, true, newStart, newEnd, finalMessages, finalDepth);
                             return;
                         }
 
@@ -3605,7 +3600,7 @@ public class MessagesController implements NotificationCenter.NotificationCenter
                         return;
                     }
 
-                    fetchFromDifference(peer, dialog_id, false, true, res.pts, end, finalMessages);
+                    fetchFromDifference(peer, dialog_id, false, true, res.pts, end, finalMessages, finalDepth);
                 }
 
                 if (response instanceof TLRPC.TL_updates_channelDifferenceEmpty) {
@@ -3618,7 +3613,7 @@ public class MessagesController implements NotificationCenter.NotificationCenter
                         newStart = calculateStartPts(res.pts);
                         newEnd = res.pts;
 
-                        fetchFromDifference(peer, dialog_id, false, true, newStart, newEnd, finalMessages);
+                        fetchFromDifference(peer, dialog_id, false, true, newStart, newEnd, finalMessages, finalDepth);
                     } else {
                         storeDifference(dialog_id, finalMessages);
                         stopFetch(id, end);
