@@ -3476,6 +3476,7 @@ public class MessagesController implements NotificationCenter.NotificationCenter
     private SparseBooleanArray alreadyGettingDifference = new SparseBooleanArray();
     private SparseIntArray currentEndPts = new SparseIntArray();
     private SparseIntArray currentStartPts = new SparseIntArray();
+    private SparseIntArray currentRecursion = new SparseIntArray();
 
     public int calculateStartPts(int pts) {
         if (pts > 2000) {
@@ -3493,7 +3494,8 @@ public class MessagesController implements NotificationCenter.NotificationCenter
 
         currentStartPts.put(id, newStart);
         currentEndPts.put(id, newEnd);
-        alreadyGettingDifference.put(id, false);
+        currentRecursion.delete(id);
+        alreadyGettingDifference.delete(id);
     }
 
     public boolean alreadyFetching(boolean first, boolean slice, int id) {
@@ -3503,9 +3505,20 @@ public class MessagesController implements NotificationCenter.NotificationCenter
 
         if (first) {
             alreadyGettingDifference.put(id, true);
+            currentRecursion.put(id, 0);
         }
 
         return false;
+    }
+
+    public boolean recursionGuard(int id) {
+        int n = currentRecursion.get(id);
+        return n > 25;
+    }
+
+    public void recursionIncrement(int id) {
+        int n = currentRecursion.get(id, 0);
+        currentRecursion.put(id, n + 1);
     }
 
     public void fetchFromDifference(TLRPC.InputChannel peer, long dialog_id) {
@@ -3527,6 +3540,16 @@ public class MessagesController implements NotificationCenter.NotificationCenter
 
         if (alreadyFetching(first, slice, id)) {
             return;
+        }
+
+        if (recursionGuard(id)) {
+            storeDifference(id, messages);
+            stopFetch(id, end);
+            return;
+        }
+
+        if (!first) {
+            recursionIncrement(id);
         }
 
         // req
@@ -3555,7 +3578,7 @@ public class MessagesController implements NotificationCenter.NotificationCenter
             messages.messages = new ArrayList<>();
         }
 
-        TLRPC.TL_messages_messages finalMessages = messages;
+        final TLRPC.TL_messages_messages finalMessages = messages;
 
         // res
 
