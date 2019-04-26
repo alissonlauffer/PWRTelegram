@@ -3539,6 +3539,10 @@ public class MessagesController implements NotificationCenter.NotificationCenter
         }
 
         if (start == 1 && end == 1) {
+            if (messages != null) {
+                storeDifference(id, messages);
+            }
+
             return; // fetch done
         }
 
