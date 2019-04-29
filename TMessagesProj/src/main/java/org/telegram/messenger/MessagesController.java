@@ -3520,6 +3520,7 @@ public class MessagesController implements NotificationCenter.NotificationCenter
     }
 
     public void storeDifference(long dialog_id, TLRPC.TL_messages_messages messages) {
+        Collections.reverse(messages.messages);
         MessagesStorage.getInstance(currentAccount).putMessages(messages, dialog_id, 0, Integer.MAX_VALUE, true);
     }
 
