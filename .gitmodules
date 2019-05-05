@@ -10,3 +10,6 @@
 [submodule "TMessagesProj/jni/boringssl"]
 	path = TMessagesProj/jni/boringssl
 	url = https://github.com/google/boringssl
+[submodule "TMessagesProj/jni/libyuv"]
+	path = TMessagesProj/jni/libyuv
+	url = https://chromium.googlesource.com/libyuv/libyuv
