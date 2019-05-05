@@ -29,6 +29,7 @@ This is an unofficial, FOSS-friendly fork of the original [Telegram App for Andr
 - **SECURITY:** Old BoringSSL prebuilts are replaced with the newest upstream source code built at compile time
 - **SECURITY:** Old FFmpeg prebuilts are replaced with the newest upstream source code built at compile time
 - **SECURITY:** Bundled libWebP is updated
+- **SECURITY:** Upstream sqlite3 / libyuv
 
 *Removal of non-FOSS, untrustworthy or suspicious binaries or source code and their functionality:*
 - Google Vision face detection and barcode scanning (Passport)
@@ -72,6 +73,7 @@ Consider using a Linux VM or dual booting.**
       ./build_ffmpeg_clang.sh
       ./patch_boringssl.sh
       ./build_boringssl.sh
+      ./build_sqlite3.sh
       ```
 
 4. If you want to publish a modified version of Telegram:

@@ -13,3 +13,6 @@
 [submodule "TMessagesProj/jni/libyuv"]
 	path = TMessagesProj/jni/libyuv
 	url = https://chromium.googlesource.com/libyuv/libyuv
+[submodule "TMessagesProj/jni/sqlite"]
+	path = TMessagesProj/jni/sqlite
+	url = https://github.com/sqlite/sqlite
