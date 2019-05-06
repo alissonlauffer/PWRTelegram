@@ -407,20 +407,23 @@ LOCAL_SRC_FILES     += \
 ./opus/celt/arm/arm_celt_map.c
 
 LOCAL_SRC_FILES     += \
-./opus/ogg/bitwise.c \
-./opus/ogg/framing.c \
-./opus/opusfile/info.c \
-./opus/opusfile/internal.c \
-./opus/opusfile/opusfile.c \
-./opus/opusfile/stream.c
+./ogg/src/bitwise.c \
+./ogg/src/framing.c \
+./opusfile/src/info.c \
+./opusfile/src/internal.c \
+./opusfile/src/opusfile.c \
+./opusfile/src/stream.c
 
 LOCAL_C_INCLUDES    := \
 $(LOCAL_PATH)/opus/include \
 $(LOCAL_PATH)/opus/silk \
 $(LOCAL_PATH)/opus/silk/fixed \
 $(LOCAL_PATH)/opus/celt \
-$(LOCAL_PATH)/opus/ \
-$(LOCAL_PATH)/opus/opusfile \
+$(LOCAL_PATH)/ogg/include \
+$(LOCAL_PATH)/ogg \
+$(LOCAL_PATH)/opus \
+$(LOCAL_PATH)/opusfile/include \
+$(LOCAL_PATH)/opusfile \
 $(LOCAL_PATH)/libyuv/include \
 $(LOCAL_PATH)/boringssl/include \
 $(FFMPEG_INCLUDE_PATH) \
