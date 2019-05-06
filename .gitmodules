@@ -16,3 +16,12 @@
 [submodule "TMessagesProj/jni/sqlite"]
 	path = TMessagesProj/jni/sqlite
 	url = https://github.com/sqlite/sqlite
+[submodule "TMessagesProj/jni/opus"]
+	path = TMessagesProj/jni/opus
+	url = https://github.com/xiph/opus
+[submodule "TMessagesProj/jni/ogg"]
+	path = TMessagesProj/jni/ogg
+	url = https://github.com/xiph/ogg
+[submodule "TMessagesProj/jni/opusfile"]
+	path = TMessagesProj/jni/opusfile
+	url = https://github.com/xiph/opusfile

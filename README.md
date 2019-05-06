@@ -29,7 +29,7 @@ This is an unofficial, FOSS-friendly fork of the original [Telegram App for Andr
 - **SECURITY:** Old BoringSSL prebuilts are replaced with the newest upstream source code built at compile time
 - **SECURITY:** Old FFmpeg prebuilts are replaced with the newest upstream source code built at compile time
 - **SECURITY:** Bundled libWebP is updated
-- **SECURITY:** Upstream sqlite3 / libyuv
+- **SECURITY:** Upstream sqlite3 / libyuv / opus
 
 *Removal of non-FOSS, untrustworthy or suspicious binaries or source code and their functionality:*
 - Google Vision face detection and barcode scanning (Passport)
@@ -42,7 +42,7 @@ This is an unofficial, FOSS-friendly fork of the original [Telegram App for Andr
  - completely removed all unsupported background calls for bot
  - read groups / channels history using getChannelDifference
  - download all old private messages using getDifference with pts = 0
- - search public chats using resolvUsername
+ - search public chats using resolveUsername
 
 *Other:*
 - Allow to set a proxy before login
