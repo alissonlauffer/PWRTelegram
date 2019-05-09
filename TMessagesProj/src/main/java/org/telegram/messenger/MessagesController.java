@@ -3476,7 +3476,6 @@ public class MessagesController implements NotificationCenter.NotificationCenter
     private SparseBooleanArray alreadyGettingDifference = new SparseBooleanArray();
     private SparseIntArray currentEndPts = new SparseIntArray();
     private SparseIntArray currentStartPts = new SparseIntArray();
-    private SparseIntArray currentRecursion = new SparseIntArray();
     public final static int maxDepth = 25;
 
     public int calculateStartPts(int pts) {
@@ -3505,7 +3504,6 @@ public class MessagesController implements NotificationCenter.NotificationCenter
 
         if (first) {
             alreadyGettingDifference.put(id, true);
-            currentRecursion.put(id, 0);
         }
 
         return false;
@@ -3609,11 +3607,8 @@ public class MessagesController implements NotificationCenter.NotificationCenter
                     TLRPC.TL_updates_channelDifferenceEmpty res = (TLRPC.TL_updates_channelDifferenceEmpty) response;
 
                     if (end == 0 && start == 0) {
-                        int newStart;
-                        int newEnd;
-
-                        newStart = calculateStartPts(res.pts);
-                        newEnd = res.pts;
+                        int newStart = calculateStartPts(res.pts);
+                        int newEnd = res.pts;
 
                         fetchFromDifference(peer, dialog_id, false, true, newStart, newEnd, finalMessages, finalDepth);
                     } else {
