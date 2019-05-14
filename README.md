@@ -59,12 +59,12 @@ MTproto protocol manuals: https://core.telegram.org/mtproto
 **NOTE: Building on Windows is, unfortunately, not supported.
 Consider using a Linux VM or dual booting.**
 
-1. You need the Android NDK, Go(Golang) and [Ninja](https://ninja-build.org/) to build the apk.
+1. You need the Android NDK (r19c), Go(Golang) and [Ninja](https://ninja-build.org/) to build the apk.
 
 2. Don't forget to include the submodules when you clone:
       - `git clone --recursive https://github.com/andrew-ld/PWRTelegram.git`
 
-3. Build native FFmpeg and BoringSSL dependencies:
+3. Build native dependencies:
       - Go to the `TMessagesProj/jni` folder and execute the following (define the paths to your NDK and Ninja):
 
       ```
