@@ -3579,6 +3579,16 @@ public class MessagesController implements NotificationCenter.NotificationCenter
 
         ConnectionsManager.getInstance(currentAccount).sendRequest(req, (response, error) -> {
             if (response != null) {
+                if (response instanceof TLRPC.TL_updates_channelDifferenceTooLong) {
+                    TLRPC.TL_updates_channelDifferenceTooLong res = (TLRPC.TL_updates_channelDifferenceTooLong) response;
+
+                    finalMessages.messages.addAll(res.new_messages);
+                    finalMessages.chats.addAll(res.chats);
+                    finalMessages.users.addAll(res.users);
+
+                    fetchFromDifference(peer, dialog_id, false, true, res.pts, end, finalMessages, finalDepth);
+                }
+
                 if (response instanceof TLRPC.TL_updates_channelDifference) {
                     TLRPC.TL_updates_channelDifference res = (TLRPC.TL_updates_channelDifference) response;
 
@@ -3616,6 +3626,11 @@ public class MessagesController implements NotificationCenter.NotificationCenter
                         stopFetch(id, end);
                     }
                 }
+            }
+
+            if (error != null) {
+                storeDifference(dialog_id, finalMessages);
+                stopFetch(id, end);
             }
         });
     }
