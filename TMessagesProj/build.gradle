@@ -1,0 +1,279 @@
+apply plugin: 'com.android.application'
+
+repositories {
+    mavenCentral()
+    google()
+    jcenter()
+}
+
+configurations {
+    compile.exclude module: 'support-v4'
+}
+
+dependencies {
+    implementation 'androidx.core:core:1.1.0-beta01'
+    implementation 'androidx.viewpager:viewpager:1.0.0'
+    implementation 'androidx.palette:palette:1.0.0'
+    implementation 'androidx.exifinterface:exifinterface:1.1.0-beta01'
+
+    compileOnly 'org.checkerframework:checker-qual:2.5.2'
+    compileOnly 'org.checkerframework:checker-compat-qual:2.5.0'
+    implementation 'com.googlecode.mp4parser:isoparser:1.0.6'
+    implementation 'com.stripe:stripe-android:2.0.2'
+    implementation 'org.osmdroid:osmdroid-android:6.1.0'
+}
+
+//return an api key from a properties file.
+def getAppId(){
+    Properties properties = new Properties()
+    properties.load(new FileInputStream("./API_KEYS"))
+    return properties.get("APP_ID")
+}
+def getAppHash(){
+    Properties properties = new Properties()
+    properties.load(new FileInputStream("./API_KEYS"))
+    return "\"" + properties.get("APP_HASH") + "\""
+}
+
+android {
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
+
+    defaultConfig.applicationId = "org.telegram.messenger"
+
+    sourceSets.main.jniLibs.srcDirs = ['./jni/']
+
+    externalNativeBuild {
+        ndkBuild {
+            path "jni/Android.mk"
+        }
+    }
+
+    lintOptions {
+        disable 'MissingTranslation'
+        disable 'ExtraTranslation'
+    }
+
+    dexOptions {
+        jumboMode = true
+        // Telegram-FOSS
+        javaMaxHeapSize "2g"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+            jniDebuggable true
+            applicationIdSuffix ".beta"
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debugMultidex {
+            initWith debug
+            minifyEnabled false
+            multiDexEnabled true
+            dependencies {
+                implementation 'com.android.support:multidex:1.0.3'
+            }
+            manifestPlaceholders = [applicationClassName: "MultiDexApplicationLoader"]
+        }
+
+        HA {
+            debuggable false
+            jniDebuggable false
+            applicationIdSuffix ".beta"
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        release {
+            debuggable false
+            jniDebuggable false
+            minifyEnabled true
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets.debug {
+        manifest.srcFile 'config/debug/AndroidManifest.xml'
+    }
+
+    sourceSets.debugMultidex {
+        manifest.srcFile 'config/debug/AndroidManifest.xml'
+        java.srcDirs = ['src/multidex/java']
+    }
+
+    sourceSets.HA {
+        manifest.srcFile 'config/debug/AndroidManifest.xml'
+    }
+
+    sourceSets.release {
+        manifest.srcFile 'config/release/AndroidManifest.xml'
+    }
+
+    flavorDimensions "minApi"
+
+    productFlavors {
+        armv7 {
+            ndk {
+                abiFilters "armeabi-v7a"
+            }
+            ext {
+                abiVersionCode = 1
+            }
+        }
+        x86 {
+            ndk {
+                abiFilters "x86"
+            }
+            ext {
+                abiVersionCode = 2
+            }
+        }
+        armv7_SDK23 {
+            ndk {
+                abiFilters "armeabi-v7a"
+            }
+            sourceSets.debug {
+                manifest.srcFile 'config/debug/AndroidManifest_SDK23.xml'
+            }
+            sourceSets.release {
+                manifest.srcFile 'config/release/AndroidManifest_SDK23.xml'
+            }
+            minSdkVersion 23
+            ext {
+                abiVersionCode = 3
+            }
+        }
+        x86_SDK23 {
+            ndk {
+                abiFilters "x86"
+            }
+            sourceSets.debug {
+                manifest.srcFile 'config/debug/AndroidManifest_SDK23.xml'
+            }
+            sourceSets.release {
+                manifest.srcFile 'config/release/AndroidManifest_SDK23.xml'
+            }
+            minSdkVersion 23
+            ext {
+                abiVersionCode = 4
+            }
+        }
+        arm64 {
+            ndk {
+                abiFilters "arm64-v8a"
+            }
+            ext {
+                abiVersionCode = 5
+            }
+        }
+        x64 {
+            ndk {
+                abiFilters "x86_64"
+            }
+            ext {
+                abiVersionCode = 6
+            }
+        }
+        arm64_SDK23 {
+            ndk {
+                abiFilters "arm64-v8a"
+            }
+            sourceSets.debug {
+                manifest.srcFile 'config/debug/AndroidManifest_SDK23.xml'
+            }
+            sourceSets.release {
+                manifest.srcFile 'config/release/AndroidManifest_SDK23.xml'
+            }
+            minSdkVersion 23
+            ext {
+                abiVersionCode = 7
+            }
+        }
+        x64_SDK23 {
+            ndk {
+                abiFilters "x86_64"
+            }
+            sourceSets.debug {
+                manifest.srcFile 'config/debug/AndroidManifest_SDK23.xml'
+            }
+            sourceSets.release {
+                manifest.srcFile 'config/release/AndroidManifest_SDK23.xml'
+            }
+            minSdkVersion 23
+            ext {
+                abiVersionCode = 8
+            }
+        }
+        afat {
+            sourceSets.debug {
+                manifest.srcFile 'config/debug/AndroidManifest_SDK23.xml'
+            }
+            sourceSets.release {
+                manifest.srcFile 'config/release/AndroidManifest_SDK23.xml'
+            }
+            ext {
+                abiVersionCode = 0
+            }
+        }
+    }
+
+    defaultConfig.versionCode = 1684
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            output.getProcessManifestProvider().get().doLast {
+                def abiVersion = variant.productFlavors.get(0).abiVersionCode
+
+                def outputDir = manifestOutputDirectory
+                File directory
+                if (outputDir instanceof File) {
+                    directory = outputDir
+                } else {
+                    directory = outputDir.get().asFile
+                }
+
+                String manifestPath = directory.toString() + "/AndroidManifest.xml"
+                def manifestContent = file(manifestPath).getText()
+
+                manifestContent = manifestContent.replace(String.format('android:versionCode="%d"', defaultConfig.versionCode), String.format('android:versionCode="%s"', defaultConfig.versionCode * 10 + abiVersion))
+                file(manifestPath).write(manifestContent)
+            }
+        }
+    }
+
+    variantFilter { variant ->
+        def names = variant.flavors*.name
+        if (variant.buildType.name != "release" && !names.contains("afat")) {
+            setIgnore(true)
+        }
+    }
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 27
+        versionName "5.10.0"
+
+        vectorDrawables.generatedDensities = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi']
+        //obtain your own keys at https://core.telegram.org/api/obtaining_api_id
+        buildConfigField 'int', 'APP_ID', getAppId()
+        buildConfigField 'String', 'APP_HASH', getAppHash()
+
+        externalNativeBuild {
+            ndkBuild {
+                arguments "NDK_APPLICATION_MK:=jni/Application.mk", "APP_PLATFORM:=android-16", "-j8"
+                abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+            }
+        }
+
+        manifestPlaceholders = [applicationClassName: "ApplicationLoader"]
+    }
+}

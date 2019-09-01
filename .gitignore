@@ -1,0 +1,15 @@
+.idea/
+.gradle/
+build/
+obj/
+*.iml
+local.properties
+*.keystore
+gradle.properties
+API_KEYS
+*.hprof
+TMessagesProj/.externalNativeBuild/
+TMessagesProj/libs
+TMessagesProj/jni/ffmpeg/android/
+TMessagesProj/jni/ffmpeg/build/
+TMessagesProj/jni/boringssl/build/
