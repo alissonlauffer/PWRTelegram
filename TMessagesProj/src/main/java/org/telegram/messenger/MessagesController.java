@@ -447,33 +447,33 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     private void loadAppConfig() {
-        if (loadingAppConfig) {
-            return;
-        }
-        loadingAppConfig = true;
-        TLRPC.TL_help_getAppConfig req = new TLRPC.TL_help_getAppConfig();
-        getConnectionsManager().sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
-            if (response instanceof TLRPC.TL_jsonObject) {
-                SharedPreferences.Editor editor = mainPreferences.edit();
-                boolean changed = false;
-                TLRPC.TL_jsonObject object = (TLRPC.TL_jsonObject) response;
-                for (int a = 0, N = object.value.size(); a < N; a++) {
-                    TLRPC.TL_jsonObjectValue value = object.value.get(a);
-                    if ("emojies_animated_zoom".equals(value.key) && value.value instanceof TLRPC.TL_jsonNumber) {
-                        TLRPC.TL_jsonNumber number = (TLRPC.TL_jsonNumber) value.value;
-                        if (animatedEmojisZoom != number.value) {
-                            animatedEmojisZoom = (float) number.value;
-                            editor.putFloat("animatedEmojisZoom", animatedEmojisZoom);
-                            changed = true;
-                        }
-                    }
-                }
-                if (changed) {
-                    editor.commit();
-                }
-            }
-            loadingAppConfig = false;
-        }));
+//        if (loadingAppConfig) {
+//            return;
+//        }
+//        loadingAppConfig = true;
+//        TLRPC.TL_help_getAppConfig req = new TLRPC.TL_help_getAppConfig();
+//        getConnectionsManager().sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
+//            if (response instanceof TLRPC.TL_jsonObject) {
+//                SharedPreferences.Editor editor = mainPreferences.edit();
+//                boolean changed = false;
+//                TLRPC.TL_jsonObject object = (TLRPC.TL_jsonObject) response;
+//                for (int a = 0, N = object.value.size(); a < N; a++) {
+//                    TLRPC.TL_jsonObjectValue value = object.value.get(a);
+//                    if ("emojies_animated_zoom".equals(value.key) && value.value instanceof TLRPC.TL_jsonNumber) {
+//                        TLRPC.TL_jsonNumber number = (TLRPC.TL_jsonNumber) value.value;
+//                        if (animatedEmojisZoom != number.value) {
+//                            animatedEmojisZoom = (float) number.value;
+//                            editor.putFloat("animatedEmojisZoom", animatedEmojisZoom);
+//                            changed = true;
+//                        }
+//                    }
+//                }
+//                if (changed) {
+//                    editor.commit();
+//                }
+//            }
+//            loadingAppConfig = false;
+//        }));
     }
 
     public void updateConfig(final TLRPC.TL_config config) {
