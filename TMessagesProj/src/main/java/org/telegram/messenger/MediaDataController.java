@@ -2483,170 +2483,170 @@ public class MediaDataController extends BaseController {
     }
 
     public void loadHints(boolean cache) {
-        if (loading || !getUserConfig().suggestContacts) {
-            return;
-        }
-        if (cache) {
-            if (loaded) {
-                return;
-            }
-            loading = true;
-            getMessagesStorage().getStorageQueue().postRunnable(() -> {
-                final ArrayList<TLRPC.TL_topPeer> hintsNew = new ArrayList<>();
-                final ArrayList<TLRPC.TL_topPeer> inlineBotsNew = new ArrayList<>();
-                final ArrayList<TLRPC.User> users = new ArrayList<>();
-                final ArrayList<TLRPC.Chat> chats = new ArrayList<>();
-                int selfUserId = getUserConfig().getClientUserId();
-                try {
-                    ArrayList<Integer> usersToLoad = new ArrayList<>();
-                    ArrayList<Integer> chatsToLoad = new ArrayList<>();
-                    SQLiteCursor cursor = getMessagesStorage().getDatabase().queryFinalized("SELECT did, type, rating FROM chat_hints WHERE 1 ORDER BY rating DESC");
-                    while (cursor.next()) {
-                        int did = cursor.intValue(0);
-                        if (did == selfUserId) {
-                            continue;
-                        }
-                        int type = cursor.intValue(1);
-                        TLRPC.TL_topPeer peer = new TLRPC.TL_topPeer();
-                        peer.rating = cursor.doubleValue(2);
-                        if (did > 0) {
-                            peer.peer = new TLRPC.TL_peerUser();
-                            peer.peer.user_id = did;
-                            usersToLoad.add(did);
-                        } else {
-                            peer.peer = new TLRPC.TL_peerChat();
-                            peer.peer.chat_id = -did;
-                            chatsToLoad.add(-did);
-                        }
-                        if (type == 0) {
-                            hintsNew.add(peer);
-                        } else if (type == 1) {
-                            inlineBotsNew.add(peer);
-                        }
-                    }
-                    cursor.dispose();
-                    if (!usersToLoad.isEmpty()) {
-                        getMessagesStorage().getUsersInternal(TextUtils.join(",", usersToLoad), users);
-                    }
-
-                    if (!chatsToLoad.isEmpty()) {
-                        getMessagesStorage().getChatsInternal(TextUtils.join(",", chatsToLoad), chats);
-                    }
-                    AndroidUtilities.runOnUIThread(() -> {
-                        getMessagesController().putUsers(users, true);
-                        getMessagesController().putChats(chats, true);
-                        loading = false;
-                        loaded = true;
-                        hints = hintsNew;
-                        inlineBots = inlineBotsNew;
-                        buildShortcuts();
-                        getNotificationCenter().postNotificationName(NotificationCenter.reloadHints);
-                        getNotificationCenter().postNotificationName(NotificationCenter.reloadInlineHints);
-                        if (Math.abs(getUserConfig().lastHintsSyncTime - (int) (System.currentTimeMillis() / 1000)) >= 24 * 60 * 60) {
-                            loadHints(false);
-                        }
-                    });
-                } catch (Exception e) {
-                    FileLog.e(e);
-                }
-            });
-            loaded = true;
-        } else {
-            loading = true;
-            TLRPC.TL_contacts_getTopPeers req = new TLRPC.TL_contacts_getTopPeers();
-            req.hash = 0;
-            req.bots_pm = false;
-            req.correspondents = true;
-            req.groups = false;
-            req.channels = false;
-            req.bots_inline = true;
-            req.offset = 0;
-            req.limit = 20;
-            getConnectionsManager().sendRequest(req, (response, error) -> {
-                if (response instanceof TLRPC.TL_contacts_topPeers) {
-                    AndroidUtilities.runOnUIThread(() -> {
-                        final TLRPC.TL_contacts_topPeers topPeers = (TLRPC.TL_contacts_topPeers) response;
-                        getMessagesController().putUsers(topPeers.users, false);
-                        getMessagesController().putChats(topPeers.chats, false);
-                        for (int a = 0; a < topPeers.categories.size(); a++) {
-                            TLRPC.TL_topPeerCategoryPeers category = topPeers.categories.get(a);
-                            if (category.category instanceof TLRPC.TL_topPeerCategoryBotsInline) {
-                                inlineBots = category.peers;
-                                getUserConfig().botRatingLoadTime = (int) (System.currentTimeMillis() / 1000);
-                            } else {
-                                hints = category.peers;
-                                int selfUserId = getUserConfig().getClientUserId();
-                                for (int b = 0; b < hints.size(); b++) {
-                                    TLRPC.TL_topPeer topPeer = hints.get(b);
-                                    if (topPeer.peer.user_id == selfUserId) {
-                                        hints.remove(b);
-                                        break;
-                                    }
-                                }
-                                getUserConfig().ratingLoadTime = (int) (System.currentTimeMillis() / 1000);
-                            }
-                        }
-                        getUserConfig().saveConfig(false);
-                        buildShortcuts();
-                        getNotificationCenter().postNotificationName(NotificationCenter.reloadHints);
-                        getNotificationCenter().postNotificationName(NotificationCenter.reloadInlineHints);
-                        getMessagesStorage().getStorageQueue().postRunnable(() -> {
-                            try {
-                                getMessagesStorage().getDatabase().executeFast("DELETE FROM chat_hints WHERE 1").stepThis().dispose();
-                                getMessagesStorage().getDatabase().beginTransaction();
-                                getMessagesStorage().putUsersAndChats(topPeers.users, topPeers.chats, false, false);
-
-                                SQLitePreparedStatement state = getMessagesStorage().getDatabase().executeFast("REPLACE INTO chat_hints VALUES(?, ?, ?, ?)");
-                                for (int a = 0; a < topPeers.categories.size(); a++) {
-                                    int type;
-                                    TLRPC.TL_topPeerCategoryPeers category = topPeers.categories.get(a);
-                                    if (category.category instanceof TLRPC.TL_topPeerCategoryBotsInline) {
-                                        type = 1;
-                                    } else {
-                                        type = 0;
-                                    }
-                                    for (int b = 0; b < category.peers.size(); b++) {
-                                        TLRPC.TL_topPeer peer = category.peers.get(b);
-                                        int did;
-                                        if (peer.peer instanceof TLRPC.TL_peerUser) {
-                                            did = peer.peer.user_id;
-                                        } else if (peer.peer instanceof TLRPC.TL_peerChat) {
-                                            did = -peer.peer.chat_id;
-                                        } else {
-                                            did = -peer.peer.channel_id;
-                                        }
-                                        state.requery();
-                                        state.bindInteger(1, did);
-                                        state.bindInteger(2, type);
-                                        state.bindDouble(3, peer.rating);
-                                        state.bindInteger(4, 0);
-                                        state.step();
-                                    }
-                                }
-
-                                state.dispose();
-
-                                getMessagesStorage().getDatabase().commitTransaction();
-                                AndroidUtilities.runOnUIThread(() -> {
-                                    getUserConfig().suggestContacts = true;
-                                    getUserConfig().lastHintsSyncTime = (int) (System.currentTimeMillis() / 1000);
-                                    getUserConfig().saveConfig(false);
-                                });
-                            } catch (Exception e) {
-                                FileLog.e(e);
-                            }
-                        });
-                    });
-                } else if (response instanceof TLRPC.TL_contacts_topPeersDisabled) {
-                    AndroidUtilities.runOnUIThread(() -> {
-                        getUserConfig().suggestContacts = false;
-                        getUserConfig().lastHintsSyncTime = (int) (System.currentTimeMillis() / 1000);
-                        getUserConfig().saveConfig(false);
-                        clearTopPeers();
-                    });
-                }
-            });
-        }
+//        if (loading || !getUserConfig().suggestContacts) {
+//            return;
+//        }
+//        if (cache) {
+//            if (loaded) {
+//                return;
+//            }
+//            loading = true;
+//            getMessagesStorage().getStorageQueue().postRunnable(() -> {
+//                final ArrayList<TLRPC.TL_topPeer> hintsNew = new ArrayList<>();
+//                final ArrayList<TLRPC.TL_topPeer> inlineBotsNew = new ArrayList<>();
+//                final ArrayList<TLRPC.User> users = new ArrayList<>();
+//                final ArrayList<TLRPC.Chat> chats = new ArrayList<>();
+//                int selfUserId = getUserConfig().getClientUserId();
+//                try {
+//                    ArrayList<Integer> usersToLoad = new ArrayList<>();
+//                    ArrayList<Integer> chatsToLoad = new ArrayList<>();
+//                    SQLiteCursor cursor = getMessagesStorage().getDatabase().queryFinalized("SELECT did, type, rating FROM chat_hints WHERE 1 ORDER BY rating DESC");
+//                    while (cursor.next()) {
+//                        int did = cursor.intValue(0);
+//                        if (did == selfUserId) {
+//                            continue;
+//                        }
+//                        int type = cursor.intValue(1);
+//                        TLRPC.TL_topPeer peer = new TLRPC.TL_topPeer();
+//                        peer.rating = cursor.doubleValue(2);
+//                        if (did > 0) {
+//                            peer.peer = new TLRPC.TL_peerUser();
+//                            peer.peer.user_id = did;
+//                            usersToLoad.add(did);
+//                        } else {
+//                            peer.peer = new TLRPC.TL_peerChat();
+//                            peer.peer.chat_id = -did;
+//                            chatsToLoad.add(-did);
+//                        }
+//                        if (type == 0) {
+//                            hintsNew.add(peer);
+//                        } else if (type == 1) {
+//                            inlineBotsNew.add(peer);
+//                        }
+//                    }
+//                    cursor.dispose();
+//                    if (!usersToLoad.isEmpty()) {
+//                        getMessagesStorage().getUsersInternal(TextUtils.join(",", usersToLoad), users);
+//                    }
+//
+//                    if (!chatsToLoad.isEmpty()) {
+//                        getMessagesStorage().getChatsInternal(TextUtils.join(",", chatsToLoad), chats);
+//                    }
+//                    AndroidUtilities.runOnUIThread(() -> {
+//                        getMessagesController().putUsers(users, true);
+//                        getMessagesController().putChats(chats, true);
+//                        loading = false;
+//                        loaded = true;
+//                        hints = hintsNew;
+//                        inlineBots = inlineBotsNew;
+//                        buildShortcuts();
+//                        getNotificationCenter().postNotificationName(NotificationCenter.reloadHints);
+//                        getNotificationCenter().postNotificationName(NotificationCenter.reloadInlineHints);
+//                        if (Math.abs(getUserConfig().lastHintsSyncTime - (int) (System.currentTimeMillis() / 1000)) >= 24 * 60 * 60) {
+//                            loadHints(false);
+//                        }
+//                    });
+//                } catch (Exception e) {
+//                    FileLog.e(e);
+//                }
+//            });
+//            loaded = true;
+//        } else {
+//            loading = true;
+//            TLRPC.TL_contacts_getTopPeers req = new TLRPC.TL_contacts_getTopPeers();
+//            req.hash = 0;
+//            req.bots_pm = false;
+//            req.correspondents = true;
+//            req.groups = false;
+//            req.channels = false;
+//            req.bots_inline = true;
+//            req.offset = 0;
+//            req.limit = 20;
+//            getConnectionsManager().sendRequest(req, (response, error) -> {
+//                if (response instanceof TLRPC.TL_contacts_topPeers) {
+//                    AndroidUtilities.runOnUIThread(() -> {
+//                        final TLRPC.TL_contacts_topPeers topPeers = (TLRPC.TL_contacts_topPeers) response;
+//                        getMessagesController().putUsers(topPeers.users, false);
+//                        getMessagesController().putChats(topPeers.chats, false);
+//                        for (int a = 0; a < topPeers.categories.size(); a++) {
+//                            TLRPC.TL_topPeerCategoryPeers category = topPeers.categories.get(a);
+//                            if (category.category instanceof TLRPC.TL_topPeerCategoryBotsInline) {
+//                                inlineBots = category.peers;
+//                                getUserConfig().botRatingLoadTime = (int) (System.currentTimeMillis() / 1000);
+//                            } else {
+//                                hints = category.peers;
+//                                int selfUserId = getUserConfig().getClientUserId();
+//                                for (int b = 0; b < hints.size(); b++) {
+//                                    TLRPC.TL_topPeer topPeer = hints.get(b);
+//                                    if (topPeer.peer.user_id == selfUserId) {
+//                                        hints.remove(b);
+//                                        break;
+//                                    }
+//                                }
+//                                getUserConfig().ratingLoadTime = (int) (System.currentTimeMillis() / 1000);
+//                            }
+//                        }
+//                        getUserConfig().saveConfig(false);
+//                        buildShortcuts();
+//                        getNotificationCenter().postNotificationName(NotificationCenter.reloadHints);
+//                        getNotificationCenter().postNotificationName(NotificationCenter.reloadInlineHints);
+//                        getMessagesStorage().getStorageQueue().postRunnable(() -> {
+//                            try {
+//                                getMessagesStorage().getDatabase().executeFast("DELETE FROM chat_hints WHERE 1").stepThis().dispose();
+//                                getMessagesStorage().getDatabase().beginTransaction();
+//                                getMessagesStorage().putUsersAndChats(topPeers.users, topPeers.chats, false, false);
+//
+//                                SQLitePreparedStatement state = getMessagesStorage().getDatabase().executeFast("REPLACE INTO chat_hints VALUES(?, ?, ?, ?)");
+//                                for (int a = 0; a < topPeers.categories.size(); a++) {
+//                                    int type;
+//                                    TLRPC.TL_topPeerCategoryPeers category = topPeers.categories.get(a);
+//                                    if (category.category instanceof TLRPC.TL_topPeerCategoryBotsInline) {
+//                                        type = 1;
+//                                    } else {
+//                                        type = 0;
+//                                    }
+//                                    for (int b = 0; b < category.peers.size(); b++) {
+//                                        TLRPC.TL_topPeer peer = category.peers.get(b);
+//                                        int did;
+//                                        if (peer.peer instanceof TLRPC.TL_peerUser) {
+//                                            did = peer.peer.user_id;
+//                                        } else if (peer.peer instanceof TLRPC.TL_peerChat) {
+//                                            did = -peer.peer.chat_id;
+//                                        } else {
+//                                            did = -peer.peer.channel_id;
+//                                        }
+//                                        state.requery();
+//                                        state.bindInteger(1, did);
+//                                        state.bindInteger(2, type);
+//                                        state.bindDouble(3, peer.rating);
+//                                        state.bindInteger(4, 0);
+//                                        state.step();
+//                                    }
+//                                }
+//
+//                                state.dispose();
+//
+//                                getMessagesStorage().getDatabase().commitTransaction();
+//                                AndroidUtilities.runOnUIThread(() -> {
+//                                    getUserConfig().suggestContacts = true;
+//                                    getUserConfig().lastHintsSyncTime = (int) (System.currentTimeMillis() / 1000);
+//                                    getUserConfig().saveConfig(false);
+//                                });
+//                            } catch (Exception e) {
+//                                FileLog.e(e);
+//                            }
+//                        });
+//                    });
+//                } else if (response instanceof TLRPC.TL_contacts_topPeersDisabled) {
+//                    AndroidUtilities.runOnUIThread(() -> {
+//                        getUserConfig().suggestContacts = false;
+//                        getUserConfig().lastHintsSyncTime = (int) (System.currentTimeMillis() / 1000);
+//                        getUserConfig().saveConfig(false);
+//                        clearTopPeers();
+//                    });
+//                }
+//            });
+//        }
     }
 
     public void clearTopPeers() {
