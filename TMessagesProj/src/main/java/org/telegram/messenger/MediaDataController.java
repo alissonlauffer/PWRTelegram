@@ -939,7 +939,7 @@ public class MediaDataController extends BaseController {
             return;
         }
         loadingFeaturedStickers = true;
-        if (cache) {
+//        if (cache) {
             getMessagesStorage().getStorageQueue().postRunnable(() -> {
                 ArrayList<TLRPC.StickerSetCovered> newStickerArray = null;
                 ArrayList<Long> unread = new ArrayList<>();
@@ -979,18 +979,18 @@ public class MediaDataController extends BaseController {
                 }
                 processLoadedFeaturedStickers(newStickerArray, unread, true, date, hash);
             });
-        } else {
-            final TLRPC.TL_messages_getFeaturedStickers req = new TLRPC.TL_messages_getFeaturedStickers();
-            req.hash = force ? 0 : loadFeaturedHash;
-            getConnectionsManager().sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
-                if (response instanceof TLRPC.TL_messages_featuredStickers) {
-                    TLRPC.TL_messages_featuredStickers res = (TLRPC.TL_messages_featuredStickers) response;
-                    processLoadedFeaturedStickers(res.sets, res.unread, false, (int) (System.currentTimeMillis() / 1000), res.hash);
-                } else {
-                    processLoadedFeaturedStickers(null, null, false, (int) (System.currentTimeMillis() / 1000), req.hash);
-                }
-            }));
-        }
+//        } else {
+//            final TLRPC.TL_messages_getFeaturedStickers req = new TLRPC.TL_messages_getFeaturedStickers();
+//            req.hash = force ? 0 : loadFeaturedHash;
+//            getConnectionsManager().sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
+//                if (response instanceof TLRPC.TL_messages_featuredStickers) {
+//                    TLRPC.TL_messages_featuredStickers res = (TLRPC.TL_messages_featuredStickers) response;
+//                    processLoadedFeaturedStickers(res.sets, res.unread, false, (int) (System.currentTimeMillis() / 1000), res.hash);
+//                } else {
+//                    processLoadedFeaturedStickers(null, null, false, (int) (System.currentTimeMillis() / 1000), req.hash);
+//                }
+//            }));
+//        }
     }
 
     private void processLoadedFeaturedStickers(final ArrayList<TLRPC.StickerSetCovered> res, final ArrayList<Long> unreadStickers, final boolean cache, final int date, final int hash) {
