@@ -7667,7 +7667,7 @@ public class MessagesController extends BaseController implements NotificationCe
                 storeMessage(res.new_messages, res.users, res.chats);
                 processUpdateArray(res.other_updates, res.users, res.chats, true, 0);
 
-                if (res.intermediate_state.pts % 24 <= 8) {
+                if (res.intermediate_state.pts % 5 == 2) {
                     AndroidUtilities.runOnUIThread(this::cleanup);
                     gettingDifference = true;
                 }
