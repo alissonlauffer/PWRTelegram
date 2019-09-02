@@ -1525,21 +1525,21 @@ public class MediaDataController extends BaseController {
             loadHash[type] = calcStickersHash(stickerSets[type]);
             putStickersToCache(type, stickerSets[type], loadDate[type], loadHash[type]);
             getNotificationCenter().postNotificationName(NotificationCenter.stickersDidLoad, type);
-            TLRPC.TL_messages_installStickerSet req = new TLRPC.TL_messages_installStickerSet();
-            req.stickerset = stickerSetID;
-            req.archived = hide == 1;
-            getConnectionsManager().sendRequest(req, (response, error) -> {
-                AndroidUtilities.runOnUIThread(() -> {
-                    if (response instanceof TLRPC.TL_messages_stickerSetInstallResultArchive) {
-                        getNotificationCenter().postNotificationName(NotificationCenter.needReloadArchivedStickers, type);
-                        if (hide != 1 && baseFragment != null && baseFragment.getParentActivity() != null) {
-                            StickersArchiveAlert alert = new StickersArchiveAlert(baseFragment.getParentActivity(), showSettings ? baseFragment : null, ((TLRPC.TL_messages_stickerSetInstallResultArchive) response).sets);
-                            baseFragment.showDialog(alert.create());
-                        }
-                    }
-                });
-                AndroidUtilities.runOnUIThread(() -> loadStickers(type, false, false), 1000);
-            });
+//            TLRPC.TL_messages_installStickerSet req = new TLRPC.TL_messages_installStickerSet();
+//            req.stickerset = stickerSetID;
+//            req.archived = hide == 1;
+//            getConnectionsManager().sendRequest(req, (response, error) -> {
+//                AndroidUtilities.runOnUIThread(() -> {
+//                    if (response instanceof TLRPC.TL_messages_stickerSetInstallResultArchive) {
+//                        getNotificationCenter().postNotificationName(NotificationCenter.needReloadArchivedStickers, type);
+//                        if (hide != 1 && baseFragment != null && baseFragment.getParentActivity() != null) {
+//                            StickersArchiveAlert alert = new StickersArchiveAlert(baseFragment.getParentActivity(), showSettings ? baseFragment : null, ((TLRPC.TL_messages_stickerSetInstallResultArchive) response).sets);
+//                            baseFragment.showDialog(alert.create());
+//                        }
+//                    }
+//                });
+//                AndroidUtilities.runOnUIThread(() -> loadStickers(type, false, false), 1000);
+//            });
         } else {
             TLRPC.TL_messages_uninstallStickerSet req = new TLRPC.TL_messages_uninstallStickerSet();
             req.stickerset = stickerSetID;

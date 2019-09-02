@@ -681,31 +681,31 @@ public class StickersAlert extends BottomSheet implements NotificationCenter.Not
                     if (installDelegate != null) {
                         installDelegate.onStickerSetInstalled();
                     }
-                    TLRPC.TL_messages_installStickerSet req = new TLRPC.TL_messages_installStickerSet();
-                    req.stickerset = inputStickerSet;
-                    ConnectionsManager.getInstance(currentAccount).sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
-                        try {
-                            if (error == null) {
-                                if (stickerSet.set.masks) {
-                                    Toast.makeText(getContext(), LocaleController.getString("AddMasksInstalled", R.string.AddMasksInstalled), Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(getContext(), LocaleController.getString("AddStickersInstalled", R.string.AddStickersInstalled), Toast.LENGTH_SHORT).show();
-                                }
-                                if (response instanceof TLRPC.TL_messages_stickerSetInstallResultArchive) {
-                                    NotificationCenter.getInstance(currentAccount).postNotificationName(NotificationCenter.needReloadArchivedStickers);
-                                    if (parentFragment != null && parentFragment.getParentActivity() != null) {
-                                        StickersArchiveAlert alert = new StickersArchiveAlert(parentFragment.getParentActivity(), parentFragment, ((TLRPC.TL_messages_stickerSetInstallResultArchive) response).sets);
-                                        parentFragment.showDialog(alert.create());
-                                    }
-                                }
-                            } else {
-                                Toast.makeText(getContext(), LocaleController.getString("ErrorOccurred", R.string.ErrorOccurred), Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (Exception e) {
-                            FileLog.e(e);
-                        }
-                        MediaDataController.getInstance(currentAccount).loadStickers(stickerSet.set.masks ? MediaDataController.TYPE_MASK : MediaDataController.TYPE_IMAGE, false, true);
-                    }));
+//                    TLRPC.TL_messages_installStickerSet req = new TLRPC.TL_messages_installStickerSet();
+//                    req.stickerset = inputStickerSet;
+//                    ConnectionsManager.getInstance(currentAccount).sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
+//                        try {
+//                            if (error == null) {
+//                                if (stickerSet.set.masks) {
+//                                    Toast.makeText(getContext(), LocaleController.getString("AddMasksInstalled", R.string.AddMasksInstalled), Toast.LENGTH_SHORT).show();
+//                                } else {
+//                                    Toast.makeText(getContext(), LocaleController.getString("AddStickersInstalled", R.string.AddStickersInstalled), Toast.LENGTH_SHORT).show();
+//                                }
+//                                if (response instanceof TLRPC.TL_messages_stickerSetInstallResultArchive) {
+//                                    NotificationCenter.getInstance(currentAccount).postNotificationName(NotificationCenter.needReloadArchivedStickers);
+//                                    if (parentFragment != null && parentFragment.getParentActivity() != null) {
+//                                        StickersArchiveAlert alert = new StickersArchiveAlert(parentFragment.getParentActivity(), parentFragment, ((TLRPC.TL_messages_stickerSetInstallResultArchive) response).sets);
+//                                        parentFragment.showDialog(alert.create());
+//                                    }
+//                                }
+//                            } else {
+//                                Toast.makeText(getContext(), LocaleController.getString("ErrorOccurred", R.string.ErrorOccurred), Toast.LENGTH_SHORT).show();
+//                            }
+//                        } catch (Exception e) {
+//                            FileLog.e(e);
+//                        }
+//                        MediaDataController.getInstance(currentAccount).loadStickers(stickerSet.set.masks ? MediaDataController.TYPE_MASK : MediaDataController.TYPE_IMAGE, false, true);
+//                    }));
                 }, text, Theme.getColor(Theme.key_dialogTextBlue2));
             } else {
                 String text;
