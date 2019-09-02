@@ -1146,29 +1146,30 @@ public class MediaDataController extends BaseController {
     }
 
     public void loadArchivedStickersCount(final int type, boolean cache) {
-        if (cache) {
+//        if (cache) {
             SharedPreferences preferences = MessagesController.getNotificationsSettings(currentAccount);
             int count = preferences.getInt("archivedStickersCount" + type, -1);
-            if (count == -1) {
-                loadArchivedStickersCount(type, false);
-            } else {
+//            if (count == -1) {
+//                loadArchivedStickersCount(type, false);
+//            } else {
+            if (count != -1) {
                 archivedStickersCount[type] = count;
                 getNotificationCenter().postNotificationName(NotificationCenter.archivedStickersCountDidLoad, type);
             }
-        } else {
-            TLRPC.TL_messages_getArchivedStickers req = new TLRPC.TL_messages_getArchivedStickers();
-            req.limit = 0;
-            req.masks = type == TYPE_MASK;
-            int reqId = getConnectionsManager().sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
-                if (error == null) {
-                    TLRPC.TL_messages_archivedStickers res = (TLRPC.TL_messages_archivedStickers) response;
-                    archivedStickersCount[type] = res.count;
-                    SharedPreferences preferences = MessagesController.getNotificationsSettings(currentAccount);
-                    preferences.edit().putInt("archivedStickersCount" + type, res.count).commit();
-                    getNotificationCenter().postNotificationName(NotificationCenter.archivedStickersCountDidLoad, type);
-                }
-            }));
-        }
+//        } else {
+//            TLRPC.TL_messages_getArchivedStickers req = new TLRPC.TL_messages_getArchivedStickers();
+//            req.limit = 0;
+//            req.masks = type == TYPE_MASK;
+//            int reqId = getConnectionsManager().sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
+//                if (error == null) {
+//                    TLRPC.TL_messages_archivedStickers res = (TLRPC.TL_messages_archivedStickers) response;
+//                    archivedStickersCount[type] = res.count;
+//                    SharedPreferences preferences = MessagesController.getNotificationsSettings(currentAccount);
+//                    preferences.edit().putInt("archivedStickersCount" + type, res.count).commit();
+//                    getNotificationCenter().postNotificationName(NotificationCenter.archivedStickersCountDidLoad, type);
+//                }
+//            }));
+//        }
     }
 
     private void processLoadStickersResponse(final int type, final TLRPC.TL_messages_allStickers res) {
