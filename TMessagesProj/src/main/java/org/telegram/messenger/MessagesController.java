@@ -3319,30 +3319,30 @@ public class MessagesController extends BaseController implements NotificationCe
                 }
             }
         }
-        if (shortPollOnlines.size() != 0) {
-            long time = SystemClock.uptimeMillis() / 1000;
-            for (int a = 0; a < shortPollOnlines.size(); a++) {
-                int key = shortPollOnlines.keyAt(a);
-                int timeout = shortPollOnlines.valueAt(a);
-                if (timeout < time) {
-                    if (needShortPollChannels.indexOfKey(key) >= 0) {
-                        shortPollOnlines.put(key, (int) (time + 60 * 5));
-                    } else {
-                        shortPollOnlines.delete(key);
-                        a--;
-                    }
-                    TLRPC.TL_messages_getOnlines req = new TLRPC.TL_messages_getOnlines();
-                    req.peer = getInputPeer(-key);
-                    getConnectionsManager().sendRequest(req, (response, error) -> {
-                        if (response != null) {
-                            TLRPC.TL_chatOnlines res = (TLRPC.TL_chatOnlines) response;
-                            getMessagesStorage().updateChatOnlineCount(key, res.onlines);
-                            AndroidUtilities.runOnUIThread(() -> getNotificationCenter().postNotificationName(NotificationCenter.chatOnlineCountDidLoad, key, res.onlines));
-                        }
-                    });
-                }
-            }
-        }
+//        if (shortPollOnlines.size() != 0) {
+//            long time = SystemClock.uptimeMillis() / 1000;
+//            for (int a = 0; a < shortPollOnlines.size(); a++) {
+//                int key = shortPollOnlines.keyAt(a);
+//                int timeout = shortPollOnlines.valueAt(a);
+//                if (timeout < time) {
+//                    if (needShortPollChannels.indexOfKey(key) >= 0) {
+//                        shortPollOnlines.put(key, (int) (time + 60 * 5));
+//                    } else {
+//                        shortPollOnlines.delete(key);
+//                        a--;
+//                    }
+//                    TLRPC.TL_messages_getOnlines req = new TLRPC.TL_messages_getOnlines();
+//                    req.peer = getInputPeer(-key);
+//                    getConnectionsManager().sendRequest(req, (response, error) -> {
+//                        if (response != null) {
+//                            TLRPC.TL_chatOnlines res = (TLRPC.TL_chatOnlines) response;
+//                            getMessagesStorage().updateChatOnlineCount(key, res.onlines);
+//                            AndroidUtilities.runOnUIThread(() -> getNotificationCenter().postNotificationName(NotificationCenter.chatOnlineCountDidLoad, key, res.onlines));
+//                        }
+//                    });
+//                }
+//            }
+//        }
         if (!printingUsers.isEmpty() || lastPrintingStringCount != printingUsers.size()) {
             boolean updated = false;
             ArrayList<Long> keys = new ArrayList<>(printingUsers.keySet());
