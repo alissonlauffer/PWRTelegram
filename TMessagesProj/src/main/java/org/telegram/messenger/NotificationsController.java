@@ -3620,37 +3620,37 @@ public class NotificationsController extends BaseController {
     }
 
     public void updateServerNotificationsSettings(long dialog_id, boolean post) {
-        if (post) {
-            getNotificationCenter().postNotificationName(NotificationCenter.notificationsSettingsUpdated);
-        }
-        if ((int) dialog_id == 0) {
-            return;
-        }
-        SharedPreferences preferences = getAccountInstance().getNotificationsSettings();
-        TLRPC.TL_account_updateNotifySettings req = new TLRPC.TL_account_updateNotifySettings();
-        req.settings = new TLRPC.TL_inputPeerNotifySettings();
-
-        req.settings.flags |= 1;
-        req.settings.show_previews = preferences.getBoolean("content_preview_" + dialog_id, true);
-
-        req.settings.flags |= 2;
-        req.settings.silent = preferences.getBoolean("silent_" + dialog_id, false);
-
-        int mute_type = preferences.getInt("notify2_" + dialog_id, -1);
-        if (mute_type != -1) {
-            req.settings.flags |= 4;
-            if (mute_type == 3) {
-                req.settings.mute_until = preferences.getInt("notifyuntil_" + dialog_id, 0);
-            } else {
-                req.settings.mute_until = mute_type != 2 ? 0 : Integer.MAX_VALUE;
-            }
-        }
-
-        req.peer = new TLRPC.TL_inputNotifyPeer();
-        ((TLRPC.TL_inputNotifyPeer) req.peer).peer = getMessagesController().getInputPeer((int) dialog_id);
-        getConnectionsManager().sendRequest(req, (response, error) -> {
-
-        });
+//        if (post) {
+//            getNotificationCenter().postNotificationName(NotificationCenter.notificationsSettingsUpdated);
+//        }
+//        if ((int) dialog_id == 0) {
+//            return;
+//        }
+//        SharedPreferences preferences = getAccountInstance().getNotificationsSettings();
+//        TLRPC.TL_account_updateNotifySettings req = new TLRPC.TL_account_updateNotifySettings();
+//        req.settings = new TLRPC.TL_inputPeerNotifySettings();
+//
+//        req.settings.flags |= 1;
+//        req.settings.show_previews = preferences.getBoolean("content_preview_" + dialog_id, true);
+//
+//        req.settings.flags |= 2;
+//        req.settings.silent = preferences.getBoolean("silent_" + dialog_id, false);
+//
+//        int mute_type = preferences.getInt("notify2_" + dialog_id, -1);
+//        if (mute_type != -1) {
+//            req.settings.flags |= 4;
+//            if (mute_type == 3) {
+//                req.settings.mute_until = preferences.getInt("notifyuntil_" + dialog_id, 0);
+//            } else {
+//                req.settings.mute_until = mute_type != 2 ? 0 : Integer.MAX_VALUE;
+//            }
+//        }
+//
+//        req.peer = new TLRPC.TL_inputNotifyPeer();
+//        ((TLRPC.TL_inputNotifyPeer) req.peer).peer = getMessagesController().getInputPeer((int) dialog_id);
+//        getConnectionsManager().sendRequest(req, (response, error) -> {
+//
+//        });
     }
 
     public final static int TYPE_GROUP = 0;
@@ -3659,25 +3659,25 @@ public class NotificationsController extends BaseController {
 
     public void updateServerNotificationsSettings(int type) {
         SharedPreferences preferences = getAccountInstance().getNotificationsSettings();
-        TLRPC.TL_account_updateNotifySettings req = new TLRPC.TL_account_updateNotifySettings();
-        req.settings = new TLRPC.TL_inputPeerNotifySettings();
-        req.settings.flags = 5;
-        if (type == TYPE_GROUP) {
-            req.peer = new TLRPC.TL_inputNotifyChats();
-            req.settings.mute_until = preferences.getInt("EnableGroup2", 0);
-            req.settings.show_previews = preferences.getBoolean("EnablePreviewGroup", true);
-        } else if (type == TYPE_PRIVATE) {
-            req.peer = new TLRPC.TL_inputNotifyUsers();
-            req.settings.mute_until = preferences.getInt("EnableAll2", 0);
-            req.settings.show_previews = preferences.getBoolean("EnablePreviewAll", true);
-        } else {
-            req.peer = new TLRPC.TL_inputNotifyBroadcasts();
-            req.settings.mute_until = preferences.getInt("EnableChannel2", 0);
-            req.settings.show_previews = preferences.getBoolean("EnablePreviewChannel", true);
-        }
-        getConnectionsManager().sendRequest(req, (response, error) -> {
-
-        });
+//        TLRPC.TL_account_updateNotifySettings req = new TLRPC.TL_account_updateNotifySettings();
+//        req.settings = new TLRPC.TL_inputPeerNotifySettings();
+//        req.settings.flags = 5;
+//        if (type == TYPE_GROUP) {
+//            req.peer = new TLRPC.TL_inputNotifyChats();
+//            req.settings.mute_until = preferences.getInt("EnableGroup2", 0);
+//            req.settings.show_previews = preferences.getBoolean("EnablePreviewGroup", true);
+//        } else if (type == TYPE_PRIVATE) {
+//            req.peer = new TLRPC.TL_inputNotifyUsers();
+//            req.settings.mute_until = preferences.getInt("EnableAll2", 0);
+//            req.settings.show_previews = preferences.getBoolean("EnablePreviewAll", true);
+//        } else {
+//            req.peer = new TLRPC.TL_inputNotifyBroadcasts();
+//            req.settings.mute_until = preferences.getInt("EnableChannel2", 0);
+//            req.settings.show_previews = preferences.getBoolean("EnablePreviewChannel", true);
+//        }
+//        getConnectionsManager().sendRequest(req, (response, error) -> {
+//
+//        });
     }
 
     public boolean isGlobalNotificationsEnabled(long did) {
