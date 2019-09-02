@@ -1245,7 +1245,7 @@ public class MediaDataController extends BaseController {
             loadArchivedStickersCount(type, cache);
         }
         loadingStickers[type] = true;
-        if (cache) {
+//        if (cache) {
             getMessagesStorage().getStorageQueue().postRunnable(() -> {
                 ArrayList<TLRPC.TL_messages_stickerSet> newStickerArray = null;
                 int date = 0;
@@ -1276,45 +1276,45 @@ public class MediaDataController extends BaseController {
                 }
                 processLoadedStickers(type, newStickerArray, true, date, hash);
             });
-        } else {
-            if (type == TYPE_FEATURED) {
-                TLRPC.TL_messages_allStickers response = new TLRPC.TL_messages_allStickers();
-                response.hash = loadFeaturedHash;
-                for (int a = 0, size = featuredStickerSets.size(); a < size; a++) {
-                    response.sets.add(featuredStickerSets.get(a).set);
-                }
-                processLoadStickersResponse(type, response);
-            } else if (type == TYPE_EMOJI) {
-                TLRPC.TL_messages_getStickerSet req = new TLRPC.TL_messages_getStickerSet();
-                req.stickerset = new TLRPC.TL_inputStickerSetAnimatedEmoji();
-                getConnectionsManager().sendRequest(req, (response, error) -> {
-                    if (response instanceof TLRPC.TL_messages_stickerSet) {
-                        final ArrayList<TLRPC.TL_messages_stickerSet> newStickerArray = new ArrayList<>();
-                        newStickerArray.add((TLRPC.TL_messages_stickerSet) response);
-                        processLoadedStickers(type, newStickerArray, false, (int) (System.currentTimeMillis() / 1000), calcStickersHash(newStickerArray));
-                    } else {
-                        processLoadedStickers(type, null, false, (int) (System.currentTimeMillis() / 1000), 0);
-                    }
-                });
-            } else {
-                TLObject req;
-                final int hash;
-                if (type == TYPE_IMAGE) {
-                    req = new TLRPC.TL_messages_getAllStickers();
-                    hash = ((TLRPC.TL_messages_getAllStickers) req).hash = force ? 0 : loadHash[type];
-                } else {
-                    req = new TLRPC.TL_messages_getMaskStickers();
-                    hash = ((TLRPC.TL_messages_getMaskStickers) req).hash = force ? 0 : loadHash[type];
-                }
-                getConnectionsManager().sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
-                    if (response instanceof TLRPC.TL_messages_allStickers) {
-                        processLoadStickersResponse(type, (TLRPC.TL_messages_allStickers) response);
-                    } else {
-                        processLoadedStickers(type, null, false, (int) (System.currentTimeMillis() / 1000), hash);
-                    }
-                }));
-            }
-        }
+//        } else {
+//            if (type == TYPE_FEATURED) {
+//                TLRPC.TL_messages_allStickers response = new TLRPC.TL_messages_allStickers();
+//                response.hash = loadFeaturedHash;
+//                for (int a = 0, size = featuredStickerSets.size(); a < size; a++) {
+//                    response.sets.add(featuredStickerSets.get(a).set);
+//                }
+//                processLoadStickersResponse(type, response);
+//            } else if (type == TYPE_EMOJI) {
+//                TLRPC.TL_messages_getStickerSet req = new TLRPC.TL_messages_getStickerSet();
+//                req.stickerset = new TLRPC.TL_inputStickerSetAnimatedEmoji();
+//                getConnectionsManager().sendRequest(req, (response, error) -> {
+//                    if (response instanceof TLRPC.TL_messages_stickerSet) {
+//                        final ArrayList<TLRPC.TL_messages_stickerSet> newStickerArray = new ArrayList<>();
+//                        newStickerArray.add((TLRPC.TL_messages_stickerSet) response);
+//                        processLoadedStickers(type, newStickerArray, false, (int) (System.currentTimeMillis() / 1000), calcStickersHash(newStickerArray));
+//                    } else {
+//                        processLoadedStickers(type, null, false, (int) (System.currentTimeMillis() / 1000), 0);
+//                    }
+//                });
+//            } else {
+//                TLObject req;
+//                final int hash;
+//                if (type == TYPE_IMAGE) {
+//                    req = new TLRPC.TL_messages_getAllStickers();
+//                    hash = ((TLRPC.TL_messages_getAllStickers) req).hash = force ? 0 : loadHash[type];
+//                } else {
+//                    req = new TLRPC.TL_messages_getMaskStickers();
+//                    hash = ((TLRPC.TL_messages_getMaskStickers) req).hash = force ? 0 : loadHash[type];
+//                }
+//                getConnectionsManager().sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
+//                    if (response instanceof TLRPC.TL_messages_allStickers) {
+//                        processLoadStickersResponse(type, (TLRPC.TL_messages_allStickers) response);
+//                    } else {
+//                        processLoadedStickers(type, null, false, (int) (System.currentTimeMillis() / 1000), hash);
+//                    }
+//                }));
+//            }
+//        }
     }
 
     private void putStickersToCache(final int type, ArrayList<TLRPC.TL_messages_stickerSet> stickers, final int date, final int hash) {
