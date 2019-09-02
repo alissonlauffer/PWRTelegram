@@ -1335,50 +1335,50 @@ public class ContactsController extends BaseController {
     }
 
     public void loadContacts(boolean fromCache, final int hash) {
-        synchronized (loadContactsSync) {
-            loadingContacts = true;
-        }
-        if (fromCache) {
-            if (BuildVars.LOGS_ENABLED) {
-                FileLog.d("load contacts from cache");
-            }
-            getMessagesStorage().getContacts();
-        } else {
-            if (BuildVars.LOGS_ENABLED) {
-                FileLog.d("load contacts from server");
-            }
-
-            TLRPC.TL_contacts_getContacts req = new TLRPC.TL_contacts_getContacts();
-            req.hash = hash;
-            getConnectionsManager().sendRequest(req, (response, error) -> {
-                if (error == null) {
-                    TLRPC.contacts_Contacts res = (TLRPC.contacts_Contacts) response;
-                    if (hash != 0 && res instanceof TLRPC.TL_contacts_contactsNotModified) {
-                        contactsLoaded = true;
-                        if (!delayedContactsUpdate.isEmpty() && contactsBookLoaded) {
-                            applyContactsUpdates(delayedContactsUpdate, null, null, null);
-                            delayedContactsUpdate.clear();
-                        }
-                        getUserConfig().lastContactsSyncTime = (int) (System.currentTimeMillis() / 1000);
-                        getUserConfig().saveConfig(false);
-                        AndroidUtilities.runOnUIThread(() -> {
-                            synchronized (loadContactsSync) {
-                                loadingContacts = false;
-                            }
-                            getNotificationCenter().postNotificationName(NotificationCenter.contactsDidLoad);
-                        });
-                        if (BuildVars.LOGS_ENABLED) {
-                            FileLog.d("load contacts don't change");
-                        }
-                        return;
-                    } else {
-                        getUserConfig().contactsSavedCount = res.saved_count;
-                        getUserConfig().saveConfig(false);
-                    }
-                    processLoadedContacts(res.contacts, res.users, 0);
-                }
-            });
-        }
+//        synchronized (loadContactsSync) {
+//            loadingContacts = true;
+//        }
+//        if (fromCache) {
+//            if (BuildVars.LOGS_ENABLED) {
+//                FileLog.d("load contacts from cache");
+//            }
+//            getMessagesStorage().getContacts();
+//        } else {
+//            if (BuildVars.LOGS_ENABLED) {
+//                FileLog.d("load contacts from server");
+//            }
+//
+//            TLRPC.TL_contacts_getContacts req = new TLRPC.TL_contacts_getContacts();
+//            req.hash = hash;
+//            getConnectionsManager().sendRequest(req, (response, error) -> {
+//                if (error == null) {
+//                    TLRPC.contacts_Contacts res = (TLRPC.contacts_Contacts) response;
+//                    if (hash != 0 && res instanceof TLRPC.TL_contacts_contactsNotModified) {
+//                        contactsLoaded = true;
+//                        if (!delayedContactsUpdate.isEmpty() && contactsBookLoaded) {
+//                            applyContactsUpdates(delayedContactsUpdate, null, null, null);
+//                            delayedContactsUpdate.clear();
+//                        }
+//                        getUserConfig().lastContactsSyncTime = (int) (System.currentTimeMillis() / 1000);
+//                        getUserConfig().saveConfig(false);
+//                        AndroidUtilities.runOnUIThread(() -> {
+//                            synchronized (loadContactsSync) {
+//                                loadingContacts = false;
+//                            }
+//                            getNotificationCenter().postNotificationName(NotificationCenter.contactsDidLoad);
+//                        });
+//                        if (BuildVars.LOGS_ENABLED) {
+//                            FileLog.d("load contacts don't change");
+//                        }
+//                        return;
+//                    } else {
+//                        getUserConfig().contactsSavedCount = res.saved_count;
+//                        getUserConfig().saveConfig(false);
+//                    }
+//                    processLoadedContacts(res.contacts, res.users, 0);
+//                }
+//            });
+//        }
     }
 
     public void processLoadedContacts(final ArrayList<TLRPC.TL_contact> contactsArr, final ArrayList<TLRPC.User> usersArr, final int from) {
@@ -1786,28 +1786,28 @@ public class ContactsController extends BaseController {
     }
 
     private boolean hasContactsPermission() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            return ApplicationLoader.applicationContext.checkSelfPermission(android.Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED;
-        }
-        Cursor cursor = null;
-        try {
-            ContentResolver cr = ApplicationLoader.applicationContext.getContentResolver();
-            cursor = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, projectionPhones, null, null, null);
-            if (cursor == null || cursor.getCount() == 0) {
-                return false;
-            }
-        } catch (Throwable e) {
-            FileLog.e(e);
-        } finally {
-            try {
-                if (cursor != null) {
-                    cursor.close();
-                }
-            } catch (Exception e) {
-                FileLog.e(e);
-            }
-        }
-        return true;
+//        if (Build.VERSION.SDK_INT >= 23) {
+//            return ApplicationLoader.applicationContext.checkSelfPermission(android.Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED;
+//        }
+//        Cursor cursor = null;
+//        try {
+//            ContentResolver cr = ApplicationLoader.applicationContext.getContentResolver();
+//            cursor = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, projectionPhones, null, null, null);
+//            if (cursor == null || cursor.getCount() == 0) {
+//                return false;
+//            }
+//        } catch (Throwable e) {
+//            FileLog.e(e);
+//        } finally {
+//            try {
+//                if (cursor != null) {
+//                    cursor.close();
+//                }
+//            } catch (Exception e) {
+//                FileLog.e(e);
+////            }
+//        }
+        return false;
     }
 
     private void performWriteContactsToPhoneBookInternal(ArrayList<TLRPC.TL_contact> contactsArray) {
