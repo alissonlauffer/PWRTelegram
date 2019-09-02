@@ -4763,34 +4763,35 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     private void resetDialogs(boolean query, final int seq, final int newPts, final int date, final int qts) {
-        if (query) {
-            if (resetingDialogs) {
-                return;
-            }
-            getUserConfig().setPinnedDialogsLoaded(1, false);
-            resetingDialogs = true;
-            TLRPC.TL_messages_getPinnedDialogs req = new TLRPC.TL_messages_getPinnedDialogs();
-            getConnectionsManager().sendRequest(req, (response, error) -> {
-                if (response != null) {
-                    resetDialogsPinned = (TLRPC.TL_messages_peerDialogs) response;
-                    for (int a = 0; a < resetDialogsPinned.dialogs.size(); a++) {
-                        TLRPC.Dialog d = resetDialogsPinned.dialogs.get(a);
-                        d.pinned = true;
-                    }
-                    resetDialogs(false, seq, newPts, date, qts);
-                }
-            });
-            TLRPC.TL_messages_getDialogs req2 = new TLRPC.TL_messages_getDialogs();
-            req2.limit = 100;
-            req2.exclude_pinned = true;
-            req2.offset_peer = new TLRPC.TL_inputPeerEmpty();
-            getConnectionsManager().sendRequest(req2, (response, error) -> {
-                if (error == null) {
-                    resetDialogsAll = (TLRPC.messages_Dialogs) response;
-                    resetDialogs(false, seq, newPts, date, qts);
-                }
-            });
-        } else if (resetDialogsPinned != null && resetDialogsAll != null) {
+//        if (query) {
+//            if (resetingDialogs) {
+//                return;
+//            }
+//            getUserConfig().setPinnedDialogsLoaded(1, false);
+//            resetingDialogs = true;
+//            TLRPC.TL_messages_getPinnedDialogs req = new TLRPC.TL_messages_getPinnedDialogs();
+//            getConnectionsManager().sendRequest(req, (response, error) -> {
+//                if (response != null) {
+//                    resetDialogsPinned = (TLRPC.TL_messages_peerDialogs) response;
+//                    for (int a = 0; a < resetDialogsPinned.dialogs.size(); a++) {
+//                        TLRPC.Dialog d = resetDialogsPinned.dialogs.get(a);
+//                        d.pinned = true;
+//                    }
+//                    resetDialogs(false, seq, newPts, date, qts);
+//                }
+//            });
+//            TLRPC.TL_messages_getDialogs req2 = new TLRPC.TL_messages_getDialogs();
+//            req2.limit = 100;
+//            req2.exclude_pinned = true;
+//            req2.offset_peer = new TLRPC.TL_inputPeerEmpty();
+//            getConnectionsManager().sendRequest(req2, (response, error) -> {
+//                if (error == null) {
+//                    resetDialogsAll = (TLRPC.messages_Dialogs) response;
+//                    resetDialogs(false, seq, newPts, date, qts);
+//                }
+//            });
+//        } else if (resetDialogsPinned != null && resetDialogsAll != null) {
+        if (resetDialogsPinned != null && resetDialogsAll != null && !query) {
             int messagesCount = resetDialogsAll.messages.size();
             int dialogsCount = resetDialogsAll.dialogs.size();
             fetchFolderInLoadedPinnedDialogs(resetDialogsPinned);
