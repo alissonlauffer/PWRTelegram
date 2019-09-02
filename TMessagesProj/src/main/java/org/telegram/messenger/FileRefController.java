@@ -314,9 +314,9 @@ public class FileRefController extends BaseController {
             } else if ("recent".equals(string)) {
                 TLRPC.TL_messages_getRecentStickers req = new TLRPC.TL_messages_getRecentStickers();
                 getConnectionsManager().sendRequest(req, (response, error) -> onRequestComplete(locationKey, parentKey, response, true));
-            } else if ("fav".equals(string)) {
-                TLRPC.TL_messages_getFavedStickers req = new TLRPC.TL_messages_getFavedStickers();
-                getConnectionsManager().sendRequest(req, (response, error) -> onRequestComplete(locationKey, parentKey, response, true));
+//            } else if ("fav".equals(string)) {
+//                TLRPC.TL_messages_getFavedStickers req = new TLRPC.TL_messages_getFavedStickers();
+//                getConnectionsManager().sendRequest(req, (response, error) -> onRequestComplete(locationKey, parentKey, response, true));
             } else if (string.startsWith("avatar_")) {
                 int id = Utilities.parseInt(string);
                 if (id > 0) {
