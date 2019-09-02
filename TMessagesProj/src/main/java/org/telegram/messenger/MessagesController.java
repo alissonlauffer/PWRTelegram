@@ -2920,50 +2920,50 @@ public class MessagesController extends BaseController implements NotificationCe
         checkDeletingTask(false);
         checkReadTasks();
 
-        if (getUserConfig().isClientActivated()) {
-            if (getConnectionsManager().getPauseTime() == 0 && ApplicationLoader.isScreenOn && !ApplicationLoader.mainInterfacePausedStageQueue) {
-                if (ApplicationLoader.mainInterfacePausedStageQueueTime != 0 && Math.abs(ApplicationLoader.mainInterfacePausedStageQueueTime - System.currentTimeMillis()) > 1000) {
-                    if (statusSettingState != 1 && (lastStatusUpdateTime == 0 || Math.abs(System.currentTimeMillis() - lastStatusUpdateTime) >= 55000 || offlineSent)) {
-                        statusSettingState = 1;
-
-                        if (statusRequest != 0) {
-                            getConnectionsManager().cancelRequest(statusRequest, true);
-                        }
-
-                        TLRPC.TL_account_updateStatus req = new TLRPC.TL_account_updateStatus();
-                        req.offline = false;
-                        statusRequest = getConnectionsManager().sendRequest(req, (response, error) -> {
-                            if (error == null) {
-                                lastStatusUpdateTime = System.currentTimeMillis();
-                                offlineSent = false;
-                                statusSettingState = 0;
-                            } else {
-                                if (lastStatusUpdateTime != 0) {
-                                    lastStatusUpdateTime += 5000;
-                                }
-                            }
-                            statusRequest = 0;
-                        });
-                    }
-                }
-            } else if (statusSettingState != 2 && !offlineSent && Math.abs(System.currentTimeMillis() - getConnectionsManager().getPauseTime()) >= 2000) {
-                statusSettingState = 2;
-                if (statusRequest != 0) {
-                    getConnectionsManager().cancelRequest(statusRequest, true);
-                }
-                TLRPC.TL_account_updateStatus req = new TLRPC.TL_account_updateStatus();
-                req.offline = true;
-                statusRequest = getConnectionsManager().sendRequest(req, (response, error) -> {
-                    if (error == null) {
-                        offlineSent = true;
-                    } else {
-                        if (lastStatusUpdateTime != 0) {
-                            lastStatusUpdateTime += 5000;
-                        }
-                    }
-                    statusRequest = 0;
-                });
-            }
+//        if (getUserConfig().isClientActivated()) {
+//            if (getConnectionsManager().getPauseTime() == 0 && ApplicationLoader.isScreenOn && !ApplicationLoader.mainInterfacePausedStageQueue) {
+//                if (ApplicationLoader.mainInterfacePausedStageQueueTime != 0 && Math.abs(ApplicationLoader.mainInterfacePausedStageQueueTime - System.currentTimeMillis()) > 1000) {
+//                    if (statusSettingState != 1 && (lastStatusUpdateTime == 0 || Math.abs(System.currentTimeMillis() - lastStatusUpdateTime) >= 55000 || offlineSent)) {
+//                        statusSettingState = 1;
+//
+//                        if (statusRequest != 0) {
+//                            getConnectionsManager().cancelRequest(statusRequest, true);
+//                        }
+//
+//                        TLRPC.TL_account_updateStatus req = new TLRPC.TL_account_updateStatus();
+//                        req.offline = false;
+//                        statusRequest = getConnectionsManager().sendRequest(req, (response, error) -> {
+//                            if (error == null) {
+//                                lastStatusUpdateTime = System.currentTimeMillis();
+//                                offlineSent = false;
+//                                statusSettingState = 0;
+//                            } else {
+//                                if (lastStatusUpdateTime != 0) {
+//                                    lastStatusUpdateTime += 5000;
+//                                }
+//                            }
+//                            statusRequest = 0;
+//                        });
+//                    }
+//                }
+//            } else if (statusSettingState != 2 && !offlineSent && Math.abs(System.currentTimeMillis() - getConnectionsManager().getPauseTime()) >= 2000) {
+//                statusSettingState = 2;
+//                if (statusRequest != 0) {
+//                    getConnectionsManager().cancelRequest(statusRequest, true);
+//                }
+//                TLRPC.TL_account_updateStatus req = new TLRPC.TL_account_updateStatus();
+//                req.offline = true;
+//                statusRequest = getConnectionsManager().sendRequest(req, (response, error) -> {
+//                    if (error == null) {
+//                        offlineSent = true;
+//                    } else {
+//                        if (lastStatusUpdateTime != 0) {
+//                            lastStatusUpdateTime += 5000;
+//                        }
+//                    }
+//                    statusRequest = 0;
+//                });
+//            }
 
             if (updatesQueueChannels.size() != 0) {
                 for (int a = 0; a < updatesQueueChannels.size(); a++) {
