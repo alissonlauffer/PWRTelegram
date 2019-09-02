@@ -4452,85 +4452,85 @@ public class MessagesController extends BaseController implements NotificationCe
         if (BuildVars.LOGS_ENABLED) {
             FileLog.d("folderId = " + folderId + " load cacheOffset = " + offset + " count = " + count + " cache = " + fromCache);
         }
-        if (fromCache) {
+//        if (fromCache) {
             getMessagesStorage().getDialogs(folderId, offset == 0 ? 0 : nextDialogsCacheOffset.get(folderId, 0), count);
-        } else {
-            TLRPC.TL_messages_getDialogs req = new TLRPC.TL_messages_getDialogs();
-            req.limit = count;
-            req.exclude_pinned = true;
-            if (folderId != 0) {
-                req.flags |= 2;
-                req.folder_id = folderId;
-            }
-            int[] dialogsLoadOffset = getUserConfig().getDialogLoadOffsets(folderId);
-            if (dialogsLoadOffset[UserConfig.i_dialogsLoadOffsetId] != -1) {
-                if (dialogsLoadOffset[UserConfig.i_dialogsLoadOffsetId] == Integer.MAX_VALUE) {
-                    dialogsEndReached.put(folderId, true);
-                    serverDialogsEndReached.put(folderId, true);
-                    loadingDialogs.put(folderId, false);
-                    getNotificationCenter().postNotificationName(NotificationCenter.dialogsNeedReload);
-                    return;
-                }
-                req.offset_id = dialogsLoadOffset[UserConfig.i_dialogsLoadOffsetId];
-                req.offset_date = dialogsLoadOffset[UserConfig.i_dialogsLoadOffsetDate];
-                if (req.offset_id == 0) {
-                    req.offset_peer = new TLRPC.TL_inputPeerEmpty();
-                } else {
-                    if (dialogsLoadOffset[UserConfig.i_dialogsLoadOffsetChannelId] != 0) {
-                        req.offset_peer = new TLRPC.TL_inputPeerChannel();
-                        req.offset_peer.channel_id = dialogsLoadOffset[UserConfig.i_dialogsLoadOffsetChannelId];
-                    } else if (dialogsLoadOffset[UserConfig.i_dialogsLoadOffsetUserId] != 0) {
-                        req.offset_peer = new TLRPC.TL_inputPeerUser();
-                        req.offset_peer.user_id = dialogsLoadOffset[UserConfig.i_dialogsLoadOffsetUserId];
-                    } else {
-                        req.offset_peer = new TLRPC.TL_inputPeerChat();
-                        req.offset_peer.chat_id = dialogsLoadOffset[UserConfig.i_dialogsLoadOffsetChatId];
-                    }
-                    req.offset_peer.access_hash = ((long) dialogsLoadOffset[UserConfig.i_dialogsLoadOffsetAccess_1]) | ((long) dialogsLoadOffset[UserConfig.i_dialogsLoadOffsetAccess_1] << 32);
-                }
-            } else {
-                boolean found = false;
-                ArrayList<TLRPC.Dialog> dialogs = getDialogs(folderId);
-                for (int a = dialogs.size() - 1; a >= 0; a--) {
-                    TLRPC.Dialog dialog = dialogs.get(a);
-                    if (dialog.pinned) {
-                        continue;
-                    }
-                    int lower_id = (int) dialog.id;
-                    int high_id = (int) (dialog.id >> 32);
-                    if (lower_id != 0 && high_id != 1 && dialog.top_message > 0) {
-                        MessageObject message = dialogMessage.get(dialog.id);
-                        if (message != null && message.getId() > 0) {
-                            req.offset_date = message.messageOwner.date;
-                            req.offset_id = message.messageOwner.id;
-                            int id;
-                            if (message.messageOwner.to_id.channel_id != 0) {
-                                id = -message.messageOwner.to_id.channel_id;
-                            } else if (message.messageOwner.to_id.chat_id != 0) {
-                                id = -message.messageOwner.to_id.chat_id;
-                            } else {
-                                id = message.messageOwner.to_id.user_id;
-                            }
-                            req.offset_peer = getInputPeer(id);
-                            found = true;
-                            break;
-                        }
-                    }
-                }
-                if (!found) {
-                    req.offset_peer = new TLRPC.TL_inputPeerEmpty();
-                }
-            }
-            getConnectionsManager().sendRequest(req, (response, error) -> {
-                if (error == null) {
-                    final TLRPC.messages_Dialogs dialogsRes = (TLRPC.messages_Dialogs) response;
-                    processLoadedDialogs(dialogsRes, null, folderId, 0, count, 0, false, false, false);
-                    if (onEmptyCallback != null && dialogsRes.dialogs.isEmpty()) {
-                        AndroidUtilities.runOnUIThread(onEmptyCallback);
-                    }
-                }
-            });
-        }
+//        } else {
+//            TLRPC.TL_messages_getDialogs req = new TLRPC.TL_messages_getDialogs();
+//            req.limit = count;
+//            req.exclude_pinned = true;
+//            if (folderId != 0) {
+//                req.flags |= 2;
+//                req.folder_id = folderId;
+//            }
+//            int[] dialogsLoadOffset = getUserConfig().getDialogLoadOffsets(folderId);
+//            if (dialogsLoadOffset[UserConfig.i_dialogsLoadOffsetId] != -1) {
+//                if (dialogsLoadOffset[UserConfig.i_dialogsLoadOffsetId] == Integer.MAX_VALUE) {
+//                    dialogsEndReached.put(folderId, true);
+//                    serverDialogsEndReached.put(folderId, true);
+//                    loadingDialogs.put(folderId, false);
+//                    getNotificationCenter().postNotificationName(NotificationCenter.dialogsNeedReload);
+//                    return;
+//                }
+//                req.offset_id = dialogsLoadOffset[UserConfig.i_dialogsLoadOffsetId];
+//                req.offset_date = dialogsLoadOffset[UserConfig.i_dialogsLoadOffsetDate];
+//                if (req.offset_id == 0) {
+//                    req.offset_peer = new TLRPC.TL_inputPeerEmpty();
+//                } else {
+//                    if (dialogsLoadOffset[UserConfig.i_dialogsLoadOffsetChannelId] != 0) {
+//                        req.offset_peer = new TLRPC.TL_inputPeerChannel();
+//                        req.offset_peer.channel_id = dialogsLoadOffset[UserConfig.i_dialogsLoadOffsetChannelId];
+//                    } else if (dialogsLoadOffset[UserConfig.i_dialogsLoadOffsetUserId] != 0) {
+//                        req.offset_peer = new TLRPC.TL_inputPeerUser();
+//                        req.offset_peer.user_id = dialogsLoadOffset[UserConfig.i_dialogsLoadOffsetUserId];
+//                    } else {
+//                        req.offset_peer = new TLRPC.TL_inputPeerChat();
+//                        req.offset_peer.chat_id = dialogsLoadOffset[UserConfig.i_dialogsLoadOffsetChatId];
+//                    }
+//                    req.offset_peer.access_hash = ((long) dialogsLoadOffset[UserConfig.i_dialogsLoadOffsetAccess_1]) | ((long) dialogsLoadOffset[UserConfig.i_dialogsLoadOffsetAccess_1] << 32);
+//                }
+//            } else {
+//                boolean found = false;
+//                ArrayList<TLRPC.Dialog> dialogs = getDialogs(folderId);
+//                for (int a = dialogs.size() - 1; a >= 0; a--) {
+//                    TLRPC.Dialog dialog = dialogs.get(a);
+//                    if (dialog.pinned) {
+//                        continue;
+//                    }
+//                    int lower_id = (int) dialog.id;
+//                    int high_id = (int) (dialog.id >> 32);
+//                    if (lower_id != 0 && high_id != 1 && dialog.top_message > 0) {
+//                        MessageObject message = dialogMessage.get(dialog.id);
+//                        if (message != null && message.getId() > 0) {
+//                            req.offset_date = message.messageOwner.date;
+//                            req.offset_id = message.messageOwner.id;
+//                            int id;
+//                            if (message.messageOwner.to_id.channel_id != 0) {
+//                                id = -message.messageOwner.to_id.channel_id;
+//                            } else if (message.messageOwner.to_id.chat_id != 0) {
+//                                id = -message.messageOwner.to_id.chat_id;
+//                            } else {
+//                                id = message.messageOwner.to_id.user_id;
+//                            }
+//                            req.offset_peer = getInputPeer(id);
+//                            found = true;
+//                            break;
+//                        }
+//                    }
+//                }
+//                if (!found) {
+//                    req.offset_peer = new TLRPC.TL_inputPeerEmpty();
+//                }
+//            }
+//            getConnectionsManager().sendRequest(req, (response, error) -> {
+//                if (error == null) {
+//                    final TLRPC.messages_Dialogs dialogsRes = (TLRPC.messages_Dialogs) response;
+//                    processLoadedDialogs(dialogsRes, null, folderId, 0, count, 0, false, false, false);
+//                    if (onEmptyCallback != null && dialogsRes.dialogs.isEmpty()) {
+//                        AndroidUtilities.runOnUIThread(onEmptyCallback);
+//                    }
+//                }
+//            });
+//        }
     }
 
     public void loadGlobalNotificationsSettings() {
@@ -4982,208 +4982,208 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     private void migrateDialogs(final int offset, final int offsetDate, final int offsetUser, final int offsetChat, final int offsetChannel, final long accessPeer) {
-        if (migratingDialogs || offset == -1) {
-            return;
-        }
-        migratingDialogs = true;
-
-        TLRPC.TL_messages_getDialogs req = new TLRPC.TL_messages_getDialogs();
-        req.exclude_pinned = true;
-        req.limit = 100;
-        req.offset_id = offset;
-        req.offset_date = offsetDate;
-        if (BuildVars.LOGS_ENABLED) {
-            FileLog.d("start migrate with id " + offset + " date " + LocaleController.getInstance().formatterStats.format((long) offsetDate * 1000));
-        }
-        if (offset == 0) {
-            req.offset_peer = new TLRPC.TL_inputPeerEmpty();
-        } else {
-            if (offsetChannel != 0) {
-                req.offset_peer = new TLRPC.TL_inputPeerChannel();
-                req.offset_peer.channel_id = offsetChannel;
-            } else if (offsetUser != 0) {
-                req.offset_peer = new TLRPC.TL_inputPeerUser();
-                req.offset_peer.user_id = offsetUser;
-            } else {
-                req.offset_peer = new TLRPC.TL_inputPeerChat();
-                req.offset_peer.chat_id = offsetChat;
-            }
-            req.offset_peer.access_hash = accessPeer;
-        }
-        getConnectionsManager().sendRequest(req, (response, error) -> {
-            if (error == null) {
-                final TLRPC.messages_Dialogs dialogsRes = (TLRPC.messages_Dialogs) response;
-                getMessagesStorage().getStorageQueue().postRunnable(() -> {
-                    try {
-                        int offsetId;
-                        int totalDialogsLoadCount = getUserConfig().getTotalDialogsCount(0);
-                        getUserConfig().setTotalDialogsCount(0, totalDialogsLoadCount + dialogsRes.dialogs.size());
-                        TLRPC.Message lastMessage = null;
-                        for (int a = 0; a < dialogsRes.messages.size(); a++) {
-                            TLRPC.Message message = dialogsRes.messages.get(a);
-                            if (BuildVars.LOGS_ENABLED) {
-                                FileLog.d("search migrate id " + message.id + " date " + LocaleController.getInstance().formatterStats.format((long) message.date * 1000));
-                            }
-                            if (lastMessage == null || message.date < lastMessage.date) {
-                                lastMessage = message;
-                            }
-                        }
-                        if (BuildVars.LOGS_ENABLED) {
-                            FileLog.d("migrate step with id " + lastMessage.id + " date " + LocaleController.getInstance().formatterStats.format((long) lastMessage.date * 1000));
-                        }
-                        if (dialogsRes.dialogs.size() >= 100) {
-                            offsetId = lastMessage.id;
-                        } else {
-                            if (BuildVars.LOGS_ENABLED) {
-                                FileLog.d("migrate stop due to not 100 dialogs");
-                            }
-                            for (int i = 0; i < 2; i++) {
-                                getUserConfig().setDialogsLoadOffset(i,
-                                        Integer.MAX_VALUE,
-                                        getUserConfig().migrateOffsetDate,
-                                        getUserConfig().migrateOffsetUserId,
-                                        getUserConfig().migrateOffsetChatId,
-                                        getUserConfig().migrateOffsetChannelId,
-                                        getUserConfig().migrateOffsetAccess);
-                            }
-                            offsetId = -1;
-                        }
-
-                        StringBuilder dids = new StringBuilder(dialogsRes.dialogs.size() * 12);
-                        LongSparseArray<TLRPC.Dialog> dialogHashMap = new LongSparseArray<>();
-                        for (int a = 0; a < dialogsRes.dialogs.size(); a++) {
-                            TLRPC.Dialog dialog = dialogsRes.dialogs.get(a);
-                            DialogObject.initDialog(dialog);
-                            if (dids.length() > 0) {
-                                dids.append(",");
-                            }
-                            dids.append(dialog.id);
-                            dialogHashMap.put(dialog.id, dialog);
-                        }
-                        SQLiteCursor cursor = getMessagesStorage().getDatabase().queryFinalized(String.format(Locale.US, "SELECT did, folder_id FROM dialogs WHERE did IN (%s)", dids.toString()));
-                        while (cursor.next()) {
-                            long did = cursor.longValue(0);
-                            int folder_id = cursor.intValue(1);
-                            TLRPC.Dialog dialog = dialogHashMap.get(did);
-                            if (dialog.folder_id != folder_id) {
-                                continue;
-                            }
-                            dialogHashMap.remove(did);
-                            if (dialog != null) {
-                                dialogsRes.dialogs.remove(dialog);
-                                for (int a = 0; a < dialogsRes.messages.size(); a++) {
-                                    TLRPC.Message message = dialogsRes.messages.get(a);
-                                    if (MessageObject.getDialogId(message) != did) {
-                                        continue;
-                                    }
-                                    dialogsRes.messages.remove(a);
-                                    a--;
-                                    if (message.id == dialog.top_message) {
-                                        dialog.top_message = 0;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        cursor.dispose();
-                        if (BuildVars.LOGS_ENABLED) {
-                            FileLog.d("migrate found missing dialogs " + dialogsRes.dialogs.size());
-                        }
-                        cursor = getMessagesStorage().getDatabase().queryFinalized("SELECT min(date) FROM dialogs WHERE date != 0 AND did >> 32 IN (0, -1)");
-                        if (cursor.next()) {
-                            int date = Math.max(1441062000, cursor.intValue(0));
-                            for (int a = 0; a < dialogsRes.messages.size(); a++) {
-                                TLRPC.Message message = dialogsRes.messages.get(a);
-                                if (message.date < date) {
-                                    if (offset != -1) {
-                                        for (int i = 0; i < 2; i++) {
-                                            getUserConfig().setDialogsLoadOffset(i,
-                                                    getUserConfig().migrateOffsetId,
-                                                    getUserConfig().migrateOffsetDate,
-                                                    getUserConfig().migrateOffsetUserId,
-                                                    getUserConfig().migrateOffsetChatId,
-                                                    getUserConfig().migrateOffsetChannelId,
-                                                    getUserConfig().migrateOffsetAccess);
-                                        }
-                                        offsetId = -1;
-                                        if (BuildVars.LOGS_ENABLED) {
-                                            FileLog.d("migrate stop due to reached loaded dialogs " + LocaleController.getInstance().formatterStats.format((long) date * 1000));
-                                        }
-                                    }
-                                    dialogsRes.messages.remove(a);
-                                    a--;
-                                    long did = MessageObject.getDialogId(message);
-                                    TLRPC.Dialog dialog = dialogHashMap.get(did);
-                                    dialogHashMap.remove(did);
-                                    if (dialog != null) {
-                                        dialogsRes.dialogs.remove(dialog);
-                                    }
-                                }
-                            }
-                            if (lastMessage != null && lastMessage.date < date && offset != -1) {
-                                for (int i = 0; i < 2; i++) {
-                                    getUserConfig().setDialogsLoadOffset(i,
-                                            getUserConfig().migrateOffsetId,
-                                            getUserConfig().migrateOffsetDate,
-                                            getUserConfig().migrateOffsetUserId,
-                                            getUserConfig().migrateOffsetChatId,
-                                            getUserConfig().migrateOffsetChannelId,
-                                            getUserConfig().migrateOffsetAccess);
-                                }
-                                offsetId = -1;
-                                if (BuildVars.LOGS_ENABLED) {
-                                    FileLog.d("migrate stop due to reached loaded dialogs " + LocaleController.getInstance().formatterStats.format((long) date * 1000));
-                                }
-                            }
-                        }
-                        cursor.dispose();
-
-                        getUserConfig().migrateOffsetDate = lastMessage.date;
-                        if (lastMessage.to_id.channel_id != 0) {
-                            getUserConfig().migrateOffsetChannelId = lastMessage.to_id.channel_id;
-                            getUserConfig().migrateOffsetChatId = 0;
-                            getUserConfig().migrateOffsetUserId = 0;
-                            for (int a = 0; a < dialogsRes.chats.size(); a++) {
-                                TLRPC.Chat chat = dialogsRes.chats.get(a);
-                                if (chat.id == getUserConfig().migrateOffsetChannelId) {
-                                    getUserConfig().migrateOffsetAccess = chat.access_hash;
-                                    break;
-                                }
-                            }
-                        } else if (lastMessage.to_id.chat_id != 0) {
-                            getUserConfig().migrateOffsetChatId = lastMessage.to_id.chat_id;
-                            getUserConfig().migrateOffsetChannelId = 0;
-                            getUserConfig().migrateOffsetUserId = 0;
-                            for (int a = 0; a < dialogsRes.chats.size(); a++) {
-                                TLRPC.Chat chat = dialogsRes.chats.get(a);
-                                if (chat.id == getUserConfig().migrateOffsetChatId) {
-                                    getUserConfig().migrateOffsetAccess = chat.access_hash;
-                                    break;
-                                }
-                            }
-                        } else if (lastMessage.to_id.user_id != 0) {
-                            getUserConfig().migrateOffsetUserId = lastMessage.to_id.user_id;
-                            getUserConfig().migrateOffsetChatId = 0;
-                            getUserConfig().migrateOffsetChannelId = 0;
-                            for (int a = 0; a < dialogsRes.users.size(); a++) {
-                                TLRPC.User user = dialogsRes.users.get(a);
-                                if (user.id == getUserConfig().migrateOffsetUserId) {
-                                    getUserConfig().migrateOffsetAccess = user.access_hash;
-                                    break;
-                                }
-                            }
-                        }
-
-                        processLoadedDialogs(dialogsRes, null, 0, offsetId, 0, 0, false, true, false);
-                    } catch (Exception e) {
-                        FileLog.e(e);
-                        AndroidUtilities.runOnUIThread(() -> migratingDialogs = false);
-                    }
-                });
-            } else {
-                AndroidUtilities.runOnUIThread(() -> migratingDialogs = false);
-            }
-        });
+//        if (migratingDialogs || offset == -1) {
+//            return;
+//        }
+//        migratingDialogs = true;
+//
+//        TLRPC.TL_messages_getDialogs req = new TLRPC.TL_messages_getDialogs();
+//        req.exclude_pinned = true;
+//        req.limit = 100;
+//        req.offset_id = offset;
+//        req.offset_date = offsetDate;
+//        if (BuildVars.LOGS_ENABLED) {
+//            FileLog.d("start migrate with id " + offset + " date " + LocaleController.getInstance().formatterStats.format((long) offsetDate * 1000));
+//        }
+//        if (offset == 0) {
+//            req.offset_peer = new TLRPC.TL_inputPeerEmpty();
+//        } else {
+//            if (offsetChannel != 0) {
+//                req.offset_peer = new TLRPC.TL_inputPeerChannel();
+//                req.offset_peer.channel_id = offsetChannel;
+//            } else if (offsetUser != 0) {
+//                req.offset_peer = new TLRPC.TL_inputPeerUser();
+//                req.offset_peer.user_id = offsetUser;
+//            } else {
+//                req.offset_peer = new TLRPC.TL_inputPeerChat();
+//                req.offset_peer.chat_id = offsetChat;
+//            }
+//            req.offset_peer.access_hash = accessPeer;
+//        }
+//        getConnectionsManager().sendRequest(req, (response, error) -> {
+//            if (error == null) {
+//                final TLRPC.messages_Dialogs dialogsRes = (TLRPC.messages_Dialogs) response;
+//                getMessagesStorage().getStorageQueue().postRunnable(() -> {
+//                    try {
+//                        int offsetId;
+//                        int totalDialogsLoadCount = getUserConfig().getTotalDialogsCount(0);
+//                        getUserConfig().setTotalDialogsCount(0, totalDialogsLoadCount + dialogsRes.dialogs.size());
+//                        TLRPC.Message lastMessage = null;
+//                        for (int a = 0; a < dialogsRes.messages.size(); a++) {
+//                            TLRPC.Message message = dialogsRes.messages.get(a);
+//                            if (BuildVars.LOGS_ENABLED) {
+//                                FileLog.d("search migrate id " + message.id + " date " + LocaleController.getInstance().formatterStats.format((long) message.date * 1000));
+//                            }
+//                            if (lastMessage == null || message.date < lastMessage.date) {
+//                                lastMessage = message;
+//                            }
+//                        }
+//                        if (BuildVars.LOGS_ENABLED) {
+//                            FileLog.d("migrate step with id " + lastMessage.id + " date " + LocaleController.getInstance().formatterStats.format((long) lastMessage.date * 1000));
+//                        }
+//                        if (dialogsRes.dialogs.size() >= 100) {
+//                            offsetId = lastMessage.id;
+//                        } else {
+//                            if (BuildVars.LOGS_ENABLED) {
+//                                FileLog.d("migrate stop due to not 100 dialogs");
+//                            }
+//                            for (int i = 0; i < 2; i++) {
+//                                getUserConfig().setDialogsLoadOffset(i,
+//                                        Integer.MAX_VALUE,
+//                                        getUserConfig().migrateOffsetDate,
+//                                        getUserConfig().migrateOffsetUserId,
+//                                        getUserConfig().migrateOffsetChatId,
+//                                        getUserConfig().migrateOffsetChannelId,
+//                                        getUserConfig().migrateOffsetAccess);
+//                            }
+//                            offsetId = -1;
+//                        }
+//
+//                        StringBuilder dids = new StringBuilder(dialogsRes.dialogs.size() * 12);
+//                        LongSparseArray<TLRPC.Dialog> dialogHashMap = new LongSparseArray<>();
+//                        for (int a = 0; a < dialogsRes.dialogs.size(); a++) {
+//                            TLRPC.Dialog dialog = dialogsRes.dialogs.get(a);
+//                            DialogObject.initDialog(dialog);
+//                            if (dids.length() > 0) {
+//                                dids.append(",");
+//                            }
+//                            dids.append(dialog.id);
+//                            dialogHashMap.put(dialog.id, dialog);
+//                        }
+//                        SQLiteCursor cursor = getMessagesStorage().getDatabase().queryFinalized(String.format(Locale.US, "SELECT did, folder_id FROM dialogs WHERE did IN (%s)", dids.toString()));
+//                        while (cursor.next()) {
+//                            long did = cursor.longValue(0);
+//                            int folder_id = cursor.intValue(1);
+//                            TLRPC.Dialog dialog = dialogHashMap.get(did);
+//                            if (dialog.folder_id != folder_id) {
+//                                continue;
+//                            }
+//                            dialogHashMap.remove(did);
+//                            if (dialog != null) {
+//                                dialogsRes.dialogs.remove(dialog);
+//                                for (int a = 0; a < dialogsRes.messages.size(); a++) {
+//                                    TLRPC.Message message = dialogsRes.messages.get(a);
+//                                    if (MessageObject.getDialogId(message) != did) {
+//                                        continue;
+//                                    }
+//                                    dialogsRes.messages.remove(a);
+//                                    a--;
+//                                    if (message.id == dialog.top_message) {
+//                                        dialog.top_message = 0;
+//                                        break;
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        cursor.dispose();
+//                        if (BuildVars.LOGS_ENABLED) {
+//                            FileLog.d("migrate found missing dialogs " + dialogsRes.dialogs.size());
+//                        }
+//                        cursor = getMessagesStorage().getDatabase().queryFinalized("SELECT min(date) FROM dialogs WHERE date != 0 AND did >> 32 IN (0, -1)");
+//                        if (cursor.next()) {
+//                            int date = Math.max(1441062000, cursor.intValue(0));
+//                            for (int a = 0; a < dialogsRes.messages.size(); a++) {
+//                                TLRPC.Message message = dialogsRes.messages.get(a);
+//                                if (message.date < date) {
+//                                    if (offset != -1) {
+//                                        for (int i = 0; i < 2; i++) {
+//                                            getUserConfig().setDialogsLoadOffset(i,
+//                                                    getUserConfig().migrateOffsetId,
+//                                                    getUserConfig().migrateOffsetDate,
+//                                                    getUserConfig().migrateOffsetUserId,
+//                                                    getUserConfig().migrateOffsetChatId,
+//                                                    getUserConfig().migrateOffsetChannelId,
+//                                                    getUserConfig().migrateOffsetAccess);
+//                                        }
+//                                        offsetId = -1;
+//                                        if (BuildVars.LOGS_ENABLED) {
+//                                            FileLog.d("migrate stop due to reached loaded dialogs " + LocaleController.getInstance().formatterStats.format((long) date * 1000));
+//                                        }
+//                                    }
+//                                    dialogsRes.messages.remove(a);
+//                                    a--;
+//                                    long did = MessageObject.getDialogId(message);
+//                                    TLRPC.Dialog dialog = dialogHashMap.get(did);
+//                                    dialogHashMap.remove(did);
+//                                    if (dialog != null) {
+//                                        dialogsRes.dialogs.remove(dialog);
+//                                    }
+//                                }
+//                            }
+//                            if (lastMessage != null && lastMessage.date < date && offset != -1) {
+//                                for (int i = 0; i < 2; i++) {
+//                                    getUserConfig().setDialogsLoadOffset(i,
+//                                            getUserConfig().migrateOffsetId,
+//                                            getUserConfig().migrateOffsetDate,
+//                                            getUserConfig().migrateOffsetUserId,
+//                                            getUserConfig().migrateOffsetChatId,
+//                                            getUserConfig().migrateOffsetChannelId,
+//                                            getUserConfig().migrateOffsetAccess);
+//                                }
+//                                offsetId = -1;
+//                                if (BuildVars.LOGS_ENABLED) {
+//                                    FileLog.d("migrate stop due to reached loaded dialogs " + LocaleController.getInstance().formatterStats.format((long) date * 1000));
+//                                }
+//                            }
+//                        }
+//                        cursor.dispose();
+//
+//                        getUserConfig().migrateOffsetDate = lastMessage.date;
+//                        if (lastMessage.to_id.channel_id != 0) {
+//                            getUserConfig().migrateOffsetChannelId = lastMessage.to_id.channel_id;
+//                            getUserConfig().migrateOffsetChatId = 0;
+//                            getUserConfig().migrateOffsetUserId = 0;
+//                            for (int a = 0; a < dialogsRes.chats.size(); a++) {
+//                                TLRPC.Chat chat = dialogsRes.chats.get(a);
+//                                if (chat.id == getUserConfig().migrateOffsetChannelId) {
+//                                    getUserConfig().migrateOffsetAccess = chat.access_hash;
+//                                    break;
+//                                }
+//                            }
+//                        } else if (lastMessage.to_id.chat_id != 0) {
+//                            getUserConfig().migrateOffsetChatId = lastMessage.to_id.chat_id;
+//                            getUserConfig().migrateOffsetChannelId = 0;
+//                            getUserConfig().migrateOffsetUserId = 0;
+//                            for (int a = 0; a < dialogsRes.chats.size(); a++) {
+//                                TLRPC.Chat chat = dialogsRes.chats.get(a);
+//                                if (chat.id == getUserConfig().migrateOffsetChatId) {
+//                                    getUserConfig().migrateOffsetAccess = chat.access_hash;
+//                                    break;
+//                                }
+//                            }
+//                        } else if (lastMessage.to_id.user_id != 0) {
+//                            getUserConfig().migrateOffsetUserId = lastMessage.to_id.user_id;
+//                            getUserConfig().migrateOffsetChatId = 0;
+//                            getUserConfig().migrateOffsetChannelId = 0;
+//                            for (int a = 0; a < dialogsRes.users.size(); a++) {
+//                                TLRPC.User user = dialogsRes.users.get(a);
+//                                if (user.id == getUserConfig().migrateOffsetUserId) {
+//                                    getUserConfig().migrateOffsetAccess = user.access_hash;
+//                                    break;
+//                                }
+//                            }
+//                        }
+//
+//                        processLoadedDialogs(dialogsRes, null, 0, offsetId, 0, 0, false, true, false);
+//                    } catch (Exception e) {
+//                        FileLog.e(e);
+//                        AndroidUtilities.runOnUIThread(() -> migratingDialogs = false);
+//                    }
+//                });
+//            } else {
+//                AndroidUtilities.runOnUIThread(() -> migratingDialogs = false);
+//            }
+//        });
     }
 
     private int DIALOGS_LOAD_TYPE_CACHE = 1;
