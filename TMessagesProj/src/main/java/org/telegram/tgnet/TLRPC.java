@@ -13783,6 +13783,8 @@ public class TLRPC {
 				case 0x92a72876:
 					result = new TL_messageActionGameScore();
 					break;
+                case 0x8f31b327:
+                    result = new TL_messageActionPaymentSentMe();
 			}
 			if (result == null && exception) {
 				throw new RuntimeException(String.format("can't parse magic %x in MessageAction", constructor));
@@ -13794,7 +13796,46 @@ public class TLRPC {
 		}
 	}
 
-	public static class TL_messageActionLoginUnknownLocation extends MessageAction {
+    public static class TL_messageActionPaymentSentMe extends MessageAction {
+        public static int constructor = 0x8f31b327;
+        public byte[] payload;
+        public TL_paymentRequestedInfo info;
+        public String shipping_option_id;
+        public String charge_id;
+        public String provider_charge_id;
+
+
+        public void readParams(AbstractSerializedData stream, boolean exception) {
+            flags = stream.readInt32(exception);
+
+            currency = stream.readString(exception);
+            total_amount = stream.readInt64(exception);
+            payload = stream.readByteArray(exception);
+
+            if ((flags & 1) != 0) {
+                info = TL_paymentRequestedInfo.TLdeserialize(stream, stream.readInt32(exception), exception);
+            }
+
+            if ((flags & 2) != 0) {
+                shipping_option_id = stream.readString(exception);
+            }
+
+            int magic = stream.readInt32(exception);
+            if (magic != 0xea02c27e && exception) {
+                throw new RuntimeException(String.format("can't parse magic %x", magic));
+            }
+
+            charge_id = stream.readString(exception);
+            provider_charge_id = stream.readString(exception);
+        }
+
+        public void serializeToStream(AbstractSerializedData stream) {
+
+        }
+    }
+
+
+    public static class TL_messageActionLoginUnknownLocation extends MessageAction {
 		public static int constructor = 0x555555F5;
 
 
