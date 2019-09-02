@@ -7388,6 +7388,8 @@ public class MessagesController extends BaseController implements NotificationCe
             Collections.reverse(msgs.messages);
             MessagesStorage.getInstance(currentAccount).putMessages(msgs, dialog_id, 0, Integer.MAX_VALUE, true);
         }
+
+        getMessagesStorage().getStorageQueue().postRunnable(() -> getMessagesStorage().putUsersAndChats(users, chats, true, false));
     }
 
     /*
@@ -7421,19 +7423,12 @@ public class MessagesController extends BaseController implements NotificationCe
 
             if (response instanceof TLRPC.TL_updates_differenceSlice) {
                 TLRPC.TL_updates_differenceSlice res = (TLRPC.TL_updates_differenceSlice) response;
-
                 getMessagesStorage().setLastDateValue(res.intermediate_state.date);
                 getMessagesStorage().setLastPtsValue(res.intermediate_state.pts);
                 getMessagesStorage().setLastQtsValue(res.intermediate_state.qts);
 
                 storeMessage(res.new_messages, res.users, res.chats);
                 processUpdateArray(res.other_updates, res.users, res.chats, true, 0);
-
-                if (res.intermediate_state.pts % 7 == 2) {
-                    AndroidUtilities.runOnUIThread(this::cleanup);
-                    gettingDifference = true;
-                }
-
                 getDifference(res.intermediate_state.pts, res.intermediate_state.date, res.intermediate_state.qts, true);
             }
 
@@ -7446,6 +7441,7 @@ public class MessagesController extends BaseController implements NotificationCe
             if (response instanceof TLRPC.TL_updates_differenceTooLong) {
                 TLRPC.TL_updates_differenceTooLong res = (TLRPC.TL_updates_differenceTooLong) response;
                 getMessagesStorage().setLastPtsValue(res.pts);
+
                 getDifference(res.pts, date, qts, true);
             }
 
@@ -7453,9 +7449,6 @@ public class MessagesController extends BaseController implements NotificationCe
                 TLRPC.TL_updates_difference res = (TLRPC.TL_updates_difference) response;
                 storeMessage(res.new_messages, res.users, res.chats);
                 processUpdateArray(res.other_updates, res.users, res.chats, true, 0);
-                getConnectionsManager().setIsUpdating(false);
-                gettingDifference = false;
-
                 AndroidUtilities.runOnUIThread(this::cleanup);
             }
         });
