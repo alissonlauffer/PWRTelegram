@@ -3196,29 +3196,29 @@ public class MessagesController extends BaseController implements NotificationCe
 //                    statusRequest = 0;
 //                });
 //            }
-
-            if (updatesQueueChannels.size() != 0) {
-                for (int a = 0; a < updatesQueueChannels.size(); a++) {
-                    int key = updatesQueueChannels.keyAt(a);
-                    long updatesStartWaitTime = updatesStartWaitTimeChannels.valueAt(a);
-                    if (updatesStartWaitTime + 1500 < currentTime) {
-                        if (BuildVars.LOGS_ENABLED) {
-                            FileLog.d("QUEUE CHANNEL " + key + " UPDATES WAIT TIMEOUT - CHECK QUEUE");
-                        }
-                        processChannelsUpdatesQueue(key, 0);
-                    }
-                }
-            }
-
-            for (int a = 0; a < 3; a++) {
-                if (getUpdatesStartTime(a) != 0 && getUpdatesStartTime(a) + 1500 < currentTime) {
-                    if (BuildVars.LOGS_ENABLED) {
-                        FileLog.d(a + " QUEUE UPDATES WAIT TIMEOUT - CHECK QUEUE");
-                    }
-                    processUpdatesQueue(a, 0);
-                }
-            }
-        }
+//
+//            if (updatesQueueChannels.size() != 0) {
+//                for (int a = 0; a < updatesQueueChannels.size(); a++) {
+//                    int key = updatesQueueChannels.keyAt(a);
+//                    long updatesStartWaitTime = updatesStartWaitTimeChannels.valueAt(a);
+//                    if (updatesStartWaitTime + 1500 < currentTime) {
+//                        if (BuildVars.LOGS_ENABLED) {
+//                            FileLog.d("QUEUE CHANNEL " + key + " UPDATES WAIT TIMEOUT - CHECK QUEUE");
+//                        }
+//                        processChannelsUpdatesQueue(key, 0);
+//                    }
+//                }
+//            }
+//
+//            for (int a = 0; a < 3; a++) {
+//                if (getUpdatesStartTime(a) != 0 && getUpdatesStartTime(a) + 1500 < currentTime) {
+//                    if (BuildVars.LOGS_ENABLED) {
+//                        FileLog.d(a + " QUEUE UPDATES WAIT TIMEOUT - CHECK QUEUE");
+//                    }
+//                    processUpdatesQueue(a, 0);
+//                }
+//            }
+//        }
         if (Math.abs(System.currentTimeMillis() - lastViewsCheckTime) >= 5000) {
             lastViewsCheckTime = System.currentTimeMillis();
             if (channelViewsToSend.size() != 0) {
