@@ -3392,25 +3392,25 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     private void checkTosUpdate() {
-        if (nextTosCheckTime > getConnectionsManager().getCurrentTime() || checkingTosUpdate || !getUserConfig().isClientActivated()) {
-            return;
-        }
-        checkingTosUpdate = true;
-        TLRPC.TL_help_getTermsOfServiceUpdate req = new TLRPC.TL_help_getTermsOfServiceUpdate();
-        getConnectionsManager().sendRequest(req, (response, error) -> {
-            checkingTosUpdate = false;
-            if (response instanceof TLRPC.TL_help_termsOfServiceUpdateEmpty) {
-                TLRPC.TL_help_termsOfServiceUpdateEmpty res = (TLRPC.TL_help_termsOfServiceUpdateEmpty) response;
-                nextTosCheckTime = res.expires;
-            } else if (response instanceof TLRPC.TL_help_termsOfServiceUpdate) {
-                final TLRPC.TL_help_termsOfServiceUpdate res = (TLRPC.TL_help_termsOfServiceUpdate) response;
-                nextTosCheckTime = res.expires;
-                AndroidUtilities.runOnUIThread(() -> getNotificationCenter().postNotificationName(NotificationCenter.needShowAlert, 4, res.terms_of_service));
-            } else {
-                nextTosCheckTime = getConnectionsManager().getCurrentTime() + 60 * 60;
-            }
-            notificationsPreferences.edit().putInt("nextTosCheckTime", nextTosCheckTime).commit();
-        });
+//        if (nextTosCheckTime > getConnectionsManager().getCurrentTime() || checkingTosUpdate || !getUserConfig().isClientActivated()) {
+//            return;
+//        }
+//        checkingTosUpdate = true;
+//        TLRPC.TL_help_getTermsOfServiceUpdate req = new TLRPC.TL_help_getTermsOfServiceUpdate();
+//        getConnectionsManager().sendRequest(req, (response, error) -> {
+//            checkingTosUpdate = false;
+//            if (response instanceof TLRPC.TL_help_termsOfServiceUpdateEmpty) {
+//                TLRPC.TL_help_termsOfServiceUpdateEmpty res = (TLRPC.TL_help_termsOfServiceUpdateEmpty) response;
+//                nextTosCheckTime = res.expires;
+//            } else if (response instanceof TLRPC.TL_help_termsOfServiceUpdate) {
+//                final TLRPC.TL_help_termsOfServiceUpdate res = (TLRPC.TL_help_termsOfServiceUpdate) response;
+//                nextTosCheckTime = res.expires;
+//                AndroidUtilities.runOnUIThread(() -> getNotificationCenter().postNotificationName(NotificationCenter.needShowAlert, 4, res.terms_of_service));
+//            } else {
+//                nextTosCheckTime = getConnectionsManager().getCurrentTime() + 60 * 60;
+//            }
+//            notificationsPreferences.edit().putInt("nextTosCheckTime", nextTosCheckTime).commit();
+//        });
     }
 
     public void checkProxyInfo(final boolean reset) {
