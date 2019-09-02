@@ -1956,41 +1956,41 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     public void loadPeerSettings(TLRPC.User currentUser, TLRPC.Chat currentChat) {
-        if (currentUser == null && currentChat == null) {
-            return;
-        }
-        final long dialogId;
-        if (currentUser != null) {
-            dialogId = currentUser.id;
-        } else {
-            dialogId = -currentChat.id;
-        }
-        if (loadingPeerSettings.indexOfKey(dialogId) >= 0) {
-            return;
-        }
-        loadingPeerSettings.put(dialogId, true);
-        if (BuildVars.LOGS_ENABLED) {
-            FileLog.d("request spam button for " + dialogId);
-        }
-        int vis = notificationsPreferences.getInt("dialog_bar_vis3" + dialogId, 0);
-        if (vis == 1 || vis == 3) {
-            if (BuildVars.LOGS_ENABLED) {
-                FileLog.d("dialog bar already hidden for " + dialogId);
-            }
-            return;
-        }
-        TLRPC.TL_messages_getPeerSettings req = new TLRPC.TL_messages_getPeerSettings();
-        if (currentUser != null) {
-            req.peer = getInputPeer(currentUser.id);
-        } else if (currentChat != null) {
-            req.peer = getInputPeer(-currentChat.id);
-        }
-        getConnectionsManager().sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
-            loadingPeerSettings.remove(dialogId);
-            if (response != null) {
-                savePeerSettings(dialogId, (TLRPC.TL_peerSettings) response, false);
-            }
-        }));
+//        if (currentUser == null && currentChat == null) {
+//            return;
+//        }
+//        final long dialogId;
+//        if (currentUser != null) {
+//            dialogId = currentUser.id;
+//        } else {
+//            dialogId = -currentChat.id;
+//        }
+//        if (loadingPeerSettings.indexOfKey(dialogId) >= 0) {
+//            return;
+//        }
+//        loadingPeerSettings.put(dialogId, true);
+//        if (BuildVars.LOGS_ENABLED) {
+//            FileLog.d("request spam button for " + dialogId);
+//        }
+//        int vis = notificationsPreferences.getInt("dialog_bar_vis3" + dialogId, 0);
+//        if (vis == 1 || vis == 3) {
+//            if (BuildVars.LOGS_ENABLED) {
+//                FileLog.d("dialog bar already hidden for " + dialogId);
+//            }
+//            return;
+//        }
+//        TLRPC.TL_messages_getPeerSettings req = new TLRPC.TL_messages_getPeerSettings();
+//        if (currentUser != null) {
+//            req.peer = getInputPeer(currentUser.id);
+//        } else if (currentChat != null) {
+//            req.peer = getInputPeer(-currentChat.id);
+//        }
+//        getConnectionsManager().sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
+//            loadingPeerSettings.remove(dialogId);
+//            if (response != null) {
+//                savePeerSettings(dialogId, (TLRPC.TL_peerSettings) response, false);
+//            }
+//        }));
     }
 
     protected void processNewChannelDifferenceParams(int pts, int pts_count, int channelId) {
