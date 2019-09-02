@@ -4344,19 +4344,19 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     public void loadSignUpNotificationsSettings() {
-        if (!loadingNotificationSignUpSettings) {
-            loadingNotificationSignUpSettings = true;
-            TLRPC.TL_account_getContactSignUpNotification req = new TLRPC.TL_account_getContactSignUpNotification();
-            getConnectionsManager().sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
-                loadingNotificationSignUpSettings = false;
-                SharedPreferences.Editor editor = notificationsPreferences.edit();
-                enableJoined = response instanceof TLRPC.TL_boolFalse;
-                editor.putBoolean("EnableContactJoined", enableJoined);
-                editor.commit();
-                getUserConfig().notificationsSignUpSettingsLoaded = true;
-                getUserConfig().saveConfig(false);
-            }));
-        }
+//        if (!loadingNotificationSignUpSettings) {
+//            loadingNotificationSignUpSettings = true;
+//            TLRPC.TL_account_getContactSignUpNotification req = new TLRPC.TL_account_getContactSignUpNotification();
+//            getConnectionsManager().sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
+//                loadingNotificationSignUpSettings = false;
+//                SharedPreferences.Editor editor = notificationsPreferences.edit();
+//                enableJoined = response instanceof TLRPC.TL_boolFalse;
+//                editor.putBoolean("EnableContactJoined", enableJoined);
+//                editor.commit();
+//                getUserConfig().notificationsSignUpSettingsLoaded = true;
+//                getUserConfig().saveConfig(false);
+//            }));
+//        }
     }
 
     public void forceResetDialogs() {
