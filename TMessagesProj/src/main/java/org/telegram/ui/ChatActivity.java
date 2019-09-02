@@ -13180,35 +13180,35 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         updatePinnedMessageView(true);
         updateVisibleRows();
 
-        if (!messageObject.scheduled) {
-            TLRPC.TL_messages_getMessageEditData req = new TLRPC.TL_messages_getMessageEditData();
-            req.peer = getMessagesController().getInputPeer((int) dialog_id);
-            req.id = messageObject.getId();
-            editingMessageObjectReqId = getConnectionsManager().sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
-                editingMessageObjectReqId = 0;
-                if (response == null) {
-                    if (getParentActivity() == null) {
-                        return;
-                    }
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
-                    builder.setTitle(LocaleController.getString("AppName", R.string.AppName));
-                    builder.setMessage(LocaleController.getString("EditMessageError", R.string.EditMessageError));
-                    builder.setPositiveButton(LocaleController.getString("OK", R.string.OK), null);
-                    showDialog(builder.create());
-
-                    if (chatActivityEnterView != null) {
-                        chatActivityEnterView.setEditingMessageObject(null, false);
-                        hideFieldPanel(true);
-                    }
-                } else {
-                    if (chatActivityEnterView != null) {
-                        chatActivityEnterView.showEditDoneProgress(false, true);
-                    }
-                }
-            }));
-        } else {
+//        if (!messageObject.scheduled) {
+//            TLRPC.TL_messages_getMessageEditData req = new TLRPC.TL_messages_getMessageEditData();
+//            req.peer = getMessagesController().getInputPeer((int) dialog_id);
+//            req.id = messageObject.getId();
+//            editingMessageObjectReqId = getConnectionsManager().sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
+//                editingMessageObjectReqId = 0;
+//                if (response == null) {
+//                    if (getParentActivity() == null) {
+//                        return;
+//                    }
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
+//                    builder.setTitle(LocaleController.getString("AppName", R.string.AppName));
+//                    builder.setMessage(LocaleController.getString("EditMessageError", R.string.EditMessageError));
+//                    builder.setPositiveButton(LocaleController.getString("OK", R.string.OK), null);
+//                    showDialog(builder.create());
+//
+//                    if (chatActivityEnterView != null) {
+//                        chatActivityEnterView.setEditingMessageObject(null, false);
+//                        hideFieldPanel(true);
+//                    }
+//                } else {
+//                    if (chatActivityEnterView != null) {
+//                        chatActivityEnterView.showEditDoneProgress(false, true);
+//                    }
+//                }
+//            }));
+//        } else {
             chatActivityEnterView.showEditDoneProgress(false, true);
-        }
+//        }
     }
 
     private void restartSticker(ChatMessageCell cell) {
