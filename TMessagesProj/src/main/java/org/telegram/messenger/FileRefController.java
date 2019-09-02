@@ -326,15 +326,16 @@ public class FileRefController extends BaseController {
                     req.max_id = 0;
                     req.user_id = getMessagesController().getInputUser(id);
                     getConnectionsManager().sendRequest(req, (response, error) -> onRequestComplete(locationKey, parentKey, response, true));
-                } else {
-                    TLRPC.TL_messages_search req = new TLRPC.TL_messages_search();
-                    req.filter = new TLRPC.TL_inputMessagesFilterChatPhotos();
-                    req.limit = 80;
-                    req.offset_id = 0;
-                    req.q = "";
-                    req.peer = getMessagesController().getInputPeer(id);
-                    getConnectionsManager().sendRequest(req, (response, error) -> onRequestComplete(locationKey, parentKey, response, true));
                 }
+//                } else {
+//                    TLRPC.TL_messages_search req = new TLRPC.TL_messages_search();
+//                    req.filter = new TLRPC.TL_inputMessagesFilterChatPhotos();
+//                    req.limit = 80;
+//                    req.offset_id = 0;
+//                    req.q = "";
+//                    req.peer = getMessagesController().getInputPeer(id);
+//                    getConnectionsManager().sendRequest(req, (response, error) -> onRequestComplete(locationKey, parentKey, response, true));
+//                }
             } else if (string.startsWith("sent_")) {
                 String[] params = string.split("_");
                 if (params.length == 3) {

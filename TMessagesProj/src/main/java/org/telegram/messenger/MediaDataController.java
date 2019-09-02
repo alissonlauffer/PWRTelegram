@@ -1660,105 +1660,105 @@ public class MediaDataController extends BaseController {
         if (messagesSearchEndReached[0] && !messagesSearchEndReached[1] && mergeDialogId != 0) {
             queryWithDialog = mergeDialogId;
         }
-        if (queryWithDialog == dialog_id && firstQuery) {
-            if (mergeDialogId != 0) {
-                TLRPC.InputPeer inputPeer = getMessagesController().getInputPeer((int) mergeDialogId);
-                if (inputPeer == null) {
-                    return;
-                }
-                final TLRPC.TL_messages_search req = new TLRPC.TL_messages_search();
-                req.peer = inputPeer;
-                lastMergeDialogId = mergeDialogId;
-                req.limit = 1;
-                req.q = query != null ? query : "";
-                if (user != null) {
-                    req.from_id = getMessagesController().getInputUser(user);
-                    req.flags |= 1;
-                }
-                req.filter = new TLRPC.TL_inputMessagesFilterEmpty();
-                mergeReqId = getConnectionsManager().sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
-                    if (lastMergeDialogId == mergeDialogId) {
-                        mergeReqId = 0;
-                        if (response != null) {
-                            TLRPC.messages_Messages res = (TLRPC.messages_Messages) response;
-                            messagesSearchEndReached[1] = res.messages.isEmpty();
-                            messagesSearchCount[1] = res instanceof TLRPC.TL_messages_messagesSlice ? res.count : res.messages.size();
-                            searchMessagesInChat(req.q, dialog_id, mergeDialogId, guid, direction, true, user);
-                        }
-                    }
-                }), ConnectionsManager.RequestFlagFailOnServerErrors);
-                return;
-            } else {
-                lastMergeDialogId = 0;
-                messagesSearchEndReached[1] = true;
-                messagesSearchCount[1] = 0;
-            }
-        }
-        final TLRPC.TL_messages_search req = new TLRPC.TL_messages_search();
-        req.peer = getMessagesController().getInputPeer((int) queryWithDialog);
-        if (req.peer == null) {
-            return;
-        }
-        req.limit = 21;
-        req.q = query != null ? query : "";
-        req.offset_id = max_id;
-        if (user != null) {
-            req.from_id = getMessagesController().getInputUser(user);
-            req.flags |= 1;
-        }
-        req.filter = new TLRPC.TL_inputMessagesFilterEmpty();
-        final int currentReqId = ++lastReqId;
-        lastSearchQuery = query;
-        final long queryWithDialogFinal = queryWithDialog;
-        reqId = getConnectionsManager().sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
-            if (currentReqId == lastReqId) {
-                reqId = 0;
-                if (response != null) {
-                    TLRPC.messages_Messages res = (TLRPC.messages_Messages) response;
-                    for (int a = 0; a < res.messages.size(); a++) {
-                        TLRPC.Message message = res.messages.get(a);
-                        if (message instanceof TLRPC.TL_messageEmpty || message.action instanceof TLRPC.TL_messageActionHistoryClear) {
-                            res.messages.remove(a);
-                            a--;
-                        }
-                    }
-                    getMessagesStorage().putUsersAndChats(res.users, res.chats, true, true);
-                    getMessagesController().putUsers(res.users, false);
-                    getMessagesController().putChats(res.chats, false);
-                    if (req.offset_id == 0 && queryWithDialogFinal == dialog_id) {
-                        lastReturnedNum = 0;
-                        searchResultMessages.clear();
-                        searchResultMessagesMap[0].clear();
-                        searchResultMessagesMap[1].clear();
-                        messagesSearchCount[0] = 0;
-                    }
-                    boolean added = false;
-                    for (int a = 0; a < Math.min(res.messages.size(), 20); a++) {
-                        TLRPC.Message message = res.messages.get(a);
-                        added = true;
-                        MessageObject messageObject = new MessageObject(currentAccount, message, false);
-                        searchResultMessages.add(messageObject);
-                        searchResultMessagesMap[queryWithDialogFinal == dialog_id ? 0 : 1].put(messageObject.getId(), messageObject);
-                    }
-                    messagesSearchEndReached[queryWithDialogFinal == dialog_id ? 0 : 1] = res.messages.size() != 21;
-                    messagesSearchCount[queryWithDialogFinal == dialog_id ? 0 : 1] = res instanceof TLRPC.TL_messages_messagesSlice || res instanceof TLRPC.TL_messages_channelMessages ? res.count : res.messages.size();
-                    if (searchResultMessages.isEmpty()) {
-                        getNotificationCenter().postNotificationName(NotificationCenter.chatSearchResultsAvailable, guid, 0, getMask(), (long) 0, 0, 0);
-                    } else {
-                        if (added) {
-                            if (lastReturnedNum >= searchResultMessages.size()) {
-                                lastReturnedNum = searchResultMessages.size() - 1;
-                            }
-                            MessageObject messageObject = searchResultMessages.get(lastReturnedNum);
-                            getNotificationCenter().postNotificationName(NotificationCenter.chatSearchResultsAvailable, guid, messageObject.getId(), getMask(), messageObject.getDialogId(), lastReturnedNum, messagesSearchCount[0] + messagesSearchCount[1]);
-                        }
-                    }
-                    if (queryWithDialogFinal == dialog_id && messagesSearchEndReached[0] && mergeDialogId != 0 && !messagesSearchEndReached[1]) {
-                        searchMessagesInChat(lastSearchQuery, dialog_id, mergeDialogId, guid, 0, true, user);
-                    }
-                }
-            }
-        }), ConnectionsManager.RequestFlagFailOnServerErrors);
+//        if (queryWithDialog == dialog_id && firstQuery) {
+//            if (mergeDialogId != 0) {
+//                TLRPC.InputPeer inputPeer = getMessagesController().getInputPeer((int) mergeDialogId);
+//                if (inputPeer == null) {
+//                    return;
+//                }
+//                final TLRPC.TL_messages_search req = new TLRPC.TL_messages_search();
+//                req.peer = inputPeer;
+//                lastMergeDialogId = mergeDialogId;
+//                req.limit = 1;
+//                req.q = query != null ? query : "";
+//                if (user != null) {
+//                    req.from_id = getMessagesController().getInputUser(user);
+//                    req.flags |= 1;
+//                }
+//                req.filter = new TLRPC.TL_inputMessagesFilterEmpty();
+//                mergeReqId = getConnectionsManager().sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
+//                    if (lastMergeDialogId == mergeDialogId) {
+//                        mergeReqId = 0;
+//                        if (response != null) {
+//                            TLRPC.messages_Messages res = (TLRPC.messages_Messages) response;
+//                            messagesSearchEndReached[1] = res.messages.isEmpty();
+//                            messagesSearchCount[1] = res instanceof TLRPC.TL_messages_messagesSlice ? res.count : res.messages.size();
+//                            searchMessagesInChat(req.q, dialog_id, mergeDialogId, guid, direction, true, user);
+//                        }
+//                    }
+//                }), ConnectionsManager.RequestFlagFailOnServerErrors);
+//                return;
+//            } else {
+//                lastMergeDialogId = 0;
+//                messagesSearchEndReached[1] = true;
+//                messagesSearchCount[1] = 0;
+//            }
+//        }
+//        final TLRPC.TL_messages_search req = new TLRPC.TL_messages_search();
+//        req.peer = getMessagesController().getInputPeer((int) queryWithDialog);
+//        if (req.peer == null) {
+//            return;
+//        }
+//        req.limit = 21;
+//        req.q = query != null ? query : "";
+//        req.offset_id = max_id;
+//        if (user != null) {
+//            req.from_id = getMessagesController().getInputUser(user);
+//            req.flags |= 1;
+//        }
+//        req.filter = new TLRPC.TL_inputMessagesFilterEmpty();
+//        final int currentReqId = ++lastReqId;
+//        lastSearchQuery = query;
+//        final long queryWithDialogFinal = queryWithDialog;
+//        reqId = getConnectionsManager().sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
+//            if (currentReqId == lastReqId) {
+//                reqId = 0;
+//                if (response != null) {
+//                    TLRPC.messages_Messages res = (TLRPC.messages_Messages) response;
+//                    for (int a = 0; a < res.messages.size(); a++) {
+//                        TLRPC.Message message = res.messages.get(a);
+//                        if (message instanceof TLRPC.TL_messageEmpty || message.action instanceof TLRPC.TL_messageActionHistoryClear) {
+//                            res.messages.remove(a);
+//                            a--;
+//                        }
+//                    }
+//                    getMessagesStorage().putUsersAndChats(res.users, res.chats, true, true);
+//                    getMessagesController().putUsers(res.users, false);
+//                    getMessagesController().putChats(res.chats, false);
+//                    if (req.offset_id == 0 && queryWithDialogFinal == dialog_id) {
+//                        lastReturnedNum = 0;
+//                        searchResultMessages.clear();
+//                        searchResultMessagesMap[0].clear();
+//                        searchResultMessagesMap[1].clear();
+//                        messagesSearchCount[0] = 0;
+//                    }
+//                    boolean added = false;
+//                    for (int a = 0; a < Math.min(res.messages.size(), 20); a++) {
+//                        TLRPC.Message message = res.messages.get(a);
+//                        added = true;
+//                        MessageObject messageObject = new MessageObject(currentAccount, message, false);
+//                        searchResultMessages.add(messageObject);
+//                        searchResultMessagesMap[queryWithDialogFinal == dialog_id ? 0 : 1].put(messageObject.getId(), messageObject);
+//                    }
+//                    messagesSearchEndReached[queryWithDialogFinal == dialog_id ? 0 : 1] = res.messages.size() != 21;
+//                    messagesSearchCount[queryWithDialogFinal == dialog_id ? 0 : 1] = res instanceof TLRPC.TL_messages_messagesSlice || res instanceof TLRPC.TL_messages_channelMessages ? res.count : res.messages.size();
+//                    if (searchResultMessages.isEmpty()) {
+//                        getNotificationCenter().postNotificationName(NotificationCenter.chatSearchResultsAvailable, guid, 0, getMask(), (long) 0, 0, 0);
+//                    } else {
+//                        if (added) {
+//                            if (lastReturnedNum >= searchResultMessages.size()) {
+//                                lastReturnedNum = searchResultMessages.size() - 1;
+//                            }
+//                            MessageObject messageObject = searchResultMessages.get(lastReturnedNum);
+//                            getNotificationCenter().postNotificationName(NotificationCenter.chatSearchResultsAvailable, guid, messageObject.getId(), getMask(), messageObject.getDialogId(), lastReturnedNum, messagesSearchCount[0] + messagesSearchCount[1]);
+//                        }
+//                    }
+//                    if (queryWithDialogFinal == dialog_id && messagesSearchEndReached[0] && mergeDialogId != 0 && !messagesSearchEndReached[1]) {
+//                        searchMessagesInChat(lastSearchQuery, dialog_id, mergeDialogId, guid, 0, true, user);
+//                    }
+//                }
+//            }
+//        }), ConnectionsManager.RequestFlagFailOnServerErrors);
     }
 
     public String getLastSearchQuery() {
@@ -1777,38 +1777,38 @@ public class MediaDataController extends BaseController {
     public void loadMedia(final long uid, final int count, final int max_id, final int type, final int fromCache, final int classGuid) {
         final boolean isChannel = (int) uid < 0 && ChatObject.isChannel(-(int) uid, currentAccount);
 
-        int lower_part = (int)uid;
-        if (fromCache != 0 || lower_part == 0) {
+//        int lower_part = (int)uid;
+//        if (fromCache != 0 || lower_part == 0) {
             loadMediaDatabase(uid, count, max_id, type, classGuid, isChannel, fromCache);
-        } else {
-            TLRPC.TL_messages_search req = new TLRPC.TL_messages_search();
-            req.limit = count;
-            req.offset_id = max_id;
-            if (type == MEDIA_PHOTOVIDEO) {
-                req.filter = new TLRPC.TL_inputMessagesFilterPhotoVideo();
-            } else if (type == MEDIA_FILE) {
-                req.filter = new TLRPC.TL_inputMessagesFilterDocument();
-            } else if (type == MEDIA_AUDIO) {
-                req.filter = new TLRPC.TL_inputMessagesFilterRoundVoice();
-            } else if (type == MEDIA_URL) {
-                req.filter = new TLRPC.TL_inputMessagesFilterUrl();
-            } else if (type == MEDIA_MUSIC) {
-                req.filter = new TLRPC.TL_inputMessagesFilterMusic();
-            }
-            req.q = "";
-            req.peer = getMessagesController().getInputPeer(lower_part);
-            if (req.peer == null) {
-                return;
-            }
-            int reqId = getConnectionsManager().sendRequest(req, (response, error) -> {
-                if (error == null) {
-                    final TLRPC.messages_Messages res = (TLRPC.messages_Messages) response;
-                    getMessagesController().removeDeletedMessagesFromArray(uid, res.messages);
-                    processLoadedMedia(res, uid, count, max_id, type, 0, classGuid, isChannel, res.messages.size() == 0);
-                }
-            });
-            getConnectionsManager().bindRequestToGuid(reqId, classGuid);
-        }
+//        } else {
+//            TLRPC.TL_messages_search req = new TLRPC.TL_messages_search();
+//            req.limit = count;
+//            req.offset_id = max_id;
+//            if (type == MEDIA_PHOTOVIDEO) {
+//                req.filter = new TLRPC.TL_inputMessagesFilterPhotoVideo();
+//            } else if (type == MEDIA_FILE) {
+//                req.filter = new TLRPC.TL_inputMessagesFilterDocument();
+//            } else if (type == MEDIA_AUDIO) {
+//                req.filter = new TLRPC.TL_inputMessagesFilterRoundVoice();
+//            } else if (type == MEDIA_URL) {
+//                req.filter = new TLRPC.TL_inputMessagesFilterUrl();
+//            } else if (type == MEDIA_MUSIC) {
+//                req.filter = new TLRPC.TL_inputMessagesFilterMusic();
+//            }
+//            req.q = "";
+//            req.peer = getMessagesController().getInputPeer(lower_part);
+//            if (req.peer == null) {
+//                return;
+//            }
+//            int reqId = getConnectionsManager().sendRequest(req, (response, error) -> {
+//                if (error == null) {
+//                    final TLRPC.messages_Messages res = (TLRPC.messages_Messages) response;
+//                    getMessagesController().removeDeletedMessagesFromArray(uid, res.messages);
+//                    processLoadedMedia(res, uid, count, max_id, type, 0, classGuid, isChannel, res.messages.size() == 0);
+//                }
+//            });
+//            getConnectionsManager().bindRequestToGuid(reqId, classGuid);
+//        }
     }
 
     public void getMediaCounts(final long uid, final int classGuid) {
@@ -1826,8 +1826,8 @@ public class MediaDataController extends BaseController {
                     }
                 }
                 cursor.dispose();
-                int lower_part = (int) uid;
-                if (lower_part == 0) {
+//                int lower_part = (int) uid;
+//                if (lower_part == 0) {
                     for (int a = 0; a < counts.length; a++) {
                         if (counts[a] == -1) {
                             cursor = getMessagesStorage().getDatabase().queryFinalized(String.format(Locale.US, "SELECT COUNT(mid) FROM media_v2 WHERE uid = %d AND type = %d LIMIT 1", uid, a));
@@ -1841,67 +1841,67 @@ public class MediaDataController extends BaseController {
                         }
                     }
                     AndroidUtilities.runOnUIThread(() -> getNotificationCenter().postNotificationName(NotificationCenter.mediaCountsDidLoad, uid, counts));
-                } else {
-                    boolean missing = false;
-                    for (int a = 0; a < counts.length; a++) {
-                        if (counts[a] == -1 || old[a] == 1) {
-                            final int type = a;
-
-                            TLRPC.TL_messages_search req = new TLRPC.TL_messages_search();
-                            req.limit = 1;
-                            req.offset_id = 0;
-                            if (a == MEDIA_PHOTOVIDEO) {
-                                req.filter = new TLRPC.TL_inputMessagesFilterPhotoVideo();
-                            } else if (a == MEDIA_FILE) {
-                                req.filter = new TLRPC.TL_inputMessagesFilterDocument();
-                            } else if (a == MEDIA_AUDIO) {
-                                req.filter = new TLRPC.TL_inputMessagesFilterRoundVoice();
-                            } else if (a == MEDIA_URL) {
-                                req.filter = new TLRPC.TL_inputMessagesFilterUrl();
-                            } else if (a == MEDIA_MUSIC) {
-                                req.filter = new TLRPC.TL_inputMessagesFilterMusic();
-                            }
-                            req.q = "";
-                            req.peer = getMessagesController().getInputPeer(lower_part);
-                            if (req.peer == null) {
-                                counts[a] = 0;
-                                continue;
-                            }
-                            int reqId = getConnectionsManager().sendRequest(req, (response, error) -> {
-                                if (error == null) {
-                                    final TLRPC.messages_Messages res = (TLRPC.messages_Messages) response;
-                                    if (res instanceof TLRPC.TL_messages_messages) {
-                                        counts[type] = res.messages.size();
-                                    } else {
-                                        counts[type] = res.count;
-                                    }
-                                    putMediaCountDatabase(uid, type, counts[type]);
-                                } else {
-                                    counts[type] = 0;
-                                }
-                                boolean finished = true;
-                                for (int b = 0; b < counts.length; b++) {
-                                    if (counts[b] == -1) {
-                                        finished = false;
-                                        break;
-                                    }
-                                }
-                                if (finished) {
-                                    AndroidUtilities.runOnUIThread(() -> getNotificationCenter().postNotificationName(NotificationCenter.mediaCountsDidLoad, uid, counts));
-                                }
-                            });
-                            getConnectionsManager().bindRequestToGuid(reqId, classGuid);
-                            if (counts[a] == -1) {
-                                missing = true;
-                            } else if (old[a] == 1) {
-                                counts[a] = -1;
-                            }
-                        }
-                    }
-                    if (!missing) {
-                        AndroidUtilities.runOnUIThread(() -> getNotificationCenter().postNotificationName(NotificationCenter.mediaCountsDidLoad, uid, countsFinal));
-                    }
-                }
+//                } else {
+//                    boolean missing = false;
+//                    for (int a = 0; a < counts.length; a++) {
+//                        if (counts[a] == -1 || old[a] == 1) {
+//                            final int type = a;
+//
+//                            TLRPC.TL_messages_search req = new TLRPC.TL_messages_search();
+//                            req.limit = 1;
+//                            req.offset_id = 0;
+//                            if (a == MEDIA_PHOTOVIDEO) {
+//                                req.filter = new TLRPC.TL_inputMessagesFilterPhotoVideo();
+//                            } else if (a == MEDIA_FILE) {
+//                                req.filter = new TLRPC.TL_inputMessagesFilterDocument();
+//                            } else if (a == MEDIA_AUDIO) {
+//                                req.filter = new TLRPC.TL_inputMessagesFilterRoundVoice();
+//                            } else if (a == MEDIA_URL) {
+//                                req.filter = new TLRPC.TL_inputMessagesFilterUrl();
+//                            } else if (a == MEDIA_MUSIC) {
+//                                req.filter = new TLRPC.TL_inputMessagesFilterMusic();
+//                            }
+//                            req.q = "";
+//                            req.peer = getMessagesController().getInputPeer(lower_part);
+//                            if (req.peer == null) {
+//                                counts[a] = 0;
+//                                continue;
+//                            }
+//                            int reqId = getConnectionsManager().sendRequest(req, (response, error) -> {
+//                                if (error == null) {
+//                                    final TLRPC.messages_Messages res = (TLRPC.messages_Messages) response;
+//                                    if (res instanceof TLRPC.TL_messages_messages) {
+//                                        counts[type] = res.messages.size();
+//                                    } else {
+//                                        counts[type] = res.count;
+//                                    }
+//                                    putMediaCountDatabase(uid, type, counts[type]);
+//                                } else {
+//                                    counts[type] = 0;
+//                                }
+//                                boolean finished = true;
+//                                for (int b = 0; b < counts.length; b++) {
+//                                    if (counts[b] == -1) {
+//                                        finished = false;
+//                                        break;
+//                                    }
+//                                }
+//                                if (finished) {
+//                                    AndroidUtilities.runOnUIThread(() -> getNotificationCenter().postNotificationName(NotificationCenter.mediaCountsDidLoad, uid, counts));
+//                                }
+//                            });
+//                            getConnectionsManager().bindRequestToGuid(reqId, classGuid);
+//                            if (counts[a] == -1) {
+//                                missing = true;
+//                            } else if (old[a] == 1) {
+//                                counts[a] = -1;
+//                            }
+//                        }
+//                    }
+//                    if (!missing) {
+//                        AndroidUtilities.runOnUIThread(() -> getNotificationCenter().postNotificationName(NotificationCenter.mediaCountsDidLoad, uid, countsFinal));
+//                    }
+//                }
             } catch (Exception e) {
                 FileLog.e(e);
             }
@@ -1909,49 +1909,49 @@ public class MediaDataController extends BaseController {
     }
 
     public void getMediaCount(final long uid, final int type, final int classGuid, boolean fromCache) {
-        int lower_part = (int)uid;
-        if (fromCache || lower_part == 0) {
+//        int lower_part = (int)uid;
+//        if (fromCache || lower_part == 0) {
             getMediaCountDatabase(uid, type, classGuid);
-        } else {
-            TLRPC.TL_messages_search req = new TLRPC.TL_messages_search();
-            req.limit = 1;
-            req.offset_id = 0;
-            if (type == MEDIA_PHOTOVIDEO) {
-                req.filter = new TLRPC.TL_inputMessagesFilterPhotoVideo();
-            } else if (type == MEDIA_FILE) {
-                req.filter = new TLRPC.TL_inputMessagesFilterDocument();
-            } else if (type == MEDIA_AUDIO) {
-                req.filter = new TLRPC.TL_inputMessagesFilterRoundVoice();
-            } else if (type == MEDIA_URL) {
-                req.filter = new TLRPC.TL_inputMessagesFilterUrl();
-            } else if (type == MEDIA_MUSIC) {
-                req.filter = new TLRPC.TL_inputMessagesFilterMusic();
-            }
-            req.q = "";
-            req.peer = getMessagesController().getInputPeer(lower_part);
-            if (req.peer == null) {
-                return;
-            }
-            int reqId = getConnectionsManager().sendRequest(req, (response, error) -> {
-                if (error == null) {
-                    final TLRPC.messages_Messages res = (TLRPC.messages_Messages) response;
-                    getMessagesStorage().putUsersAndChats(res.users, res.chats, true, true);
-                    int count;
-                    if (res instanceof TLRPC.TL_messages_messages) {
-                        count = res.messages.size();
-                    } else {
-                        count = res.count;
-                    }
-                    AndroidUtilities.runOnUIThread(() -> {
-                        getMessagesController().putUsers(res.users, false);
-                        getMessagesController().putChats(res.chats, false);
-                    });
-
-                    processLoadedMediaCount(count, uid, type, classGuid, false, 0);
-                }
-            });
-            getConnectionsManager().bindRequestToGuid(reqId, classGuid);
-        }
+//        } else {
+//            TLRPC.TL_messages_search req = new TLRPC.TL_messages_search();
+//            req.limit = 1;
+//            req.offset_id = 0;
+//            if (type == MEDIA_PHOTOVIDEO) {
+//                req.filter = new TLRPC.TL_inputMessagesFilterPhotoVideo();
+//            } else if (type == MEDIA_FILE) {
+//                req.filter = new TLRPC.TL_inputMessagesFilterDocument();
+//            } else if (type == MEDIA_AUDIO) {
+//                req.filter = new TLRPC.TL_inputMessagesFilterRoundVoice();
+//            } else if (type == MEDIA_URL) {
+//                req.filter = new TLRPC.TL_inputMessagesFilterUrl();
+//            } else if (type == MEDIA_MUSIC) {
+//                req.filter = new TLRPC.TL_inputMessagesFilterMusic();
+//            }
+//            req.q = "";
+//            req.peer = getMessagesController().getInputPeer(lower_part);
+//            if (req.peer == null) {
+//                return;
+//            }
+//            int reqId = getConnectionsManager().sendRequest(req, (response, error) -> {
+//                if (error == null) {
+//                    final TLRPC.messages_Messages res = (TLRPC.messages_Messages) response;
+//                    getMessagesStorage().putUsersAndChats(res.users, res.chats, true, true);
+//                    int count;
+//                    if (res instanceof TLRPC.TL_messages_messages) {
+//                        count = res.messages.size();
+//                    } else {
+//                        count = res.count;
+//                    }
+//                    AndroidUtilities.runOnUIThread(() -> {
+//                        getMessagesController().putUsers(res.users, false);
+//                        getMessagesController().putChats(res.chats, false);
+//                    });
+//
+//                    processLoadedMediaCount(count, uid, type, classGuid, false, 0);
+//                }
+//            });
+//            getConnectionsManager().bindRequestToGuid(reqId, classGuid);
+//        }
     }
 
     public static int getMediaType(TLRPC.Message message) {
