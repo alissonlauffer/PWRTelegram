@@ -1837,13 +1837,13 @@ public class LocaleController {
                     }, ConnectionsManager.RequestFlagWithoutLogin);
                 }
             } else {
-                TLRPC.TL_langpack_getLangPack req = new TLRPC.TL_langpack_getLangPack();
-                req.lang_code = localeInfo.getBaseLangCode();
-                ConnectionsManager.getInstance(currentAccount).sendRequest(req, (TLObject response, TLRPC.TL_error error) -> {
-                    if (response != null) {
-                        AndroidUtilities.runOnUIThread(() -> saveRemoteLocaleStrings(localeInfo, (TLRPC.TL_langPackDifference) response, currentAccount));
-                    }
-                }, ConnectionsManager.RequestFlagWithoutLogin);
+//                TLRPC.TL_langpack_getLangPack req = new TLRPC.TL_langpack_getLangPack();
+//                req.lang_code = localeInfo.getBaseLangCode();
+//                ConnectionsManager.getInstance(currentAccount).sendRequest(req, (TLObject response, TLRPC.TL_error error) -> {
+//                    if (response != null) {
+//                        AndroidUtilities.runOnUIThread(() -> saveRemoteLocaleStrings(localeInfo, (TLRPC.TL_langPackDifference) response, currentAccount));
+//                    }
+//                }, ConnectionsManager.RequestFlagWithoutLogin);
             }
         }
         if (langCode == null || langCode.equals(localeInfo.shortName)) {
@@ -1861,13 +1861,13 @@ public class LocaleController {
                 for (int a = 0; a < UserConfig.MAX_ACCOUNT_COUNT; a++) {
                     ConnectionsManager.setLangCode(localeInfo.getLangCode());
                 }
-                TLRPC.TL_langpack_getLangPack req = new TLRPC.TL_langpack_getLangPack();
-                req.lang_code = localeInfo.getLangCode();
-                ConnectionsManager.getInstance(currentAccount).sendRequest(req, (TLObject response, TLRPC.TL_error error) -> {
-                    if (response != null) {
-                        AndroidUtilities.runOnUIThread(() -> saveRemoteLocaleStrings(localeInfo, (TLRPC.TL_langPackDifference) response, currentAccount));
-                    }
-                }, ConnectionsManager.RequestFlagWithoutLogin);
+//                TLRPC.TL_langpack_getLangPack req = new TLRPC.TL_langpack_getLangPack();
+//                req.lang_code = localeInfo.getLangCode();
+//                ConnectionsManager.getInstance(currentAccount).sendRequest(req, (TLObject response, TLRPC.TL_error error) -> {
+//                    if (response != null) {
+//                        AndroidUtilities.runOnUIThread(() -> saveRemoteLocaleStrings(localeInfo, (TLRPC.TL_langPackDifference) response, currentAccount));
+//                    }
+//                }, ConnectionsManager.RequestFlagWithoutLogin);
             }
         }
     }
