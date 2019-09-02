@@ -4422,65 +4422,65 @@ public class MediaDataController extends BaseController {
                 return;
             }
             currentFetchingEmoji.put(langCode, true);
-            getMessagesStorage().getStorageQueue().postRunnable(() -> {
-                int version = -1;
-                String alias = null;
-                long date = 0;
-                try {
-                    SQLiteCursor cursor = getMessagesStorage().getDatabase().queryFinalized("SELECT alias, version, date FROM emoji_keywords_info_v2 WHERE lang = ?", langCode);
-                    if (cursor.next()) {
-                        alias = cursor.stringValue(0);
-                        version = cursor.intValue(1);
-                        date = cursor.longValue(2);
-                    }
-                    cursor.dispose();
-                } catch (Exception e) {
-                    FileLog.e(e);
-                }
-                if (!BuildVars.DEBUG_VERSION && Math.abs(System.currentTimeMillis() - date) < 60 * 60 * 1000) {
-                    AndroidUtilities.runOnUIThread(() -> currentFetchingEmoji.remove(langCode));
-                    return;
-                }
-                TLObject request;
-                if (version == -1) {
-                    TLRPC.TL_messages_getEmojiKeywords req = new TLRPC.TL_messages_getEmojiKeywords();
-                    req.lang_code = langCode;
-                    request = req;
-                } else {
-                    TLRPC.TL_messages_getEmojiKeywordsDifference req = new TLRPC.TL_messages_getEmojiKeywordsDifference();
-                    req.lang_code = langCode;
-                    req.from_version = version;
-                    request = req;
-                }
-                String aliasFinal = alias;
-                int versionFinal = version;
-                getConnectionsManager().sendRequest(request, (response, error) -> {
-                    if (response != null) {
-                        TLRPC.TL_emojiKeywordsDifference res = (TLRPC.TL_emojiKeywordsDifference) response;
-                        if (versionFinal != -1 && !res.lang_code.equals(aliasFinal)) {
-                            getMessagesStorage().getStorageQueue().postRunnable(() -> {
-                                try {
-                                    SQLitePreparedStatement deleteState = getMessagesStorage().getDatabase().executeFast("DELETE FROM emoji_keywords_info_v2 WHERE lang = ?");
-                                    deleteState.bindString(1, langCode);
-                                    deleteState.step();
-                                    deleteState.dispose();
-
-                                    AndroidUtilities.runOnUIThread(() -> {
-                                        currentFetchingEmoji.remove(langCode);
-                                        fetchNewEmojiKeywords(new String[]{langCode});
-                                    });
-                                } catch (Exception e) {
-                                    FileLog.e(e);
-                                }
-                            });
-                        } else {
-                            putEmojiKeywords(langCode, res);
-                        }
-                    } else {
-                        AndroidUtilities.runOnUIThread(() -> currentFetchingEmoji.remove(langCode));
-                    }
-                });
-            });
+//            getMessagesStorage().getStorageQueue().postRunnable(() -> {
+//                int version = -1;
+//                String alias = null;
+//                long date = 0;
+//                try {
+//                    SQLiteCursor cursor = getMessagesStorage().getDatabase().queryFinalized("SELECT alias, version, date FROM emoji_keywords_info_v2 WHERE lang = ?", langCode);
+//                    if (cursor.next()) {
+//                        alias = cursor.stringValue(0);
+//                        version = cursor.intValue(1);
+//                        date = cursor.longValue(2);
+//                    }
+//                    cursor.dispose();
+//                } catch (Exception e) {
+//                    FileLog.e(e);
+//                }
+//                if (!BuildVars.DEBUG_VERSION && Math.abs(System.currentTimeMillis() - date) < 60 * 60 * 1000) {
+//                    AndroidUtilities.runOnUIThread(() -> currentFetchingEmoji.remove(langCode));
+//                    return;
+//                }
+//                TLObject request;
+//                if (version == -1) {
+//                    TLRPC.TL_messages_getEmojiKeywords req = new TLRPC.TL_messages_getEmojiKeywords();
+//                    req.lang_code = langCode;
+//                    request = req;
+//                } else {
+//                    TLRPC.TL_messages_getEmojiKeywordsDifference req = new TLRPC.TL_messages_getEmojiKeywordsDifference();
+//                    req.lang_code = langCode;
+//                    req.from_version = version;
+//                    request = req;
+//                }
+//                String aliasFinal = alias;
+//                int versionFinal = version;
+//                getConnectionsManager().sendRequest(request, (response, error) -> {
+//                    if (response != null) {
+//                        TLRPC.TL_emojiKeywordsDifference res = (TLRPC.TL_emojiKeywordsDifference) response;
+//                        if (versionFinal != -1 && !res.lang_code.equals(aliasFinal)) {
+//                            getMessagesStorage().getStorageQueue().postRunnable(() -> {
+//                                try {
+//                                    SQLitePreparedStatement deleteState = getMessagesStorage().getDatabase().executeFast("DELETE FROM emoji_keywords_info_v2 WHERE lang = ?");
+//                                    deleteState.bindString(1, langCode);
+//                                    deleteState.step();
+//                                    deleteState.dispose();
+//
+//                                    AndroidUtilities.runOnUIThread(() -> {
+//                                        currentFetchingEmoji.remove(langCode);
+//                                        fetchNewEmojiKeywords(new String[]{langCode});
+//                                    });
+//                                } catch (Exception e) {
+//                                    FileLog.e(e);
+//                                }
+//                            });
+//                        } else {
+//                            putEmojiKeywords(langCode, res);
+//                        }
+//                    } else {
+//                        AndroidUtilities.runOnUIThread(() -> currentFetchingEmoji.remove(langCode));
+//                    }
+//                });
+//            });
         }
     }
 
