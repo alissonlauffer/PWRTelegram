@@ -551,16 +551,16 @@ public class ChatEditActivity extends BaseFragment implements ImageUpdater.Image
             });
         }
 
-        if (ChatObject.isChannel(currentChat) && (isChannel && ChatObject.canUserDoAdminAction(currentChat, ChatObject.ACTION_CHANGE_INFO) || !isChannel && ChatObject.canUserDoAdminAction(currentChat, ChatObject.ACTION_PIN))) {
-            linkedCell = new TextDetailCell(context);
-            linkedCell.setBackgroundDrawable(Theme.getSelectorDrawable(false));
-            typeEditContainer.addView(linkedCell, LayoutHelper.createLinear(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            linkedCell.setOnClickListener(v -> {
-                ChatLinkActivity fragment = new ChatLinkActivity(chatId);
-                fragment.setInfo(info);
-                presentFragment(fragment);
-            });
-        }
+//        if (ChatObject.isChannel(currentChat) && (isChannel && ChatObject.canUserDoAdminAction(currentChat, ChatObject.ACTION_CHANGE_INFO) || !isChannel && ChatObject.canUserDoAdminAction(currentChat, ChatObject.ACTION_PIN))) {
+//            linkedCell = new TextDetailCell(context);
+//            linkedCell.setBackgroundDrawable(Theme.getSelectorDrawable(false));
+//            typeEditContainer.addView(linkedCell, LayoutHelper.createLinear(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//            linkedCell.setOnClickListener(v -> {
+//                ChatLinkActivity fragment = new ChatLinkActivity(chatId);
+//                fragment.setInfo(info);
+//                presentFragment(fragment);
+//            });
+//        }
 
         if (!isChannel && ChatObject.canBlockUsers(currentChat) && (ChatObject.isChannel(currentChat) || currentChat.creator)) {
             historyCell = new TextDetailCell(context);
@@ -613,16 +613,16 @@ public class ChatEditActivity extends BaseFragment implements ImageUpdater.Image
             });
         }
 
-        if (isChannel) {
-            signCell = new TextCheckCell(context);
-            signCell.setBackgroundDrawable(Theme.getSelectorDrawable(false));
-            signCell.setTextAndValueAndCheck(LocaleController.getString("ChannelSignMessages", R.string.ChannelSignMessages), LocaleController.getString("ChannelSignMessagesInfo", R.string.ChannelSignMessagesInfo), signMessages, true, false);
-            typeEditContainer.addView(signCell, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT));
-            signCell.setOnClickListener(v -> {
-                signMessages = !signMessages;
-                ((TextCheckCell) v).setChecked(signMessages);
-            });
-        }
+//        if (isChannel) {
+//            signCell = new TextCheckCell(context);
+//            signCell.setBackgroundDrawable(Theme.getSelectorDrawable(false));
+//            signCell.setTextAndValueAndCheck(LocaleController.getString("ChannelSignMessages", R.string.ChannelSignMessages), LocaleController.getString("ChannelSignMessagesInfo", R.string.ChannelSignMessagesInfo), signMessages, true, false);
+//            typeEditContainer.addView(signCell, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT));
+//            signCell.setOnClickListener(v -> {
+//                signMessages = !signMessages;
+//                ((TextCheckCell) v).setChecked(signMessages);
+//            });
+//        }
 
         ActionBarMenu menu = actionBar.createMenu();
         if (ChatObject.canChangeChatInfo(currentChat) || signCell != null || historyCell != null) {
@@ -1050,35 +1050,35 @@ public class ChatEditActivity extends BaseFragment implements ImageUpdater.Image
             logCell.setVisibility(!currentChat.megagroup || info != null && info.participants_count > 200 ? View.VISIBLE : View.GONE);
         }
 
-        if (linkedCell != null) {
-            if (info == null || !isChannel && info.linked_chat_id == 0) {
-                linkedCell.setVisibility(View.GONE);
-            } else {
-                linkedCell.setVisibility(View.VISIBLE);
-                if (info.linked_chat_id == 0) {
-                    linkedCell.setTextAndValue(LocaleController.getString("Discussion", R.string.Discussion), LocaleController.getString("DiscussionInfo", R.string.DiscussionInfo), true);
-                } else {
-                    TLRPC.Chat chat = getMessagesController().getChat(info.linked_chat_id);
-                    if (chat == null) {
-                        linkedCell.setVisibility(View.GONE);
-                    } else {
-                        if (isChannel) {
-                            if (TextUtils.isEmpty(chat.username)) {
-                                linkedCell.setTextAndValue(LocaleController.getString("Discussion", R.string.Discussion), chat.title, true);
-                            } else {
-                                linkedCell.setTextAndValue(LocaleController.getString("Discussion", R.string.Discussion), "@" + chat.username, true);
-                            }
-                        } else {
-                            if (TextUtils.isEmpty(chat.username)) {
-                                linkedCell.setTextAndValue(LocaleController.getString("LinkedChannel", R.string.LinkedChannel), chat.title, false);
-                            } else {
-                                linkedCell.setTextAndValue(LocaleController.getString("LinkedChannel", R.string.LinkedChannel), "@" + chat.username, false);
-                            }
-                        }
-                    }
-                }
-            }
-        }
+//        if (linkedCell != null) {
+//            if (info == null || !isChannel && info.linked_chat_id == 0) {
+//                linkedCell.setVisibility(View.GONE);
+//            } else {
+//                linkedCell.setVisibility(View.VISIBLE);
+//                if (info.linked_chat_id == 0) {
+//                    linkedCell.setTextAndValue(LocaleController.getString("Discussion", R.string.Discussion), LocaleController.getString("DiscussionInfo", R.string.DiscussionInfo), true);
+//                } else {
+//                    TLRPC.Chat chat = getMessagesController().getChat(info.linked_chat_id);
+//                    if (chat == null) {
+//                        linkedCell.setVisibility(View.GONE);
+//                    } else {
+//                        if (isChannel) {
+//                            if (TextUtils.isEmpty(chat.username)) {
+//                                linkedCell.setTextAndValue(LocaleController.getString("Discussion", R.string.Discussion), chat.title, true);
+//                            } else {
+//                                linkedCell.setTextAndValue(LocaleController.getString("Discussion", R.string.Discussion), "@" + chat.username, true);
+//                            }
+//                        } else {
+//                            if (TextUtils.isEmpty(chat.username)) {
+//                                linkedCell.setTextAndValue(LocaleController.getString("LinkedChannel", R.string.LinkedChannel), chat.title, false);
+//                            } else {
+//                                linkedCell.setTextAndValue(LocaleController.getString("LinkedChannel", R.string.LinkedChannel), "@" + chat.username, false);
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
         if (locationCell != null) {
             if (info != null && info.can_set_location) {
