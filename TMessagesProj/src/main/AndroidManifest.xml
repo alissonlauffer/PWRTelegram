@@ -75,10 +75,12 @@
         android:theme="@style/Theme.TMessages.Start"
         android:manageSpaceActivity="org.telegram.ui.ExternalActionActivity"
         android:supportsRtl="false"
+        android:label="@string/AppName"
         tools:replace="android:supportsRtl">
 
         <activity
             android:name="org.telegram.ui.LaunchActivity"
+            android:label="@string/AppName"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:hardwareAccelerated="@bool/useHardwareAcceleration"
             android:launchMode="singleTask"
