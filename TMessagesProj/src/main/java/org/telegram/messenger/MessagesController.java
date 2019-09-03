@@ -3956,7 +3956,7 @@ public class MessagesController extends BaseController implements NotificationCe
 
     public void storeDifference(long dialog_id, TLRPC.TL_messages_messages messages) {
         Collections.reverse(messages.messages);
-        MessagesStorage.getInstance(currentAccount).putMessages(messages, dialog_id, 0, Integer.MAX_VALUE, true, false);
+        MessagesStorage.getInstance(currentAccount).putMessages(messages, dialog_id, 0, Integer.MAX_VALUE, false, false);
     }
 
     public void fetchFromDifference(TLRPC.InputChannel peer, long dialog_id, boolean first, boolean slice, int start, int end, TLRPC.TL_messages_messages messages, int depth) {
