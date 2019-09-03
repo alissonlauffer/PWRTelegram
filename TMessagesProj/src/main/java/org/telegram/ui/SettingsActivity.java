@@ -223,7 +223,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         settingsSectionRow = rowCount++;
         settingsSectionRow2 = rowCount++;
         notificationRow = rowCount++;
-        privacyRow = rowCount++;
+//        privacyRow = rowCount++;
         dataRow = rowCount++;
         chatRow = rowCount++;
         languageRow = rowCount++;
