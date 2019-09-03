@@ -37,8 +37,8 @@ import org.telegram.ui.ContentPreviewViewer;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.fakewidget.LinearLayoutManager;
+import androidx.recyclerview.fakewidget.RecyclerView;
 
 public class SharingLocationsAlert extends BottomSheet implements NotificationCenter.NotificationCenterDelegate {
 

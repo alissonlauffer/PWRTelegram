@@ -46,9 +46,9 @@ import org.telegram.ui.Components.URLSpanNoUnderline;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.fakewidget.ItemTouchHelper;
+import androidx.recyclerview.fakewidget.LinearLayoutManager;
+import androidx.recyclerview.fakewidget.RecyclerView;
 
 public class StickersActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate {
 

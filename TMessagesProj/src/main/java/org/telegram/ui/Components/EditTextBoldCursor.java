@@ -528,7 +528,7 @@ public class EditTextBoldCursor extends EditText {
     @Override
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
         super.onInitializeAccessibilityNodeInfo(info);
-        info.setClassName("android.widget.EditText");
+        info.setClassName("android.fakewidget.EditText");
         if (hintLayout != null)
 			info.setContentDescription(hintLayout.getText());
     }

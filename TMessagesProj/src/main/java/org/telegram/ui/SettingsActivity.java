@@ -29,8 +29,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.core.content.FileProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.fakewidget.LinearLayoutManager;
+import androidx.recyclerview.fakewidget.RecyclerView;
 
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;

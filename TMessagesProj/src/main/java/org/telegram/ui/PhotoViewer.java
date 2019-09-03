@@ -43,10 +43,10 @@ import android.provider.Settings;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSmoothScrollerEnd;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.fakewidget.DefaultItemAnimator;
+import androidx.recyclerview.fakewidget.LinearLayoutManager;
+import androidx.recyclerview.fakewidget.LinearSmoothScrollerEnd;
+import androidx.recyclerview.fakewidget.RecyclerView;
 
 import android.text.Layout;
 import android.text.Selection;

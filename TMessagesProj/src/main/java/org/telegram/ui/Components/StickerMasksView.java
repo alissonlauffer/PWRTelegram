@@ -35,8 +35,8 @@ import org.telegram.ui.ContentPreviewViewer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.fakewidget.GridLayoutManager;
+import androidx.recyclerview.fakewidget.RecyclerView;
 
 @SuppressWarnings("unchecked")
 public class StickerMasksView extends FrameLayout implements NotificationCenter.NotificationCenterDelegate {

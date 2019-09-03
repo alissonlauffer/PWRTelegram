@@ -466,11 +466,11 @@ public class UserCell extends FrameLayout {
         if (checkBoxBig != null && checkBoxBig.getVisibility() == VISIBLE) {
             info.setCheckable(true);
             info.setChecked(checkBoxBig.isChecked());
-            info.setClassName("android.widget.CheckBox");
+            info.setClassName("android.fakewidget.CheckBox");
         } else if (checkBox != null && checkBox.getVisibility() == VISIBLE) {
             info.setCheckable(true);
             info.setChecked(checkBox.isChecked());
-            info.setClassName("android.widget.CheckBox");
+            info.setClassName("android.fakewidget.CheckBox");
         }
     }
 }

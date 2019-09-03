@@ -345,14 +345,14 @@ public class PhotoViewerCaptionEnterView extends FrameLayout implements Notifica
             fieldToolbar.setAccessible(true);
             Object toolbar = fieldToolbar.get(mode);
 
-            Class classToolbar = Class.forName("com.android.internal.widget.FloatingToolbar");
+            Class classToolbar = Class.forName("com.android.internal.fakewidget.FloatingToolbar");
             Field fieldToolbarPopup = classToolbar.getDeclaredField("mPopup");
             Field fieldToolbarWidth = classToolbar.getDeclaredField("mWidthChanged");
             fieldToolbarPopup.setAccessible(true);
             fieldToolbarWidth.setAccessible(true);
             Object popup = fieldToolbarPopup.get(toolbar);
 
-            Class classToolbarPopup = Class.forName("com.android.internal.widget.FloatingToolbar$FloatingToolbarPopup");
+            Class classToolbarPopup = Class.forName("com.android.internal.fakewidget.FloatingToolbar$FloatingToolbarPopup");
             Field fieldToolbarPopupParent = classToolbarPopup.getDeclaredField("mParent");
             fieldToolbarPopupParent.setAccessible(true);
 

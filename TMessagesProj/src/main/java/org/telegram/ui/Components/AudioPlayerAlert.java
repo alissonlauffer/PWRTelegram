@@ -25,8 +25,8 @@ import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.Keep;
 import androidx.core.content.FileProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.fakewidget.LinearLayoutManager;
+import androidx.recyclerview.fakewidget.RecyclerView;
 
 import android.text.TextUtils;
 import android.util.TypedValue;

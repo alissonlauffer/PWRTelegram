@@ -201,7 +201,7 @@ public class ChatActivityEnterView extends FrameLayout implements NotificationCe
         @Override
         public void onInitializeAccessibilityNodeInfo(View host, AccessibilityNodeInfo info) {
             super.onInitializeAccessibilityNodeInfo(host, info);
-            info.setClassName("android.widget.ImageButton");
+            info.setClassName("android.fakewidget.ImageButton");
             info.setClickable(true);
             info.setLongClickable(true);
         }

@@ -670,7 +670,7 @@ public class PasscodeView extends FrameLayout {
                 @Override
                 public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
                     super.onInitializeAccessibilityNodeInfo(info);
-                    info.setClassName("android.widget.Button");
+                    info.setClassName("android.fakewidget.Button");
                 }
             };
             frameLayout.setBackgroundResource(R.drawable.bar_selector_lock);

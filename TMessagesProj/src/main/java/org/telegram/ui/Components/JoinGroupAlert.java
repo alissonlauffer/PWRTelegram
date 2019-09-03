@@ -32,8 +32,8 @@ import org.telegram.ui.ActionBar.Theme;
 import org.telegram.ui.Cells.JoinSheetUserCell;
 import org.telegram.ui.ChatActivity;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.fakewidget.LinearLayoutManager;
+import androidx.recyclerview.fakewidget.RecyclerView;
 
 public class JoinGroupAlert extends BottomSheet {
 

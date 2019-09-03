@@ -15,8 +15,8 @@ import org.telegram.ui.Cells.DialogCell;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.recyclerview.widget.RecyclerView.ViewHolder;
-import androidx.recyclerview.widget.SimpleItemAnimator;
+import androidx.recyclerview.fakewidget.RecyclerView.ViewHolder;
+import androidx.recyclerview.fakewidget.SimpleItemAnimator;
 
 public class DialogsItemAnimator extends SimpleItemAnimator {
     private static final boolean DEBUG = false;

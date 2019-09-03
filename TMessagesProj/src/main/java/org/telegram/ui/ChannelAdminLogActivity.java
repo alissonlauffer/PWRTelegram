@@ -31,9 +31,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.core.content.FileProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSmoothScrollerMiddle;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.fakewidget.LinearLayoutManager;
+import androidx.recyclerview.fakewidget.LinearSmoothScrollerMiddle;
+import androidx.recyclerview.fakewidget.RecyclerView;
 
 import android.text.TextUtils;
 import android.text.style.CharacterStyle;
