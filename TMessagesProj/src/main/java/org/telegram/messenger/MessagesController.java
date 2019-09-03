@@ -3054,11 +3054,11 @@ public class MessagesController extends BaseController implements NotificationCe
 //            req.id.file_reference = new byte[0];
 //        }
 //        req.unsave = false;
-        getConnectionsManager().sendRequest(req, (response, error) -> {
-            if (error != null && FileRefController.isFileRefError(error.text) && parentObject != null) {
-                getFileRefController().requestReference(parentObject, req);
-            }
-        });
+//        getConnectionsManager().sendRequest(req, (response, error) -> {
+//            if (error != null && FileRefController.isFileRefError(error.text) && parentObject != null) {
+//                getFileRefController().requestReference(parentObject, req);
+//            }
+//        });
     }
 
     public void saveRecentSticker(Object parentObject, TLRPC.Document document, boolean asMask) {
