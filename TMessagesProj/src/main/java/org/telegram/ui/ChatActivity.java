@@ -10905,25 +10905,28 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         if (currentChat != null) {
             if (ChatObject.isChannel(currentChat) && !(currentChat instanceof TLRPC.TL_channelForbidden)) {
                 if (ChatObject.isNotInChat(currentChat)) {
-                    if (getMessagesController().isJoiningChannel(currentChat.id)) {
-                        showBottomOverlayProgress(true, false);
-                    } else {
-                        bottomOverlayChatText.setText(LocaleController.getString("ChannelJoin", R.string.ChannelJoin));
-                        showBottomOverlayProgress(false, false);
-                    }
-                } else {
-                    if (!getMessagesController().isDialogMuted(dialog_id)) {
-                        bottomOverlayChatText.setText(LocaleController.getString("ChannelMute", R.string.ChannelMute));
-                    } else {
-                        bottomOverlayChatText.setText(LocaleController.getString("ChannelUnmute", R.string.ChannelUnmute));
-                    }
-                    showBottomOverlayProgress(false, bottomOverlayProgress.getTag() != null);
-                }
-                if (!ChatObject.isNotInChat(currentChat) && !currentChat.megagroup && (currentChat.has_link || chatInfo != null && chatInfo.linked_chat_id != 0)) {
-                    bottomOverlayChatText2.setText(LocaleController.getString("ChannelDiscuss", R.string.ChannelDiscuss));
-                    bottomOverlayChatText2.setVisibility(View.VISIBLE);
-                    bottomOverlayChatText2.updateCounter();
-                } else {
+//                    if (getMessagesController().isJoiningChannel(currentChat.id)) {
+//                        showBottomOverlayProgress(true, false);
+//                    } else {
+//                        bottomOverlayChatText.setText(LocaleController.getString("ChannelJoin", R.string.ChannelJoin));
+//                        showBottomOverlayProgress(false, false);
+//                    }
+//                } else {
+//                    if (!getMessagesController().isDialogMuted(dialog_id)) {
+//                        bottomOverlayChatText.setText(LocaleController.getString("ChannelMute", R.string.ChannelMute));
+//                    } else {
+//                        bottomOverlayChatText.setText(LocaleController.getString("ChannelUnmute", R.string.ChannelUnmute));
+//                    }
+//                    showBottomOverlayProgress(false, bottomOverlayProgress.getTag() != null);
+//                }
+//                if (!ChatObject.isNotInChat(currentChat) && !currentChat.megagroup && (currentChat.has_link || chatInfo != null && chatInfo.linked_chat_id != 0)) {
+//                    bottomOverlayChatText2.setText(LocaleController.getString("ChannelDiscuss", R.string.ChannelDiscuss));
+//                    bottomOverlayChatText2.setVisibility(View.VISIBLE);
+//                    bottomOverlayChatText2.updateCounter();
+//                } else {
+//                    bottomOverlayChatText2.setVisibility(View.GONE);
+//                }
+                    bottomOverlayChatText.setVisibility(View.GONE);
                     bottomOverlayChatText2.setVisibility(View.GONE);
                 }
             } else {
