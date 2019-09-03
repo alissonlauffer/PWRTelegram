@@ -2058,30 +2058,30 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             dialogsSearchAdapter.notifyDataSetChanged();
         }
         if (checkPermission && !onlySelect && Build.VERSION.SDK_INT >= 23) {
-            Activity activity = getParentActivity();
-            if (activity != null) {
-                checkPermission = false;
-                boolean hasNotContactsPermission = activity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED;
-                boolean hasNotStoragePermission = activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED;
-                if (hasNotContactsPermission || hasNotStoragePermission) {
-                    if (hasNotContactsPermission && askAboutContacts && getUserConfig().syncContacts && activity.shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
-                        AlertDialog.Builder builder = AlertsCreator.createContactsPermissionDialog(activity, param -> {
-                            askAboutContacts = param != 0;
-                            MessagesController.getGlobalNotificationsSettings().edit().putBoolean("askAboutContacts", askAboutContacts).commit();
-                            askForPermissons(false);
-                        });
-                        showDialog(permissionDialog = builder.create());
-                    } else if (hasNotStoragePermission && activity.shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                        builder.setTitle(LocaleController.getString("AppName", R.string.AppName));
-                        builder.setMessage(LocaleController.getString("PermissionStorage", R.string.PermissionStorage));
-                        builder.setPositiveButton(LocaleController.getString("OK", R.string.OK), null);
-                        showDialog(permissionDialog = builder.create());
-                    } else {
-                        askForPermissons(true);
-                    }
-                }
-            }
+//            Activity activity = getParentActivity();
+//            if (activity != null) {
+//                checkPermission = false;
+//                boolean hasNotContactsPermission = activity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED;
+//                boolean hasNotStoragePermission = activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED;
+//                if (hasNotContactsPermission || hasNotStoragePermission) {
+//                    if (hasNotContactsPermission && askAboutContacts && getUserConfig().syncContacts && activity.shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
+//                        AlertDialog.Builder builder = AlertsCreator.createContactsPermissionDialog(activity, param -> {
+//                            askAboutContacts = param != 0;
+//                            MessagesController.getGlobalNotificationsSettings().edit().putBoolean("askAboutContacts", askAboutContacts).commit();
+//                            askForPermissons(false);
+//                        });
+//                        showDialog(permissionDialog = builder.create());
+//                    } else if (hasNotStoragePermission && activity.shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+//                        builder.setTitle(LocaleController.getString("AppName", R.string.AppName));
+//                        builder.setMessage(LocaleController.getString("PermissionStorage", R.string.PermissionStorage));
+//                        builder.setPositiveButton(LocaleController.getString("OK", R.string.OK), null);
+//                        showDialog(permissionDialog = builder.create());
+//                    } else {
+//                        askForPermissons(true);
+//                    }
+//                }
+//            }
         } else if (!onlySelect && XiaomiUtilities.isMIUI() && Build.VERSION.SDK_INT >= 19 && !XiaomiUtilities.isCustomPermissionGranted(XiaomiUtilities.OP_SHOW_WHEN_LOCKED)) {
             if (getParentActivity() == null) {
                 return;
