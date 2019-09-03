@@ -73,6 +73,10 @@ public class DialogsAdapter extends RecyclerListView.SelectionAdapter {
     private boolean isReordering;
     private long lastSortTime;
 
+    public void setDialogsType(int dialogsType) {
+        this.dialogsType = dialogsType;
+    }
+
     public DialogsAdapter(Context context, int type, int folder, boolean onlySelect) {
         mContext = context;
         dialogsType = type;

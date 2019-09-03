@@ -7462,6 +7462,8 @@ public class MessagesController extends BaseController implements NotificationCe
         HashMap<Integer, TLRPC.TL_messages_messages> messages = new HashMap<>();
 
         AndroidUtilities.runOnUIThread(() -> {
+            loadedFullUsers.clear();
+            loadedFullChats.clear();
             putUsers(users, false);
             putChats(chats, false);
         });
@@ -7517,7 +7519,7 @@ public class MessagesController extends BaseController implements NotificationCe
         getConnectionsManager().setIsUpdating(true);
         getConnectionsManager().sendRequest(req, (response, error) -> {
             if (error != null) {
-                getDifference();
+                getDifference(pts, date, qts, true);
                 return;
             }
 
@@ -7551,6 +7553,10 @@ public class MessagesController extends BaseController implements NotificationCe
                 storeMessage(res.new_messages, res.users, res.chats);
                 processUpdateArray(res.other_updates, res.users, res.chats, true, 0);
                 AndroidUtilities.runOnUIThread(this::cleanup);
+            }
+
+            for (int a = 0; a < 3; a++) {
+                processUpdatesQueue(a, 1);
             }
         });
     }
