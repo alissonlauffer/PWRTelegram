@@ -50,8 +50,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.fakewidget.LinearLayoutManager;
+import androidx.recyclerview.fakewidget.RecyclerView;
 
 public class PhonebookShareActivity extends BaseFragment {
 

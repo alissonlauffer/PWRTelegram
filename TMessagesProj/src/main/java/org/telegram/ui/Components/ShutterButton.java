@@ -213,7 +213,7 @@ public class ShutterButton extends View {
     @Override
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
         super.onInitializeAccessibilityNodeInfo(info);
-        info.setClassName("android.widget.Button");
+        info.setClassName("android.fakewidget.Button");
         info.setClickable(true);
         info.setLongClickable(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

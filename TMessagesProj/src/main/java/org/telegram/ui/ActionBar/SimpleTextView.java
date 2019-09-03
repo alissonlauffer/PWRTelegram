@@ -485,7 +485,7 @@ public class SimpleTextView extends View implements Drawable.Callback {
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
         super.onInitializeAccessibilityNodeInfo(info);
         info.setVisibleToUser(true);
-        info.setClassName("android.widget.TextView");
+        info.setClassName("android.fakewidget.TextView");
         info.setText(text);
     }
 }

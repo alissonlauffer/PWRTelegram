@@ -71,8 +71,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
 
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.fakewidget.GridLayoutManager;
+import androidx.recyclerview.fakewidget.RecyclerView;
 
 public class ShareAlert extends BottomSheet implements NotificationCenter.NotificationCenterDelegate {
 

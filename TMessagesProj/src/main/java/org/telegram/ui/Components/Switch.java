@@ -520,7 +520,7 @@ public class Switch extends View {
     @Override
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
         super.onInitializeAccessibilityNodeInfo(info);
-        info.setClassName("android.widget.Switch");
+        info.setClassName("android.fakewidget.Switch");
         info.setCheckable(true);
         info.setChecked(isChecked);
         //info.setContentDescription(isChecked ? LocaleController.getString("NotificationsOn", R.string.NotificationsOn) : LocaleController.getString("NotificationsOff", R.string.NotificationsOff));

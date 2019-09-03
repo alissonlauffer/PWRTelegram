@@ -943,6 +943,6 @@ public class ActionBarMenuItem extends FrameLayout {
     @Override
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
         super.onInitializeAccessibilityNodeInfo(info);
-        info.setClassName("android.widget.ImageButton");
+        info.setClassName("android.fakewidget.ImageButton");
     }
 }

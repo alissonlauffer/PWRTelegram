@@ -5,7 +5,7 @@ import android.view.View;
 
 import org.telegram.messenger.AndroidUtilities;
 
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.fakewidget.RecyclerView;
 
 public class RecyclerViewItemRangeSelector implements RecyclerView.OnItemTouchListener {
 

@@ -15,7 +15,7 @@ import org.telegram.tgnet.TLRPC;
 import org.telegram.ui.Cells.LocationCell;
 import org.telegram.ui.Components.RecyclerListView;
 
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.fakewidget.RecyclerView;
 
 public class LocationActivitySearchAdapter extends BaseLocationAdapter {
 

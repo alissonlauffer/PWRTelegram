@@ -113,7 +113,7 @@ public class RadioCell extends FrameLayout {
     @Override
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
         super.onInitializeAccessibilityNodeInfo(info);
-        info.setClassName("android.widget.RadioButton");
+        info.setClassName("android.fakewidget.RadioButton");
         info.setCheckable(true);
         info.setChecked(isChecked());
     }

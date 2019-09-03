@@ -50,7 +50,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.fakewidget.RecyclerView;
 
 public class MentionsAdapter extends RecyclerListView.SelectionAdapter {
 

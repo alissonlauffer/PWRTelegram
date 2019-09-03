@@ -9034,7 +9034,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                         }
                     }
 
-                    info.setClassName("android.widget.TextView");
+                    info.setClassName("android.fakewidget.TextView");
                     info.setEnabled(true);
                     info.setClickable(true);
                     info.setLongClickable(true);
@@ -9047,7 +9047,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                     }
                     BotButton button = botButtons.get(buttonIndex);
                     info.setText(button.title.getText());
-                    info.setClassName("android.widget.Button");
+                    info.setClassName("android.fakewidget.Button");
                     info.setEnabled(true);
                     info.setClickable(true);
                     info.addAction(AccessibilityNodeInfo.ACTION_CLICK);
@@ -9074,7 +9074,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                     PollButton button = pollButtons.get(buttonIndex);
                     info.setText(button.title.getText());
                     if (!pollVoted) {
-                        info.setClassName("android.widget.Button");
+                        info.setClassName("android.fakewidget.Button");
                     } else {
                         info.setText(info.getText() + ", " + button.percent + "%");
                     }
@@ -9092,7 +9092,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
 
                     info.setClickable(true);
                 } else if (virtualViewId == INSTANT_VIEW) {
-                    info.setClassName("android.widget.Button");
+                    info.setClassName("android.fakewidget.Button");
                     info.setEnabled(true);
                     if (instantViewLayout != null) {
                         info.setText(instantViewLayout.getText());
@@ -9115,7 +9115,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                     info.setBoundsInScreen(rect);
                     info.setClickable(true);
                 } else if (virtualViewId == SHARE) {
-                    info.setClassName("android.widget.ImageButton");
+                    info.setClassName("android.fakewidget.ImageButton");
                     info.setEnabled(true);
                     if (isOpenChatByShare(currentMessageObject)) {
                         info.setContentDescription(LocaleController.getString("AccDescrOpenChat", R.string.AccDescrOpenChat));

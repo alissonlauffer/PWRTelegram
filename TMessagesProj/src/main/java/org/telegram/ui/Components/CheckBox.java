@@ -286,7 +286,7 @@ public class CheckBox extends View {
     @Override
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
         super.onInitializeAccessibilityNodeInfo(info);
-        info.setClassName("android.widget.CheckBox");
+        info.setClassName("android.fakewidget.CheckBox");
         info.setCheckable(true);
         info.setChecked(isChecked);
     }

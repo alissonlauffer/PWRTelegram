@@ -13,7 +13,7 @@ import android.util.SparseIntArray;
 
 import org.telegram.messenger.AndroidUtilities;
 
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.fakewidget.GridLayoutManager;
 
 public class ExtendedGridLayoutManager extends GridLayoutManager {
 

@@ -31,8 +31,8 @@ import org.telegram.ui.Components.StickersAlert;
 
 import java.util.ArrayList;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.fakewidget.LinearLayoutManager;
+import androidx.recyclerview.fakewidget.RecyclerView;
 
 public class FeaturedStickersActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate {
 

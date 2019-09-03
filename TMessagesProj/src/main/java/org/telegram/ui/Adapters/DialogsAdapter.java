@@ -51,7 +51,7 @@ import org.telegram.ui.DialogsActivity;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.fakewidget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 public class DialogsAdapter extends RecyclerListView.SelectionAdapter {

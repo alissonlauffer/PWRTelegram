@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.fakewidget.RecyclerView;
 
 public class PhonebookSearchAdapter extends RecyclerListView.SelectionAdapter {
 

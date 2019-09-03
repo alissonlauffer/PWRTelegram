@@ -32,9 +32,9 @@ import android.os.Vibrator;
 
 import androidx.annotation.Keep;
 import androidx.core.content.FileProvider;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.fakewidget.DefaultItemAnimator;
+import androidx.recyclerview.fakewidget.LinearLayoutManager;
+import androidx.recyclerview.fakewidget.RecyclerView;
 
 import android.text.InputType;
 import android.text.TextPaint;

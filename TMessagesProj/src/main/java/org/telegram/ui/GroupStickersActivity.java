@@ -66,8 +66,8 @@ import org.telegram.ui.Components.URLSpanNoUnderline;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.fakewidget.LinearLayoutManager;
+import androidx.recyclerview.fakewidget.RecyclerView;
 
 public class GroupStickersActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate {
 

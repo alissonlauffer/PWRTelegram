@@ -36,10 +36,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSmoothScrollerMiddle;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.fakewidget.ItemTouchHelper;
+import androidx.recyclerview.fakewidget.LinearLayoutManager;
+import androidx.recyclerview.fakewidget.LinearSmoothScrollerMiddle;
+import androidx.recyclerview.fakewidget.RecyclerView;
 
 import android.text.TextUtils;
 import android.view.Gravity;

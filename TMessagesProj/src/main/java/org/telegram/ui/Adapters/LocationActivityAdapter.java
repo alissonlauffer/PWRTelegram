@@ -33,7 +33,7 @@ import org.telegram.ui.LocationActivity;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.fakewidget.RecyclerView;
 
 public class LocationActivityAdapter extends BaseLocationAdapter implements LocationController.LocationFetchCallback {
 
