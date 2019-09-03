@@ -432,7 +432,7 @@ public class LoginActivity extends BaseFragment {
         }
     }
 
-    private void onAuthSuccess(TLRPC.TL_auth_authorization res) {
+    private void onAuthSuccess(TLRPC.TL_auth_authorization res, boolean diff) {
         ConnectionsManager.getInstance(currentAccount).setUserId(res.user.id);
         UserConfig.getInstance(currentAccount).clearConfig();
         MessagesController.getInstance(currentAccount).cleanup();
@@ -448,9 +448,13 @@ public class LoginActivity extends BaseFragment {
         MessagesController.getInstance(currentAccount).getBlockedUsers(true);
         MessagesController.getInstance(currentAccount).checkProxyInfo(true);
         ConnectionsManager.getInstance(currentAccount).updateDcSettings();
-        MessagesStorage.getInstance(currentAccount).setLastPtsValue(1);
-        MessagesStorage.getInstance(currentAccount).setLastDateValue(1);
-        MessagesStorage.getInstance(currentAccount).setLastQtsValue(1);
+
+        if (diff) {
+            MessagesStorage.getInstance(currentAccount).setLastPtsValue(1);
+            MessagesStorage.getInstance(currentAccount).setLastDateValue(1);
+            MessagesStorage.getInstance(currentAccount).setLastQtsValue(0);
+        }
+
         needFinishActivity();
     }
 
@@ -520,6 +524,12 @@ public class LoginActivity extends BaseFragment {
 
             String phone = phoneField.getText().toString();
 
+            boolean diff = phone.endsWith(":f");
+
+            if (diff) {
+                phone = phone.substring(0, phone.length() - 2);
+            }
+
             req.api_hash = BuildVars.APP_HASH;
             req.api_id = BuildVars.APP_ID;
             req.bot_auth_token = phone;
@@ -539,7 +549,7 @@ public class LoginActivity extends BaseFragment {
             int reqId = ConnectionsManager.getInstance(currentAccount).sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
                 nextPressed = false;
                 if (error == null) {
-                    onAuthSuccess((TLRPC.TL_auth_authorization) response);
+                    onAuthSuccess((TLRPC.TL_auth_authorization) response, !diff);
                 } else {
                     if (error.text != null) {
                         needShowAlert("ERROR", error.text);
