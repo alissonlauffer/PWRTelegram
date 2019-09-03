@@ -2606,7 +2606,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 if (userBlocked) {
                     unblockRow = rowCount++;
                 } else {
-                    startSecretChatRow = rowCount++;
+//                    startSecretChatRow = rowCount++;
                 }
                 lastSectionRow = rowCount++;
             }

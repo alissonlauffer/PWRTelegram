@@ -216,8 +216,8 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
 
         rowCount = 0;
         overscrollRow = rowCount++;
-        numberSectionRow = rowCount++;
-        numberRow = rowCount++;
+//        numberSectionRow = rowCount++;
+//        numberRow = rowCount++;
         usernameRow = rowCount++;
         bioRow = rowCount++;
         settingsSectionRow = rowCount++;
@@ -375,13 +375,13 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                 } else if (position == languageRow) {
                     presentFragment(new LanguageSelectActivity());
                 } else if (position == usernameRow) {
-                    presentFragment(new ChangeUsernameActivity());
+//                    presentFragment(new ChangeUsernameActivity());
                 } else if (position == bioRow) {
-                    if (userInfo != null) {
-                        presentFragment(new ChangeBioActivity());
-                    }
+//                    if (userInfo != null) {
+//                        presentFragment(new ChangeBioActivity());
+//                    }
                 } else if (position == numberRow) {
-                    presentFragment(new ActionIntroActivity(ActionIntroActivity.ACTION_TYPE_CHANGE_PHONE_NUMBER));
+//                    presentFragment(new ActionIntroActivity(ActionIntroActivity.ACTION_TYPE_CHANGE_PHONE_NUMBER));
                 }
             } else {
                 if (position < 0) {

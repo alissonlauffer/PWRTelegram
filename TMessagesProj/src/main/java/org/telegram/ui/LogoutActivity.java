@@ -74,8 +74,8 @@ public class LogoutActivity extends BaseFragment {
             passcodeRow = -1;
         }
         cacheRow = rowCount++;
-        phoneRow = rowCount++;
-        supportRow = rowCount++;
+//        phoneRow = rowCount++;
+//        supportRow = rowCount++;
         alternativeSectionRow = rowCount++;
         logoutRow = rowCount++;
         logoutSectionRow = rowCount++;
