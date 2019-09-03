@@ -7552,7 +7552,8 @@ public class MessagesController extends BaseController implements NotificationCe
                 TLRPC.TL_updates_difference res = (TLRPC.TL_updates_difference) response;
                 storeMessage(res.new_messages, res.users, res.chats);
                 processUpdateArray(res.other_updates, res.users, res.chats, true, 0);
-                AndroidUtilities.runOnUIThread(this::cleanup);
+                gettingDifference = false;
+                getConnectionsManager().setIsUpdating(false);
             }
 
             for (int a = 0; a < 3; a++) {

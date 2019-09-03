@@ -1833,7 +1833,7 @@ public class MessagesStorage extends BaseController {
                     int high_id = (int) (did >> 32);
                     if (lower_id != 0) {
                         if (high_id == 1) {
-                            database.executeFast("DELETE FROM chats WHERE uid = " + lower_id).stepThis().dispose();
+//                            database.executeFast("DELETE FROM chats WHERE uid = " + lower_id).stepThis().dispose();
                         } else if (lower_id < 0) {
                             //database.executeFast("DELETE FROM chats WHERE uid = " + (-lower_id)).stepThis().dispose();
                         }
@@ -2008,9 +2008,9 @@ public class MessagesStorage extends BaseController {
                 String ids = "(" + TextUtils.join(",", dids) + ")";
 
                 database.beginTransaction();
-                database.executeFast("DELETE FROM dialogs WHERE did IN " + ids).stepThis().dispose();
-                database.executeFast("DELETE FROM messages WHERE uid IN " + ids).stepThis().dispose();
-                database.executeFast("DELETE FROM polls WHERE 1").stepThis().dispose();
+//                database.executeFast("DELETE FROM dialogs WHERE did IN " + ids).stepThis().dispose();
+//                database.executeFast("DELETE FROM messages WHERE uid IN " + ids).stepThis().dispose();
+//                database.executeFast("DELETE FROM polls WHERE 1").stepThis().dispose();
                 database.executeFast("DELETE FROM bot_keyboard WHERE uid IN " + ids).stepThis().dispose();
                 database.executeFast("DELETE FROM media_v2 WHERE uid IN " + ids).stepThis().dispose();
                 database.executeFast("DELETE FROM messages_holes WHERE uid IN " + ids).stepThis().dispose();
