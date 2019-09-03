@@ -2037,9 +2037,9 @@ public class MessagesStorage extends BaseController {
                 String ids = "(" + TextUtils.join(",", dids) + ")";
 
                 database.beginTransaction();
-                database.executeFast("DELETE FROM dialogs WHERE did IN " + ids).stepThis().dispose();
-                database.executeFast("DELETE FROM messages WHERE uid IN " + ids).stepThis().dispose();
-                database.executeFast("DELETE FROM polls WHERE 1").stepThis().dispose();
+//                database.executeFast("DELETE FROM dialogs WHERE did IN " + ids).stepThis().dispose();
+//                database.executeFast("DELETE FROM messages WHERE uid IN " + ids).stepThis().dispose();
+//                database.executeFast("DELETE FROM polls WHERE 1").stepThis().dispose();
                 database.executeFast("DELETE FROM bot_keyboard WHERE uid IN " + ids).stepThis().dispose();
                 database.executeFast("DELETE FROM media_v2 WHERE uid IN " + ids).stepThis().dispose();
                 database.executeFast("DELETE FROM messages_holes WHERE uid IN " + ids).stepThis().dispose();
