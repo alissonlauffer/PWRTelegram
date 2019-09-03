@@ -314,20 +314,20 @@ public class MediaDataController extends BaseController {
 
     public void removeRecentGif(final TLRPC.Document document) {
         recentGifs.remove(document);
-        TLRPC.TL_messages_saveGif req = new TLRPC.TL_messages_saveGif();
-        req.id = new TLRPC.TL_inputDocument();
-        req.id.id = document.id;
-        req.id.access_hash = document.access_hash;
-        req.id.file_reference = document.file_reference;
-        if (req.id.file_reference == null) {
-            req.id.file_reference = new byte[0];
-        }
-        req.unsave = true;
-        getConnectionsManager().sendRequest(req, (response, error) -> {
-            if (error != null && FileRefController.isFileRefError(error.text)) {
-                getFileRefController().requestReference("gif", req);
-            }
-        });
+//        TLRPC.TL_messages_saveGif req = new TLRPC.TL_messages_saveGif();
+//        req.id = new TLRPC.TL_inputDocument();
+//        req.id.id = document.id;
+//        req.id.access_hash = document.access_hash;
+//        req.id.file_reference = document.file_reference;
+//        if (req.id.file_reference == null) {
+//            req.id.file_reference = new byte[0];
+//        }
+//        req.unsave = true;
+//        getConnectionsManager().sendRequest(req, (response, error) -> {
+//            if (error != null && FileRefController.isFileRefError(error.text)) {
+//                getFileRefController().requestReference("gif", req);
+//            }
+//        });
         getMessagesStorage().getStorageQueue().postRunnable(() -> {
             try {
                 getMessagesStorage().getDatabase().executeFast("DELETE FROM web_recent_v3 WHERE id = '" + document.id + "' AND type = 2").stepThis().dispose();
