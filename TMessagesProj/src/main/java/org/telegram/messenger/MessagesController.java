@@ -3728,7 +3728,19 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     public void storeDifference(long dialog_id, TLRPC.TL_messages_messages messages, int guid) {
-        Collections.reverse(messages.messages);
+        ArrayList<TLRPC.Message> filtered_messages = new ArrayList<>();
+
+        for (int a = 0; a < messages.messages.size(); a++) {
+            TLRPC.Message msg = messages.messages.get(a);
+
+            if (!(msg instanceof TLRPC.TL_messageEmpty)) {
+                filtered_messages.add(msg);
+            }
+        }
+
+        Collections.reverse(filtered_messages);
+        messages.messages = filtered_messages;
+
         MessagesStorage.getInstance(currentAccount).putMessages(messages, dialog_id, 0, Integer.MAX_VALUE, false);
 
         if (!messages.messages.isEmpty()) {
@@ -4249,14 +4261,14 @@ public class MessagesController extends BaseController implements NotificationCe
             newTaskId = taskId;
         }
         if (!req.folder_peers.isEmpty()) {
-            getConnectionsManager().sendRequest(req, (response, error) -> {
-                if (error == null) {
-                    processUpdates((TLRPC.Updates) response, false);
-                }
-                if (newTaskId != 0) {
-                    getMessagesStorage().removePendingTask(newTaskId);
-                }
-            });
+//            getConnectionsManager().sendRequest(req, (response, error) -> {
+//                if (error == null) {
+//                    processUpdates((TLRPC.Updates) response, false);
+//                }
+//                if (newTaskId != 0) {
+//                    getMessagesStorage().removePendingTask(newTaskId);
+//                }
+//            });
             getMessagesStorage().setDialogsFolderId(null, req.folder_peers, 0, folderId);
         }
         return folderCreated == null ? 0 : (folderCreated[0] ? 2 : 1);
