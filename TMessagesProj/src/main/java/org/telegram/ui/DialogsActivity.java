@@ -173,6 +173,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
 
     private int tabsHeight = 56;
     private TabLayout tabLayout;
+    private boolean tabs = true;
 
     private RecyclerListView listView;
     private LinearLayoutManager layoutManager;
@@ -291,6 +292,11 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
 
 
     private void hideTabs(boolean hide) {
+        if (tabLayout == null) {
+            tabs = !hide;
+            return;
+        }
+
         if(hide) {
             tabLayout.setVisibility(View.GONE);
             FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) listView.getLayoutParams();
@@ -820,7 +826,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                         progressView.setVisibility(View.GONE);
                     }
                     if (!onlySelect) {
-                        hideTabs(false);
+                        hideTabs(true);
                         floatingButtonContainer.setVisibility(View.GONE);
                         //unreadFloatingButtonContainer.setVisibility(View.GONE);
                     }
@@ -853,6 +859,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                     searchEmptyView.setVisibility(View.GONE);
                     if (!onlySelect) {
                         floatingButtonContainer.setVisibility(View.VISIBLE);
+                        hideTabs(false);
                         /*if (currentUnreadCount != 0) {
                             unreadFloatingButtonContainer.setVisibility(View.VISIBLE);
                             unreadFloatingButtonContainer.setTranslationY(AndroidUtilities.dp(74));
@@ -912,8 +919,10 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 actionBar.setBackButtonContentDescription(LocaleController.getString("AccDescrOpenMenu", R.string.AccDescrOpenMenu));
             }
             if (folderId != 0) {
+                hideTabs(true);
                 actionBar.setTitle(LocaleController.getString("ArchivedChats", R.string.ArchivedChats));
             } else {
+                hideTabs(false);
                 if (BuildVars.DEBUG_VERSION) {
                     actionBar.setTitle("Telegram Beta"/*LocaleController.getString("AppNameBeta", R.string.AppNameBeta)*/);
                 } else {
@@ -1017,41 +1026,43 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         ContentView contentView = new ContentView(context);
         fragmentView = contentView;
 
-        tabLayout = new TabLayout(context);
-        tabLayout.setBackgroundColor(Theme.getColor(Theme.key_actionBarDefault));
-        int fontColor = Theme.getColor(Theme.key_actionBarDefaultTitle);
-        tabLayout.setSelectedTabIndicatorColor(fontColor);
-        tabLayout.setSelectedTabIndicatorHeight(AndroidUtilities.dp(2));
-        tabLayout.setTabTextColors(fontColor,fontColor);
+        if (tabs) {
+            tabLayout = new TabLayout(context);
+            tabLayout.setBackgroundColor(Theme.getColor(Theme.key_actionBarDefault));
+            int fontColor = Theme.getColor(Theme.key_actionBarDefaultTitle);
+            tabLayout.setSelectedTabIndicatorColor(fontColor);
+            tabLayout.setSelectedTabIndicatorHeight(AndroidUtilities.dp(2));
+            tabLayout.setTabTextColors(fontColor, fontColor);
 
-        for (TabsEnum tab : TabsEnum.values()) {
-            //tabLayout.addTab(tabLayout.newTab().setText(tab.getTitle()));
-            Drawable normalDrawable = ContextCompat.getDrawable(context, tab.getDrawableId());
-            Drawable wrapDrawable = DrawableCompat.wrap(normalDrawable);
-            DrawableCompat.setTint(wrapDrawable, fontColor);
-            tabLayout.addTab(tabLayout.newTab().setIcon(wrapDrawable));
+            for (TabsEnum tab : TabsEnum.values()) {
+                //tabLayout.addTab(tabLayout.newTab().setText(tab.getTitle()));
+                Drawable normalDrawable = ContextCompat.getDrawable(context, tab.getDrawableId());
+                Drawable wrapDrawable = DrawableCompat.wrap(normalDrawable);
+                DrawableCompat.setTint(wrapDrawable, fontColor);
+                tabLayout.addTab(tabLayout.newTab().setIcon(wrapDrawable));
+            }
+            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    TabsEnum tabsEnum = TabsEnum.values()[tab.getPosition()];
+                    dialogsType = tabsEnum.getType();
+                    dialogsAdapter.setDialogsType(dialogsType);
+                    dialogsAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+
+                }
+
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+
+                }
+            });
+
+            contentView.addView(tabLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, tabsHeight, Gravity.TOP));
         }
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                TabsEnum tabsEnum = TabsEnum.values()[tab.getPosition()];
-                dialogsType = tabsEnum.getType();
-                dialogsAdapter.setDialogsType(dialogsType);
-                dialogsAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
-        contentView.addView(tabLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, tabsHeight, Gravity.TOP));
 
         listView = new RecyclerListView(context) {
 
@@ -1167,6 +1178,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 return super.onInterceptTouchEvent(e);
             }
         };
+
         dialogsItemAnimator = new DialogsItemAnimator() {
             @Override
             public void onRemoveFinished(RecyclerView.ViewHolder item) {
@@ -1249,7 +1261,12 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         listView.setLayoutManager(layoutManager);
         listView.setVerticalScrollbarPosition(LocaleController.isRTL ? RecyclerListView.SCROLLBAR_POSITION_LEFT : RecyclerListView.SCROLLBAR_POSITION_RIGHT);
-        contentView.addView(listView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT, Gravity.TOP | Gravity.START,0,tabsHeight,0,0));
+
+        if (tabs) {
+            contentView.addView(listView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT, Gravity.TOP | Gravity.START,0,tabsHeight,0,0));
+        } else {
+            contentView.addView(listView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT));
+        }
 
         listView.setOnItemClickListener((view, position) -> {
             if (listView == null || listView.getAdapter() == null || getParentActivity() == null) {
