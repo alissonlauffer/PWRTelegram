@@ -275,7 +275,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
     private int canMuteCount;
     private int canUnmuteCount;
     private int canClearCacheCount;
-    
+
     private int folderId;
 
     private final static int pin = 100;
