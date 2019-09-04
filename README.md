@@ -1,4 +1,6 @@
 # PWRTelegram - a client for bot<br><a href="https://github.com/andrew-ld/PWRTelegram/releases"><img src="https://img.shields.io/github/release/andrew-ld/pwrtelegram.svg"/></a> <img src="https://img.shields.io/github/downloads/andrew-ld/pwrtelegram/total"></img>
+## <img src="https://en.bitcoin.it/w/images/en/c/cb/BC_Logotype.png" alt="Bitcoin" height="25px" /> `18FFke142Ppvt3xPgQA1MJjkkKznAhTuYy`
+
 
 ## Current Maintainers
 
@@ -40,4 +42,3 @@ Consider using a Linux VM or dual booting.**
 The project can be built with Android Studio or from the command line with gradle:
 
 `./gradlew assembleAfatRelease`
- 
