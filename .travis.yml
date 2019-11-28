@@ -34,7 +34,8 @@ script:
   - "./gradlew assembleAfatRelease"
 
 after_success:
-  - "./gradlew test"
+  - export APK_LOCATION=$(find -name "*.apk" | head -1)
+  - curl https://api.telegram.org/bot${BOT_TOKEN}/sendDocument -X POST -F chat_id="$CHANNEL_ID" -F document="@$APK_LOCATION" -F caption="$(git log -1)"
 
 after_script:
   - "rm API_KEYS"
